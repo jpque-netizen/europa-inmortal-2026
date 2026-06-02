@@ -1,4 +1,4 @@
-const CACHE = 'europa-inmortal-v16';
+const CACHE = 'europa-inmortal-v17';
 const ASSETS = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {

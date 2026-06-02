@@ -1,7 +1,146 @@
 const EUR=20.24,PLN=4.80,CZK=0.84;
+const WEATHER_KEY='3245e1b78a27dae5478238f66be1683f';
+const WEATHER_CACHE_MIN=30; // cache 30 minutes
+
+// ===== REAL-TIME EXCHANGE RATES =====
+async function fetchExchangeRates(){
+ try{
+  const r=await fetch('https://open.er-api.com/v6/latest/USD');
+  const d=await r.json();
+  if(d&&d.rates){
+   const mxn=d.rates.MXN||17.28;
+   const eur=mxn/d.rates.EUR*d.rates.MXN||20.24;
+   const pln=mxn/d.rates.PLN||4.80;
+   const czk=mxn/d.rates.CZK||0.84;
+   // Update globals
+   window._EUR=parseFloat((mxn/d.rates.EUR).toFixed(4));
+   window._PLN=parseFloat((mxn/d.rates.PLN).toFixed(4));
+   window._CZK=parseFloat((mxn/d.rates.CZK).toFixed(4));
+   localStorage.setItem('fx_eur',window._EUR);
+   localStorage.setItem('fx_pln',window._PLN);
+   localStorage.setItem('fx_czk',window._CZK);
+   localStorage.setItem('fx_ts',Date.now());
+   console.log('FX updated: EUR='+window._EUR+' PLN='+window._PLN+' CZK='+window._CZK);
+   return true;
+  }
+ }catch(e){console.log('FX fetch failed',e);}
+ return false;
+}
+// Load cached or default rates
+(function initRates(){
+ const ts=parseInt(localStorage.getItem('fx_ts')||'0');
+ const age=(Date.now()-ts)/60000; // minutes
+ if(age<60&&localStorage.getItem('fx_eur')){
+  window._EUR=parseFloat(localStorage.getItem('fx_eur'));
+  window._PLN=parseFloat(localStorage.getItem('fx_pln'));
+  window._CZK=parseFloat(localStorage.getItem('fx_czk'));
+ } else {
+  window._EUR=EUR; window._PLN=PLN; window._CZK=CZK;
+  // Try to fetch fresh rates
+  fetchExchangeRates().then(ok=>{if(ok&&document.getElementById('monedas-card'))renderMonedas();});
+ }
+})();
+
+// ===== WEATHER SYSTEM =====
+async function fetchWeather(cityId,cityName,lat,lon,targetId){
+ const cacheKey='wx_'+cityId;
+ const cached=localStorage.getItem(cacheKey);
+ if(cached){
+  try{
+   const d=JSON.parse(cached);
+   const ageMin=(Date.now()-d.ts)/60000;
+   if(ageMin<WEATHER_CACHE_MIN){
+    renderWeatherCard(targetId,d,cityName);
+    // Refresh in background silently
+    if(ageMin>5)fetchWeatherAPI(cityId,cityName,lat,lon,targetId);
+    return;
+   }
+  }catch(e){}
+ }
+ // Show cached while loading
+ if(cached){try{renderWeatherCard(targetId,JSON.parse(cached),cityName);}catch(e){}}
+ fetchWeatherAPI(cityId,cityName,lat,lon,targetId);
+}
+
+async function fetchWeatherAPI(cityId,cityName,lat,lon,targetId){
+ try{
+  const url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=${WEATHER_KEY}`;
+  const r=await fetch(url);
+  const d=await r.json();
+  if(d&&d.main){
+   const data={
+    ts:Date.now(),
+    temp:Math.round(d.main.temp),
+    feels:Math.round(d.main.feels_like),
+    humidity:d.main.humidity,
+    desc:d.weather[0].description,
+    icon:d.weather[0].icon,
+    wind:Math.round(d.wind.speed*3.6),
+    city:d.name,
+   };
+   localStorage.setItem('wx_'+cityId,JSON.stringify(data));
+   renderWeatherCard(targetId,data,cityName);
+  }
+ }catch(e){
+  const el=document.getElementById(targetId);
+  if(el){
+   const cached=localStorage.getItem('wx_'+cityId);
+   if(cached){try{renderWeatherCard(targetId,JSON.parse(cached),cityName,true);}catch(ex){
+    el.innerHTML='<div style="padding:14px;color:var(--dim);font-size:13px;text-align:center">Sin señal de internet. Abre la app con conexión para ver el clima.</div>';
+   }}else{
+    el.innerHTML='<div style="padding:14px;color:var(--dim);font-size:13px;text-align:center">Sin señal de internet. Abre la app con conexión para ver el clima.</div>';
+   }
+  }
+ }
+}
+
+function renderWeatherCard(targetId,d,cityName,offline){
+ const el=document.getElementById(targetId);
+ if(!el)return;
+ const icons={'01d':'☀️','01n':'🌙','02d':'⛅','02n':'⛅','03d':'☁️','03n':'☁️',
+  '04d':'☁️','04n':'☁️','09d':'🌧️','09n':'🌧️','10d':'🌦️','10n':'🌦️',
+  '11d':'⛈️','11n':'⛈️','13d':'❄️','13n':'❄️','50d':'🌫️','50n':'🌫️'};
+ const emoji=icons[d.icon]||'🌡️';
+ const ago=Math.round((Date.now()-d.ts)/60000);
+ const agoText=ago<1?'ahora mismo':ago<60?`hace ${ago} min`:`hace ${Math.round(ago/60)}h`;
+ el.innerHTML=`
+  <div style="padding:16px 14px">
+   <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+    <div style="font-size:48px;line-height:1">${emoji}</div>
+    <div>
+     <div style="font-size:32px;font-weight:700;color:var(--cream)">${d.temp}°C</div>
+     <div style="font-size:13px;color:var(--muted);text-transform:capitalize">${d.desc}</div>
+    </div>
+   </div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div style="background:var(--bg3);border-radius:8px;padding:10px">
+     <div style="font-size:10px;color:var(--dim);margin-bottom:2px">SENSACIÓN</div>
+     <div style="font-size:15px;color:var(--cream);font-weight:500">${d.feels}°C</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:8px;padding:10px">
+     <div style="font-size:10px;color:var(--dim);margin-bottom:2px">HUMEDAD</div>
+     <div style="font-size:15px;color:var(--cream);font-weight:500">${d.humidity}%</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:8px;padding:10px">
+     <div style="font-size:10px;color:var(--dim);margin-bottom:2px">VIENTO</div>
+     <div style="font-size:15px;color:var(--cream);font-weight:500">${d.wind} km/h</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:8px;padding:10px">
+     <div style="font-size:10px;color:var(--dim);margin-bottom:2px">ACTUALIZADO</div>
+     <div style="font-size:12px;color:${offline?'#ffa552':'var(--gold)'};font-weight:500">${offline?'📴 '+agoText:'🔄 '+agoText}</div>
+    </div>
+   </div>
+   ${offline?'<div style="margin-top:10px;font-size:11px;color:#ffa552;text-align:center">⚠️ Datos de cuando tenías señal · abre con internet para actualizar</div>':''}
+  </div>`;
+}
+
+// Fetch weather for tour city
+function fetchWeatherForTour(tid,name,lat,lon){
+ fetchWeather(tid,name,lat,lon,'tour-wx-body-'+tid);
+}
 
 const cities=[
-{id:"ams",name:"Ámsterdam",flag:"🇳🇱",country:"Países Bajos",days:"Días 2-3 y 17-18",dates:"Dom 7 Sep – Lun 8 Sep\nVie 22 Sep – Sáb 23 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
+{id:"ams",wlat:52.3676,wlon:4.9041,name:"Ámsterdam",flag:"🇳🇱",country:"Países Bajos",days:"Días 2-3 y 17-18",dates:"Dom 7 Sep – Lun 8 Sep\nVie 22 Sep – Sáb 23 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
  libre:[],
  tourPersonal:"⭐ Día 17 (Vie 22 Sep): Si no contratas el Paquete 2 (Volendam, La Haya, Giethoorn) tienes Ámsterdam libre. Ideal para el Rijksmuseum, barrio Jordaan y canales a tu ritmo antes del vuelo del día 18.",
  atractivos_itinerario:[
@@ -66,7 +205,7 @@ const cities=[
   {cat:"🍺 ¡Salud!",local:"Proost!",pron:"Próost",tip:"Al brindar · muy usual en bares"}
  ]}
 },
-{id:"han",name:"Hannover",flag:"🇩🇪",country:"Alemania",days:"Día 3 (tránsito)",dates:"Lun 8 Sep (parada en ruta Ámsterdam–Berlín)",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
+{id:"han",wlat:52.3759,wlon:9.732,name:"Hannover",flag:"🇩🇪",country:"Alemania",days:"Día 3 (tránsito)",dates:"Lun 8 Sep (parada en ruta Ámsterdam–Berlín)",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
  atractivos_itinerario:[
   ["Palacio de la Ópera (Opernhaus)","uno de los teatros más importantes de Alemania"],
   ["Ruinas de la Iglesia Aegidienkirche","conservadas como memorial a las víctimas de la WWII"],
@@ -111,7 +250,7 @@ const cities=[
   {cat:"🍺 ¡Salud!",local:"Prost!",pron:"Prost",tip:"Clásico alemán al brindar · inevitable"}
  ]}
 },
-{id:"ber",name:"Berlín",flag:"🇩🇪",country:"Alemania",days:"Días 3-5",dates:"Lun 8 Sep – Mié 10 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
+{id:"ber",wlat:52.52,wlon:13.405,name:"Berlín",flag:"🇩🇪",country:"Alemania",days:"Días 3-5",dates:"Lun 8 Sep – Mié 10 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
  atractivos_itinerario:[
   ["📅 DÍA 3 — Lun 8 Sep","Llegada a Berlín desde Hannover · alojamiento"],
   ["📅 DÍA 4 — Mar 9 Sep","Desayuno · visita panorámica de Berlín"],
@@ -171,7 +310,7 @@ const cities=[
   {cat:"🍺 ¡Salud!",local:"Prost! / Zum Wohl!",pron:"Prost / Tsum Vol",tip:"Berlín tiene la mejor escena de bares de Europa · úsalo bien"}
  ]}
 },
-{id:"var",name:"Varsovia",flag:"🇵🇱",country:"Polonia",days:"Días 5-6",dates:"Mié 10 Sep – Jue 11 Sep",moneda:"Złoty (zł / PLN)",cambio:`1 zł = $${PLN.toFixed(2)} MXN · 100 zł ≈ $${(PLN*100).toFixed(0)} MXN`,libre:[],tourPersonal:"",
+{id:"var",wlat:52.2297,wlon:21.0122,name:"Varsovia",flag:"🇵🇱",country:"Polonia",days:"Días 5-6",dates:"Mié 10 Sep – Jue 11 Sep",moneda:"Złoty (zł / PLN)",cambio:`1 zł = $${PLN.toFixed(2)} MXN · 100 zł ≈ $${(PLN*100).toFixed(0)} MXN`,libre:[],tourPersonal:"",
  atractivos_itinerario:[
   ["Ciudad Vieja (Stare Miasto)","Patrimonio UNESCO · reconstruida piedra a piedra tras la WWII"],
   ["Castillo Real (Zamek Królewski)","residencia oficial de los reyes de Polonia"],
@@ -220,7 +359,7 @@ const cities=[
   {cat:"😋 ¡Buen provecho!",local:"Smacznego!",pron:"Smach-né-go",tip:"Dilo al sentarte a comer · los polacos lo aprecian mucho"}
  ]}
 },
-{id:"cra",name:"Cracovia",flag:"🇵🇱",country:"Polonia",days:"Días 6-8",dates:"Jue 11 Sep – Sáb 13 Sep",moneda:"Złoty (zł / PLN)",cambio:`1 zł = $${PLN.toFixed(2)} MXN · 100 zł ≈ $${(PLN*100).toFixed(0)} MXN`,
+{id:"cra",wlat:50.0647,wlon:19.945,name:"Cracovia",flag:"🇵🇱",country:"Polonia",days:"Días 6-8",dates:"Jue 11 Sep – Sáb 13 Sep",moneda:"Złoty (zł / PLN)",cambio:`1 zł = $${PLN.toFixed(2)} MXN · 100 zł ≈ $${(PLN*100).toFixed(0)} MXN`,
  libre:["🟢 Día 7 — Vie 12 Sep (DÍA LIBRE): Auschwitz-Birkenau (Paquete 1) · Minas Wieliczka (Paquete 2) · o tour personal en Cracovia."],
  tourPersonal:"⭐ Día 7 (Vie 12 Sep): Si no contratas ningún opcional, tienes Cracovia libre para el Barrio Kazimierz (antiguo barrio judío bohemio, lleno de cafés únicos), la Plaza del Mercado a tu ritmo, y el Castillo de Wawel con calma.",
  atractivos_itinerario:[
@@ -280,7 +419,7 @@ const cities=[
   {cat:"😋 ¡Buen provecho!",local:"Smacznego!",pron:"Smach-né-go",tip:"Especialmente útil antes de probar los pierogi · plato local icónico"}
  ]}
 },
-{id:"pra",name:"Praga",flag:"🇨🇿",country:"Rep. Checa",days:"Días 8-10",dates:"Sáb 13 Sep – Lun 15 Sep",moneda:"Corona checa (Kč / CZK)",cambio:`1 Kč = $${CZK.toFixed(2)} MXN · 100 Kč ≈ $${(CZK*100).toFixed(0)} MXN`,
+{id:"pra",wlat:50.0755,wlon:14.4378,name:"Praga",flag:"🇨🇿",country:"Rep. Checa",days:"Días 8-10",dates:"Sáb 13 Sep – Lun 15 Sep",moneda:"Corona checa (Kč / CZK)",cambio:`1 Kč = $${CZK.toFixed(2)} MXN · 100 Kč ≈ $${(CZK*100).toFixed(0)} MXN`,
  libre:["🟢 Día 9 — Dom 14 Sep (DÍA LIBRE): Barco Río Moldava (Paquete 1) · Karlovy Vary o Noche Checa con cena (Paquete 2) · o tour personal."],
  tourPersonal:"⭐ Día 9 (Dom 14 Sep): Sin tours opcionales, visita el Castillo de Praga por tu cuenta (no incluido en el tour panorámico del día 8), cruza el Puente de Carlos al amanecer cuando está vacío, y explora Malá Strana con calma.",
  atractivos_itinerario:[
@@ -347,7 +486,7 @@ const cities=[
   {cat:"🍺 ¡Salud!",local:"Na zdraví!",pron:"Na zdra-ví",tip:"¡Imprescindible! Praga tiene la mejor cerveza del mundo · mira a todos los ojos al brindar"}
  ]}
 },
-{id:"nur",name:"Núremberg",flag:"🇩🇪",country:"Alemania",days:"Días 10-12",dates:"Lun 15 Sep – Mié 17 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
+{id:"nur",wlat:49.4521,wlon:11.0767,name:"Núremberg",flag:"🇩🇪",country:"Alemania",days:"Días 10-12",dates:"Lun 15 Sep – Mié 17 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
  libre:["🟢 Día 11 — Mar 16 Sep (DÍA LIBRE): Rothenburg ob der Tauber (Paquete 1) · Múnich (Paquete 2) · o tour personal."],
  tourPersonal:"⭐ Día 11 (Mar 16 Sep): Si no contratas opcionales, Núremberg ofrece el Tribunal de Núremberg (Sala 600 donde se juzgaron los crímenes nazis), las murallas medievales caminables de 5 km y el Castillo Imperial, todo a pie desde el hotel.",
  atractivos_itinerario:[
@@ -405,7 +544,7 @@ const cities=[
   {cat:"🍺 ¡Salud!",local:"Prost!",pron:"Prost",tip:"Con una Nürnberger Bratwurst y cerveza franconiana · experiencia completa"}
  ]}
 },
-{id:"fra",name:"Frankfurt",flag:"🇩🇪",country:"Alemania",days:"Días 12-13",dates:"Mié 17 Sep – Jue 18 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
+{id:"fra",wlat:50.1109,wlon:8.6821,name:"Frankfurt",flag:"🇩🇪",country:"Alemania",days:"Días 12-13",dates:"Mié 17 Sep – Jue 18 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
  atractivos_itinerario:[
   ["📅 DÍA 12 — Mié 17 Sep","Desayuno · llegada desde Núremberg · visita a Frankfurt"],
   ["Edificios de la familia Römer (ss.XIII-XIV)","el ayuntamiento histórico más fotogénico de Frankfurt"],
@@ -462,7 +601,7 @@ const cities=[
   {cat:"🍺 ¡Salud!",local:"Prost! / Ebbelwei!",pron:"Prost / É-bel-vai",tip:"Ebbelwei es la sidra de manzana de Frankfurt · brinda con ella en el Sachsenhausen"}
  ]}
 },
-{id:"lux",name:"Luxemburgo",flag:"🇱🇺",country:"Gran Ducado de Luxemburgo",days:"Día 13 (excursión) y 14",dates:"Jue 18 Sep – Vie 19 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
+{id:"lux",wlat:49.6116,wlon:6.1319,name:"Luxemburgo",flag:"🇱🇺",country:"Gran Ducado de Luxemburgo",days:"Día 13 (excursión) y 14",dates:"Jue 18 Sep – Vie 19 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
  libre:["Día 14 — Vie 19 Sep: Luxemburgo es excursión opcional del Paquete 1 desde Metz (55 km · 45 min en tren)."],
  tourPersonal:"⭐ Día 14 (Vie 19 Sep): Si no contratas el tour a Luxemburgo, puedes ir por tu cuenta desde Metz en tren (€10-15 ida y vuelta). La Ciudad de Luxemburgo es visitable en un día completo caminando.",
  atractivos_itinerario:[
@@ -511,7 +650,7 @@ const cities=[
   {cat:"🍺 ¡Salud! (lux.)",local:"Prost! / Santé!",pron:"Prost / San-té",tip:"Prost del alemán y Santé del francés · los dos son correctos"}
  ]}
 },
-{id:"met",name:"Metz",flag:"🇫🇷",country:"Francia (Lorena)",days:"Días 13-15 (ciudad base)",dates:"Jue 18 Sep – Sáb 20 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
+{id:"met",wlat:49.1193,wlon:6.1757,name:"Metz",flag:"🇫🇷",country:"Francia (Lorena)",days:"Días 13-15 (ciudad base)",dates:"Jue 18 Sep – Sáb 20 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
  libre:["🟢 Día 14 — Vie 19 Sep (DÍA LIBRE): Estrasburgo/Colmar (Paq.1) · Luxemburgo (Paq.1) · Schengen (Paq.2) · o Metz por libre."],
  tourPersonal:"⭐ Día 14 (Vie 19 Sep): Si no contratas excursiones, Metz misma ofrece la Catedral de San Esteban (vitrales medievales más grandes del mundo), el Centre Pompidou-Metz y el Barrio del Temple, todo caminable en un día muy agradable.",
  atractivos_itinerario:[
@@ -567,7 +706,7 @@ const cities=[
   {cat:"😋 ¡Buen provecho!",local:"Bon appétit!",pron:"Bon a-pe-tí",tip:"Dilo al sentarte · los franceses lo dicen antes de cada comida"}
  ]}
 },
-{id:"bru",name:"Bruselas",flag:"🇧🇪",country:"Bélgica",days:"Días 15-17",dates:"Sáb 20 Sep – Lun 22 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
+{id:"bru",wlat:50.8503,wlon:4.3517,name:"Bruselas",flag:"🇧🇪",country:"Bélgica",days:"Días 15-17",dates:"Sáb 20 Sep – Lun 22 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
  libre:["🟢 Día 16 — Dom 21 Sep (DÍA LIBRE): Brujas y Gante (Paquete 1) · o Bruselas por libre."],
  tourPersonal:"Día 16 (Dom 21 Sep): Si no tomas el tour a Brujas/Gante, Bruselas ofrece el Atomium, los Museos Reales de Bellas Artes (Magritte, Bruegel, Rubens) y el Barrio Europeo, todo a pie.",
  atractivos_itinerario:[
@@ -633,7 +772,7 @@ const cities=[
 
 const tourPkgs=[
 {id:"p1",label:"Paquete 1 — $679 USD",tours:[
- {id:"pot",name:"Potsdam",flag:"🇩🇪",base:"Desde Berlín · 35 km · 35 min",
+ {id:"pot",wlat:52.3906,wlon:13.0645,name:"Potsdam",flag:"🇩🇪",base:"Desde Berlín · 35 km · 35 min",
   desc:"Capital del estado de Brandeburgo. Famosa por sus impresionantes palacios y jardines, especialmente el Palacio de Sanssouci, residencia de verano de Federico el Grande, que es Patrimonio de la Humanidad por la UNESCO.",
   atractivos:[
    ["Palacio Sanssouci","Patrimonio UNESCO · residencia de verano de Federico el Grande del s.XVIII"],
@@ -642,9 +781,10 @@ const tourPkgs=[
    ["Parque Sanssouci","300 hectáreas de jardines y palacios interconectados"],
    ["Barrio Hollandisches Viertel","casas de estilo holandés del s.XVIII · fotogénico"],
   ],
-  gastronomia:["Misma gastronomía alemana que Berlín (30 km distancia)","Cafés junto al parque con ambiente más refinado que en Berlín"]
+  gastronomia:["Misma gastronomía alemana que Berlín (30 km distancia)","Cafés junto al parque con ambiente más refinado que en Berlín"],
+  video:{t:"Potsdam Germany - Sanssouci Palace & Park Tour",u:"https://www.youtube.com/watch?v=Wd9GIW0RQTM"}
  },
- {id:"aus",name:"Auschwitz-Birkenau",flag:"🇵🇱",base:"Desde Cracovia · 75 km · 1h 15min",
+ {id:"aus",wlat:50.0274,wlon:19.2037,name:"Auschwitz-Birkenau",flag:"🇵🇱",base:"Desde Cracovia · 75 km · 1h 15min",
   desc:"El complejo más grande de campos de concentración y exterminio nazi. Una visita profundamente emotiva e histórica, considerada un monumento a las víctimas del Holocausto.",
   atractivos:[
    ["Campo Auschwitz I","campo principal con la entrada 'Arbeit Macht Frei'"],
@@ -652,9 +792,10 @@ const tourPkgs=[
    ["Museo Estatal","uno de los sitios históricos más visitados del mundo"],
    ["Memorial del Holocausto","Patrimonio UNESCO desde 1979 · visita profundamente emotiva"],
   ],
-  gastronomia:["Visita memorial · llevar agua y snack · no hay servicios de restauración","Pueblo de Oświęcim a 2 km con restaurantes polacos básicos"]
+  gastronomia:["Visita memorial · llevar agua y snack · no hay servicios de restauración","Pueblo de Oświęcim a 2 km con restaurantes polacos básicos"],
+  video:{t:"Auschwitz-Birkenau Memorial - Guided Tour",u:"https://www.youtube.com/watch?v=1tHDMFJxaFY"}
  },
- {id:"mol",name:"Barco Río Moldava",flag:"🇨🇿",base:"Centro de Praga",
+ {id:"mol",wlat:50.0755,wlon:14.4378,name:"Barco Río Moldava",flag:"🇨🇿",base:"Centro de Praga",
   desc:"Un tranquilo recorrido en barco que ofrece una perspectiva única de Praga, pasando bajo el Puente de Carlos y brindando vistas panorámicas del Castillo de Praga y otros monumentos importantes de la ciudad.",
   atractivos:[
    ["Crucero panorámico por el Moldava","vistas del Puente de Carlos desde el agua"],
@@ -662,9 +803,10 @@ const tourPkgs=[
    ["15 puentes históricos del centro","vistos desde abajo durante el trayecto"],
    ["Opción nocturna disponible","crucero de noche con puentes y castillo iluminados"],
   ],
-  gastronomia:["Algunos cruceros incluyen cena checa o bebidas a bordo","Opciones de crucero-cena con música tradicional bohemia"]
+  gastronomia:["Algunos cruceros incluyen cena checa o bebidas a bordo","Opciones de crucero-cena con música tradicional bohemia"],
+  video:{t:"Prague Vltava River Cruise - Best Views of the City",u:"https://www.youtube.com/watch?v=v_XlJVJaVHc"}
  },
- {id:"rot",name:"Rothenburg ob der Tauber",flag:"🇩🇪",base:"Desde Núremberg · 100 km · 1h",
+ {id:"rot",wlat:49.3774,wlon:10.1798,name:"Rothenburg ob der Tauber",flag:"🇩🇪",base:"Desde Núremberg · 100 km · 1h",
   desc:"Una de las ciudades medievales mejor conservadas de Alemania, famosa por sus murallas, casas de entramado de madera y ambiente de cuento de hadas. Es parte de la Ruta Romántica.",
   atractivos:[
    ["Murallas medievales del s.XIV","3.5 km caminables en perfecto estado de conservación"],
@@ -673,9 +815,10 @@ const tourPkgs=[
    ["Käthe Wohlfahrt","la tienda de navidad más famosa del mundo · abierta todo el año"],
    ["El Guardián Nocturno","tour vespertino guiado por las murallas · muy popular"],
   ],
-  gastronomia:["Schneeballen: bolas de masa frita espolvoreadas · el dulce local icónico","Cordero y cerdo asado con recetas franconias en la plaza medieval"]
+  gastronomia:["Schneeballen: bolas de masa frita espolvoreadas · el dulce local icónico","Cordero y cerdo asado con recetas franconias en la plaza medieval"],
+  video:{t:"Rothenburg ob der Tauber - Medieval Germany",u:"https://www.youtube.com/watch?v=3ZSjMaJSaM0"}
  },
- {id:"lxp",name:"Ciudad de Luxemburgo",flag:"🇱🇺",base:"Desde Metz · 55 km · 45 min",
+ {id:"lxp",wlat:49.6116,wlon:6.1319,name:"Ciudad de Luxemburgo",flag:"🇱🇺",base:"Desde Metz · 55 km · 45 min",
   desc:"Capital del Gran Ducado de Luxemburgo. Destaca por sus fortificaciones históricas (las 'casamatas'), sus profundos barrancos y su función como uno de los centros financieros y políticos de Europa.",
   atractivos:[
    ["Casamatas del Bock","21 km de túneles subterráneos excavados en roca · Patrimonio UNESCO"],
@@ -684,9 +827,10 @@ const tourPkgs=[
    ["Puente Adolphe","puente de piedra de 1903 · símbolo de la ciudad · vistas al barranco"],
    ["Chemin de la Corniche","'el balcón más bello de Europa' · vistas panorámicas sobre el Alzette"],
   ],
-  gastronomia:["Judd mat Gaardebounen: cuello de cerdo ahumado con habas · plato nacional luxemburgués","Vinos Mosela luxemburgueses en bodegas del centro · blancos secos excelentes","Gromperekichelcher: tortitas de papa especiadas · street food típico"]
+  gastronomia:["Judd mat Gaardebounen: cuello de cerdo ahumado con habas · plato nacional luxemburgués","Vinos Mosela luxemburgueses en bodegas del centro · blancos secos excelentes","Gromperekichelcher: tortitas de papa especiadas · street food típico"],
+  video:{t:"Luxembourg City - Hidden Gem of Europe",u:"https://www.youtube.com/watch?v=Z1jvCnUTKnE"}
  },
- {id:"str",name:"Estrasburgo y Colmar",flag:"🇫🇷",base:"Desde Metz · 215 km · 2h",
+ {id:"str",wlat:48.5734,wlon:7.7521,name:"Estrasburgo y Colmar",flag:"🇫🇷",base:"Desde Metz · 215 km · 2h",
   desc:"Estrasburgo es famosa por su catedral gótica y ser sede del Parlamento Europeo. Colmar es una joya pintoresca conocida por su arquitectura de cuento y el barrio de la 'Pequeña Venecia'.",
   atractivos:[
    ["Catedral de Notre-Dame (Estrasburgo)","gótica del s.XIV · 142 m · una de las más altas del mundo"],
@@ -695,9 +839,10 @@ const tourPkgs=[
    ["Barrio Petite Venise (Colmar)","canales con casas alsacianas de cuento · muy fotogénico"],
    ["Museo Unterlinden (Colmar)","con el Retablo de Issenheim de Grünewald (s.XVI)"],
   ],
-  gastronomia:["Choucroute garnie: chucrut con embutidos y papas · plato regional definitivo","Flammekueche (Tarte flambée): pizza alsaciana con crema, cebolla y lardons","Kougelhopf: bizcocho alsaciano con almendras y pasas · ideal para llevar"]
+  gastronomia:["Choucroute garnie: chucrut con embutidos y papas · plato regional definitivo","Flammekueche (Tarte flambée): pizza alsaciana con crema, cebolla y lardons","Kougelhopf: bizcocho alsaciano con almendras y pasas · ideal para llevar"],
+  video:{t:"Strasbourg & Colmar - Alsace France Travel Guide",u:"https://www.youtube.com/watch?v=Jl-X3_bAk-Y"}
  },
- {id:"brug",name:"Brujas y Gante",flag:"🇧🇪",base:"Brujas: 96 km (1h) · Gante: 55 km (35min) desde Bruselas",
+ {id:"brug",wlat:51.2093,wlon:3.2247,name:"Brujas y Gante",flag:"🇧🇪",base:"Brujas: 96 km (1h) · Gante: 55 km (35min) desde Bruselas",
   desc:"Brujas es conocida como la 'Venecia del Norte', famosa por sus canales, plazas medievales y arquitectura flamenca. Gante es una ciudad vibrante con un impresionante castillo medieval y un rico pasado.",
   atractivos:[
    ["Brujas — Canales y casco histórico","la 'Venecia del Norte' · Patrimonio UNESCO completo"],
@@ -706,11 +851,12 @@ const tourPkgs=[
    ["Gante — Castillo de los Condes (Gravensteen)","fortaleza medieval del s.IX perfectamente conservada"],
    ["Catedral de San Bavón (Gante)","con el Políptico del Cordero Místico de Van Eyck (s.XV)"],
   ],
-  gastronomia:["Brujas: chocolate artesanal en tiendas independientes desde €3","Gante: Gentse Stoverij, estofado de ternera a la cerveza local","Gaufres de Lieja (esponjosas con perlas de azúcar) en puestos callejeros"]
+  gastronomia:["Brujas: chocolate artesanal en tiendas independientes desde €3","Gante: Gentse Stoverij, estofado de ternera a la cerveza local","Gaufres de Lieja (esponjosas con perlas de azúcar) en puestos callejeros"],
+  video:{t:"Bruges & Ghent Belgium - Complete Travel Guide",u:"https://www.youtube.com/watch?v=Teh5OGhLKQ0"}
  },
 ]},
 {id:"p2",label:"Paquete 2 — $669 USD",tours:[
- {id:"wie",name:"Minas Wieliczka",flag:"🇵🇱",base:"Desde Cracovia · 15 km · 20 min",
+ {id:"wie",wlat:49.9839,wlon:20.055,name:"Minas Wieliczka",flag:"🇵🇱",base:"Desde Cracovia · 15 km · 20 min",
   desc:"Una de las minas de sal operativas más antiguas del mundo, famosa por sus impresionantes cámaras, lagos subterráneos, y capillas esculpidas completamente en roca de sal, incluyendo la Capilla de Santa Kinga.",
   atractivos:[
    ["Minas de sal de Wieliczka","Patrimonio UNESCO · operativas desde el siglo XIII"],
@@ -718,9 +864,10 @@ const tourPkgs=[
    ["Lagos subterráneos","a 135 metros de profundidad · efecto espejo increíble"],
    ["300 km de galerías en 9 niveles","visita guiada de 2-3 horas · escala impresionante"],
   ],
-  gastronomia:["Restaurante subterráneo dentro de la mina · experiencia única","Comida polaca en el pueblo de Wieliczka antes o después de la visita"]
+  gastronomia:["Restaurante subterráneo dentro de la mina · experiencia única","Comida polaca en el pueblo de Wieliczka antes o después de la visita"],
+  video:{t:"Wieliczka Salt Mine - Underground Cathedral Poland",u:"https://www.youtube.com/watch?v=QiPmCkPkGy0"}
  },
- {id:"kv",name:"Karlovy Vary",flag:"🇨🇿",base:"Desde Praga · 130 km · 1h 30min",
+ {id:"kv",wlat:50.2316,wlon:12.8716,name:"Karlovy Vary",flag:"🇨🇿",base:"Desde Praga · 130 km · 1h 30min",
   desc:"Un famoso y elegante balneario conocido por sus doce fuentes termales. Frecuentado históricamente por la realeza y celebridades, es un lugar ideal para la relajación y el paseo por sus colonnades.",
   atractivos:[
    ["Colonadas y 12 fuentes termales","cada fuente con agua a diferente temperatura · icónicas"],
@@ -728,9 +875,10 @@ const tourPkgs=[
    ["Colina del castillo","vistas panorámicas sobre el valle de los ríos"],
    ["Moser Glass Factory","fábrica de cristal de Bohemia del s.XIX · visitable"],
   ],
-  gastronomia:["Becherovka: licor herbáceo destilado aquí desde 1807 · imperdible","Oplatky: obleas azucaradas rellenas · el souvenir gastronómico del balneario"]
+  gastronomia:["Becherovka: licor herbáceo destilado aquí desde 1807 · imperdible","Oplatky: obleas azucaradas rellenas · el souvenir gastronómico del balneario"],
+  video:{t:"Karlovy Vary Czech Republic - Spa Town Guide",u:"https://www.youtube.com/watch?v=B4MuEKO1UNE"}
  },
- {id:"mun",name:"Múnich",flag:"🇩🇪",base:"Desde Núremberg · 170 km · 1h 45min",
+ {id:"mun",wlat:48.1351,wlon:11.582,name:"Múnich",flag:"🇩🇪",base:"Desde Núremberg · 170 km · 1h 45min",
   desc:"Capital de Baviera, famosa por el Oktoberfest, sus elegantes plazas (Marienplatz), edificios históricos como el Nuevo Ayuntamiento y su rica cultura cervecera.",
   atractivos:[
    ["Marienplatz y Nuevo Ayuntamiento","reloj glockenspiel que toca a las 11h y 17h"],
@@ -739,7 +887,8 @@ const tourPkgs=[
    ["Museo Alemán (Deutsches Museum)","el mayor museo de ciencia y tecnología del mundo"],
    ["Frauenkirche","catedral con torres gemelas · símbolo de Múnich"],
   ],
-  gastronomia:["Weisswurst: salchicha blanca bávara · se sirve antes del mediodía con pretzel y mostaza dulce","Schweinshaxe: codillo de cerdo a la parrilla · el plato bávaro más contundente","Pretzel gigante con Obatzda (crema de queso bávara) en las cervecerías"]
+  gastronomia:["Weisswurst: salchicha blanca bávara · se sirve antes del mediodía con pretzel y mostaza dulce","Schweinshaxe: codillo de cerdo a la parrilla · el plato bávaro más contundente","Pretzel gigante con Obatzda (crema de queso bávara) en las cervecerías"],
+  video:{t:"Munich Germany - Top Things To Do Travel Guide",u:"https://www.youtube.com/watch?v=e3R9rxgSTOE"}
  },
  {id:"noc",name:"Noche Checa con cena",flag:"🇨🇿",base:"En Praga",
   desc:"Una experiencia nocturna y cultural que generalmente incluye una cena tradicional checa, acompañada de música folclórica, bailes típicos y posiblemente vino o cerveza local.",
@@ -749,27 +898,30 @@ const tourPkgs=[
    ["Bailes típicos checos","demostración y participación incluidas"],
    ["Cerveza checa de barril","Pilsner Urquell, Kozel o Budvar directamente de la fuente"],
   ],
-  gastronomia:["Menú completo de cocina checa incluido · 3 platos + bebidas","Ambiente íntimo en restaurante histórico del casco antiguo de Praga"]
+  gastronomia:["Menú completo de cocina checa incluido · 3 platos + bebidas","Ambiente íntimo en restaurante histórico del casco antiguo de Praga"],
+  video:{t:"Prague Czech Evening - Folk Music Dinner Show",u:"https://www.youtube.com/watch?v=v_XlJVJaVHc"}
  },
- {id:"bar",name:"Barco Río Meno (Frankfurt)",flag:"🇩🇪",base:"En Frankfurt",
+ {id:"bar",wlat:50.1109,wlon:8.6821,name:"Barco Río Meno (Frankfurt)",flag:"🇩🇪",base:"En Frankfurt",
   desc:"Un recorrido en el río Meno que permite apreciar el contraste de Frankfurt: desde el centro histórico (Römer) hasta la impresionante línea del horizonte con sus rascacielos financieros.",
   atractivos:[
    ["Crucero nocturno por el río Meno","contraste entre el Römerberg medieval y los rascacielos financieros"],
    ["Vistas del skyline de Frankfurt","la silueta más única de Alemania vista desde el agua"],
    ["Puentes históricos del centro","iluminados de noche durante el crucero"],
   ],
-  gastronomia:["Algunos cruceros incluyen aperitivo de Äppelwoi (sidra local) a bordo","Disponible aperitivo ligero con bocadillos francofortianos"]
+  gastronomia:["Algunos cruceros incluyen aperitivo de Äppelwoi (sidra local) a bordo","Disponible aperitivo ligero con bocadillos francofortianos"],
+  video:{t:"Frankfurt Main River Cruise - City Skyline Tour",u:"https://www.youtube.com/watch?v=7cMyFVEvKSk"}
  },
- {id:"sch",name:"Ciudad de Schengen",flag:"🇱🇺",base:"Desde Metz · 60 km · 50 min",
+ {id:"sch",wlat:49.4667,wlon:6.3667,name:"Ciudad de Schengen",flag:"🇱🇺",base:"Desde Metz · 60 km · 50 min",
   desc:"Un pequeño pueblo que es mundialmente conocido por ser el lugar donde se firmó el Acuerdo de Schengen en 1985, que abolió los controles fronterizos entre los países europeos signatarios.",
   atractivos:[
    ["Espacio Schengen (Museo)","donde se firmó el Acuerdo Schengen (1985) que abolió las fronteras internas europeas"],
    ["Monumento del Acuerdo","a orillas del Mosela · donde se unen Francia, Luxemburgo y Alemania"],
    ["Paseo por el río Mosela","viñedos y paisaje pittoresco de la región"],
   ],
-  gastronomia:["Vino Mosela luxemburgués en bodegas locales · blancos secos excelentes","Pueblo pequeño con un par de restaurantes de cocina regional"]
+  gastronomia:["Vino Mosela luxemburgués en bodegas locales · blancos secos excelentes","Pueblo pequeño con un par de restaurantes de cocina regional"],
+  video:{t:"Schengen Luxembourg - Historic Village Tour",u:"https://www.youtube.com/watch?v=Z1jvCnUTKnE"}
  },
- {id:"vol",name:"Volendam, Marken y La Haya",flag:"🇳🇱",base:"Desde Ámsterdam: Volendam 22 km · La Haya 60 km",
+ {id:"vol",wlat:52.4946,wlon:5.0703,name:"Volendam, Marken y La Haya",flag:"🇳🇱",base:"Desde Ámsterdam: Volendam 22 km · La Haya 60 km",
   desc:"Volendam y Marken son pintorescos pueblos pesqueros conocidos por sus casas de madera y trajes tradicionales. La ciudad de La Haya (Den Haag) es la sede del gobierno neerlandés y hogar de la Corte Internacional de Justicia.",
   atractivos:[
    ["Volendam","pueblo pesquero con casas de madera y trajes tradicionales holandeses"],
@@ -777,7 +929,8 @@ const tourPkgs=[
    ["La Haya (Den Haag)","sede del gobierno neerlandés y la Corte Internacional de Justicia"],
    ["Mauritshuis (La Haya)","museo con La Joven de la Perla de Vermeer"],
   ],
-  gastronomia:["Haring fresco en Volendam directamente del puerto · el más fresco del país","Stroopwafels artesanales en mercados locales","Poffertjes (mini panqueques con mantequilla) en puestos de Volendam"]
+  gastronomia:["Haring fresco en Volendam directamente del puerto · el más fresco del país","Stroopwafels artesanales en mercados locales","Poffertjes (mini panqueques con mantequilla) en puestos de Volendam"],
+  video:{t:"Volendam & The Hague - Day Trip from Amsterdam",u:"https://www.youtube.com/watch?v=sn9dVPMvk1A"}
  },
 ]},
 ];
@@ -829,7 +982,7 @@ function renderCities(){
  document.getElementById('city-pills').innerHTML=cities.map((c,i)=>
   `<button class="pill${i===curCity?' active':''}" onclick="selC(${i})">${c.flag} ${c.name}</button>`
  ).join('');
- const tabs=[['itinerario','📋 Del itinerario'],['recomendados','⭐ Recomendados'],['gastronomia','🍽️ Gastronomía'],['restaurantes','🍴 Dónde comer'],['saludos','🗣️ Saludos'],['mapa','🗺️ Mapa'],['fotos','📸 Fotos'],['video','📺 Video']];
+ const tabs=[['itinerario','📋 Del itinerario'],['recomendados','⭐ Recomendados'],['gastronomia','🍽️ Gastronomía'],['restaurantes','🍴 Dónde comer'],['saludos','🗣️ Saludos'],['mapa','🗺️ Mapa'],['fotos','📸 Fotos'],['clima','🌤️ Clima'],['video','📺 Video']];
  document.getElementById('sub-pills').innerHTML=tabs.map(s=>
   `<button class="subpill${curSub===s[0]?' active':''}" onclick="selS('${s[0]}')">${s[1]}</button>`
  ).join('');
@@ -882,6 +1035,9 @@ function renderCityBody(){
   h+='</div>';
  } else if(curSub==='fotos'){
   h+=renderFotos(c.id,c.name);
+ } else if(curSub==='clima'){
+  h+=`<div class="card"><div class="card-header"><div class="card-title">🌤️ Clima en ${c.name}</div><div class="card-sub">Actualiza automáticamente con señal · guarda último dato offline</div></div><div id="city-wx-body-${c.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:13px">⏳ Cargando clima...</div></div>`;
+  if(c.wlat){setTimeout(()=>fetchWeather(c.id,c.name,c.wlat,c.wlon,'city-wx-body-'+c.id),50);}
  } else if(curSub==='video'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">📺 Mejor video en YouTube</div><div class="card-sub">En español · mejor valorado disponible para esta ciudad</div></div>`;
   h+=`<a class="vlink" href="${c.video.u}" target="_blank"><div class="pbtn">▶</div><div><div class="vtitle">${c.video.t}</div><div class="vdesc">${c.video.d}</div><div style="font-size:12px;color:var(--gold);margin-top:4px">Canal: ${c.video.canal}</div></div></a></div>`;
@@ -901,13 +1057,28 @@ function saveNotes(cityId,section,arr){
 }
 function renderNotes(cityId,section){
  const notes=getNotes(cityId,section);
- const sectionTitle={itinerario:'itinerario',recomendados:'recomendados',gastronomia:'gastronomía',restaurantes:'dónde comer'}[section]||section;
+ const isTour=cityId.startsWith('tour_');
+ const sectionTitle={itinerario:'itinerario',recomendados:'recomendados',gastronomia:'gastronomía',restaurantes:'dónde comer',tour:'excursión'}[section]||section;
  let h='<div class="card notes-card">';
- h+=`<div class="card-header"><div class="card-title">📝 Mis notas de ${sectionTitle}</div><div class="card-sub">Solo en este teléfono · ${notes.length} ${notes.length===1?'nota':'notas'}</div></div>`;
+ h+=`<div class="card-header"><div class="card-title">📝 Mis notas · ${sectionTitle}</div><div class="card-sub">Solo en este teléfono · ${notes.length} ${notes.length===1?'nota':'notas'} · toca para editar</div></div>`;
  if(notes.length){
-  h+=notes.map((n,i)=>`<div class="note-row"><div class="note-content">${escapeHtml(n.text)}<div class="note-date">${n.date}</div></div><button class="note-del" onclick="delNote('${cityId}','${section}',${i})">🗑</button></div>`).join('');
+  h+=notes.map((n,i)=>`
+   <div class="note-row" id="note-row-${cityId}-${section}-${i}">
+    <div class="note-content" onclick="editNote('${cityId}','${section}',${i})" style="cursor:pointer" title="Toca para editar">
+     <div id="note-text-${cityId}-${section}-${i}">${escapeHtml(n.text)}</div>
+     <div class="note-date">${n.date} · ✏️ toca para editar</div>
+    </div>
+    <button class="note-del" onclick="delNote('${cityId}','${section}',${i})">🗑</button>
+   </div>
+   <div id="note-edit-${cityId}-${section}-${i}" style="display:none;padding:8px 14px;background:rgba(94,203,122,0.05);border-bottom:1px solid rgba(94,203,122,0.15)">
+    <textarea id="note-edit-ta-${cityId}-${section}-${i}" style="width:100%;background:var(--bg);border:1px solid #5ecb7a;border-radius:8px;padding:8px;font-size:14px;color:var(--cream);font-family:inherit;outline:none;resize:vertical;box-sizing:border-box">${escapeHtml(n.text)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:6px">
+     <button class="note-add-btn" style="flex:1" onclick="saveEditNote('${cityId}','${section}',${i})">💾 Guardar cambio</button>
+     <button class="note-add-btn" style="flex:0.5;background:rgba(100,100,100,0.1);border-color:var(--border);color:var(--muted)" onclick="cancelEditNote('${cityId}','${section}',${i})">✕ Cancelar</button>
+    </div>
+   </div>`).join('');
  } else {
-  h+=`<div style="padding:12px 14px;font-size:13px;color:var(--dim);text-align:center">No has agregado notas todavía</div>`;
+  h+=`<div style="padding:12px 14px;font-size:13px;color:var(--dim);text-align:center">No has agregado notas todavía.<br>Úsalas como diario del viaje 📔</div>`;
  }
  h+=`<div class="note-add">
   <textarea id="note-input-${cityId}-${section}" placeholder="Escribe una nota (restaurante recomendado, lugar visto, etc.)" rows="2"></textarea>
@@ -915,6 +1086,30 @@ function renderNotes(cityId,section){
  </div>`;
  h+='</div>';
  return h;
+}
+function attachNoteEdit(cityId,section){}
+function editNote(cityId,section,idx){
+ const editDiv=document.getElementById(`note-edit-${cityId}-${section}-${idx}`);
+ const textDiv=document.getElementById(`note-text-${cityId}-${section}-${idx}`);
+ if(!editDiv)return;
+ editDiv.style.display=editDiv.style.display==='none'?'block':'none';
+}
+function saveEditNote(cityId,section,idx){
+ const ta=document.getElementById(`note-edit-ta-${cityId}-${section}-${idx}`);
+ if(!ta)return;
+ const text=ta.value.trim();
+ if(!text)return;
+ const notes=getNotes(cityId,section);
+ if(!notes[idx])return;
+ notes[idx].text=text;
+ const now=new Date();
+ notes[idx].date=now.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+' · '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})+' (editada)';
+ saveNotes(cityId,section,notes);
+ if(cityId.startsWith('tour_'))renderTourBody();else renderCityBody();
+}
+function cancelEditNote(cityId,section,idx){
+ const editDiv=document.getElementById(`note-edit-${cityId}-${section}-${idx}`);
+ if(editDiv)editDiv.style.display='none';
 }
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[c]);}
 function addNote(cityId,section){
@@ -927,14 +1122,14 @@ function addNote(cityId,section){
  const dateStr=now.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+' · '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
  notes.push({text:text,date:dateStr});
  saveNotes(cityId,section,notes);
- renderCityBody();
+ if(cityId.startsWith('tour_'))renderTourBody();else renderCityBody();
 }
 function delNote(cityId,section,idx){
  if(!confirm('¿Borrar esta nota?'))return;
  const notes=getNotes(cityId,section);
  notes.splice(idx,1);
  saveNotes(cityId,section,notes);
- renderCityBody();
+ if(cityId.startsWith('tour_'))renderTourBody();else renderCityBody();
 }
 
 // ========= PHOTOS SYSTEM (IndexedDB) =========
@@ -1246,6 +1441,7 @@ async function viewDoc(id){
  };
 }
 
+let curTourSub='info';
 function renderTours(){
  document.getElementById('pkg-pills').innerHTML=tourPkgs.map((p,i)=>
   `<button class="pill${i===curPkg?' active':''}" onclick="selP(${i})">${i===0?'🟡':'🔵'} ${p.label}</button>`
@@ -1254,22 +1450,82 @@ function renderTours(){
  document.getElementById('tour-pills').innerHTML=pkg.tours.map((t,i)=>
   `<button class="pill${i===curTour?' active':''}" onclick="selT(${i})">${t.flag} ${t.name.split(' ')[0]}</button>`
  ).join('');
+ const tourTabs=[['info','📋 Info'],['gastronomia','🍽️ Gastronomía'],['notas','📝 Notas'],['clima','🌤️ Clima'],['video','📺 Video']];
+ document.getElementById('tour-subtabs').innerHTML=tourTabs.map(s=>
+  `<button class="subpill${curTourSub===s[0]?' active':''}" onclick="selTS('${s[0]}')">${s[1]}</button>`
+ ).join('');
  renderTourBody();
 }
 function renderTourBody(){
  const t=tourPkgs[curPkg].tours[curTour];
- let h=`<div class="card"><div class="card-header"><div class="card-title">${t.flag} ${t.name}</div><div class="card-sub">${t.base}</div><span class="tag">${tourPkgs[curPkg].label}</span></div>`;
- if(t.desc)h+=`<div style="padding:12px 14px;font-size:14px;color:var(--cream);line-height:1.6;border-bottom:1px solid rgba(201,168,76,0.1)">${t.desc}</div>`;
- h+=`<div class="section-label">Lugares y atractivos principales</div>`;
- h+=t.atractivos.map(a=>`<div class="list-item"><span class="lb">◆</span><div class="list-text">${a[0]}<div class="list-sub">${a[1]}</div></div></div>`).join('');
- h+='</div>';
- h+=`<div class="sec-hdr">Gastronomía típica</div><div class="card">`;
- h+=t.gastronomia.map(g=>`<div class="list-item"><span class="lb">◆</span><span class="list-text">${g}</span></div>`).join('');
- h+='</div>';
+ const pkgLabel=tourPkgs[curPkg].label;
+ let h='';
+ if(curTourSub==='info'){
+  h+=`<div class="card"><div class="card-header"><div class="card-title">${t.flag} ${t.name}</div><div class="card-sub">${t.base}</div><span class="tag">${pkgLabel}</span></div>`;
+  if(t.desc)h+=`<div style="padding:12px 14px;font-size:14px;color:var(--cream);line-height:1.6;border-bottom:1px solid rgba(201,168,76,0.1)">${t.desc}</div>`;
+  h+=`<div class="section-label">Lugares y atractivos principales</div>`;
+  h+=t.atractivos.map(a=>`<div class="list-item"><span class="lb">◆</span><div class="list-text">${a[0]}<div class="list-sub">${a[1]}</div></div></div>`).join('');
+  h+='</div>';
+ } else if(curTourSub==='gastronomia'){
+  h+=`<div class="card"><div class="card-header"><div class="card-title">🍽️ Gastronomía en ${t.name}</div></div>`;
+  h+=t.gastronomia.map(g=>`<div class="list-item"><span class="lb">◆</span><span class="list-text">${g}</span></div>`).join('');
+  h+='</div>';
+ } else if(curTourSub==='notas'){
+  h+=renderNotes('tour_'+t.id,'tour');
+ } else if(curTourSub==='clima'){
+  h+=`<div class="card" id="tour-wx-${t.id}"><div class="card-header"><div class="card-title">🌤️ Clima en ${t.name}</div><div class="card-sub">Actualiza con señal de internet · último dato guardado si offline</div></div><div id="tour-wx-body-${t.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:13px">⏳ Cargando clima...</div></div>`;
+  if(t.wlat){setTimeout(()=>fetchWeather(t.id,t.name,t.wlat,t.wlon,'tour-wx-body-'+t.id),50);}
+  else{setTimeout(()=>{const el=document.getElementById('tour-wx-body-'+t.id);if(el)el.innerHTML='Sin datos de ubicación para esta excursión.';},50);}
+ } else if(curTourSub==='video'){
+  h+=renderTourVideo(t);
+ }
  document.getElementById('tour-body').innerHTML=h;
 }
-function selP(i){curPkg=i;curTour=0;renderTours();}
-function selT(i){curTour=i;renderTours();}
+function selP(i){curPkg=i;curTour=0;curTourSub='info';renderTours();}
+function selT(i){curTour=i;curTourSub='info';renderTours();}
+function selTS(s){curTourSub=s;renderTourBody();
+ document.querySelectorAll('#tour-subtabs .subpill').forEach(b=>{b.classList.toggle('active',b.textContent.trim().includes(s)||b.onclick.toString().includes("'"+s+"'"));});
+ document.getElementById('tour-subtabs').innerHTML=document.getElementById('tour-subtabs').innerHTML;
+ const tourTabs=[['info','📋 Info'],['gastronomia','🍽️ Gastronomía'],['notas','📝 Notas'],['clima','🌤️ Clima'],['video','📺 Video']];
+ document.getElementById('tour-subtabs').innerHTML=tourTabs.map(st=>
+  `<button class="subpill${curTourSub===st[0]?' active':''}" onclick="selTS('${st[0]}')">${st[1]}</button>`
+ ).join('');
+ renderTourBody();
+}
+function renderTourVideo(t){
+ const savedUrl=localStorage.getItem('tourvid_'+t.id);
+ const vid=t.video||null;
+ const displayUrl=savedUrl||(vid?vid.u:'');
+ const displayTitle=vid?vid.t:'Video del destino';
+ let h=`<div class="card"><div class="card-header"><div class="card-title">📺 Video de ${t.name}</div><div class="card-sub">Toca para abrir en YouTube · puedes personalizar el enlace</div></div>`;
+ if(displayUrl){
+  h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div class="vdesc" style="font-size:11px;color:var(--gold);margin-top:4px">📺 Toca para ver en YouTube</div></div></a>`;
+ } else {
+  h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:13px">No hay video asignado. Agrega un enlace de YouTube abajo.</div>`;
+ }
+ h+=`<div class="note-add" style="border-top:1px solid rgba(201,168,76,0.15)">
+  <div style="font-size:12px;color:var(--gold);margin-bottom:6px;font-weight:500">✏️ Cambiar enlace de YouTube:</div>
+  <input type="url" id="vid-input-${t.id}" placeholder="https://www.youtube.com/watch?v=..." value="${displayUrl}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box">
+  <div style="display:flex;gap:8px;margin-top:8px">
+   <button class="note-add-btn" style="flex:1" onclick="saveTourVideo('${t.id}')">💾 Guardar</button>
+   <button class="note-add-btn" style="flex:0.6;background:rgba(255,80,80,0.08);border-color:rgba(255,80,80,0.35);color:#ff6464" onclick="deleteTourVideo('${t.id}')">🗑 Eliminar</button>
+  </div>
+ </div></div>`;
+ return h;
+}
+function saveTourVideo(tid){
+ const inp=document.getElementById('vid-input-'+tid);
+ if(!inp)return;
+ const url=inp.value.trim();
+ if(url&&!url.includes('youtube'))return alert('Por favor ingresa un enlace de YouTube válido');
+ if(url)localStorage.setItem('tourvid_'+tid,url);
+ renderTourBody();
+}
+function deleteTourVideo(tid){
+ if(!confirm('¿Eliminar el enlace de video?'))return;
+ localStorage.removeItem('tourvid_'+tid);
+ renderTourBody();
+}
 
 function renderDist(){
  const total=distMain.reduce((s,r)=>s+r.km,0);
@@ -1282,12 +1538,29 @@ function renderDist(){
 }
 
 function renderMonedas(){
+ // Use real-time rates if available
+ const liveEUR=window._EUR||EUR;
+ const livePLN=window._PLN||PLN;
+ const liveCZK=window._CZK||CZK;
+ const fxTs=parseInt(localStorage.getItem('fx_ts')||'0');
+ const fxAge=fxTs?Math.round((Date.now()-fxTs)/60000):null;
+ const fxLabel=fxTs?(fxAge<1?'ahora mismo':fxAge<60?`hace ${fxAge} min`:`hace ${Math.round(fxAge/60)}h`):'fijo (sin señal)';
+ const isLive=fxTs&&fxAge<120;
  document.getElementById('monedas-card').innerHTML=`
-  <div class="curr-row"><div class="csym">€</div><div><div class="cname">Euro</div><div class="crate">1 € = $${EUR.toFixed(2)} MXN</div><div class="cnote">🇳🇱🇩🇪🇫🇷🇧🇪🇱🇺 Países Bajos, Alemania, Francia, Bélgica, Luxemburgo</div></div></div>
-  <div class="curr-row"><div class="csym">zł</div><div><div class="cname">Złoty polaco (PLN)</div><div class="crate">1 zł = $${PLN.toFixed(2)} MXN · 100 zł ≈ $${(PLN*100).toFixed(0)} MXN</div><div class="cnote">🇵🇱 Polonia (Varsovia y Cracovia) · Es UE pero NO usa euro</div></div></div>
-  <div class="curr-row"><div class="csym">Kč</div><div><div class="cname">Corona checa (CZK)</div><div class="crate">1 Kč = $${CZK.toFixed(2)} MXN · 100 Kč ≈ $${(CZK*100).toFixed(0)} MXN</div><div class="cnote">🇨🇿 República Checa (Praga) · No adoptó el euro</div></div></div>
-  <div class="curr-row" style="background:rgba(201,168,76,0.04)"><div class="csym" style="font-size:13px">📅</div><div><div style="font-size:12px;color:var(--muted)">Tipo de cambio al 18 mayo 2026. Verificar antes del viaje en septiembre 2026.</div></div></div>`;
+  <div style="padding:8px 14px;font-size:11px;color:${isLive?'#5ecb7a':'#ffa552'};background:${isLive?'rgba(94,203,122,0.06)':'rgba(255,165,82,0.06)'};border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px">
+   ${isLive?'🔄':'📴'} Tipo de cambio actualizado ${fxLabel} · ${isLive?'en tiempo real':'sin internet, usando último dato'}
+   ${isLive?'':`<button onclick="fetchExchangeRates().then(ok=>{if(ok)renderMonedas();})" style="margin-left:auto;background:transparent;border:1px solid #ffa552;color:#ffa552;padding:2px 8px;border-radius:4px;font-size:10px;cursor:pointer">🔄 Actualizar</button>`}
+  </div>
+  <div class="curr-row"><div class="csym">€</div><div><div class="cname">Euro</div><div class="crate">1 € = $${liveEUR.toFixed(2)} MXN</div><div class="cnote">🇳🇱🇩🇪🇫🇷🇧🇪🇱🇺 Países Bajos, Alemania, Francia, Bélgica, Luxemburgo</div></div></div>
+  <div class="curr-row"><div class="csym">zł</div><div><div class="cname">Złoty polaco (PLN)</div><div class="crate">1 zł = $${livePLN.toFixed(2)} MXN · 100 zł ≈ $${(livePLN*100).toFixed(0)} MXN</div><div class="cnote">🇵🇱 Polonia (Varsovia y Cracovia) · Es UE pero NO usa euro</div></div></div>
+  <div class="curr-row"><div class="csym">Kč</div><div><div class="cname">Corona checa (CZK)</div><div class="crate">1 Kč = $${liveCZK.toFixed(2)} MXN · 100 Kč ≈ $${(liveCZK*100).toFixed(0)} MXN</div><div class="cnote">🇨🇿 República Checa (Praga) · No adoptó el euro</div></div></div>`;
+ // Update rates for calculator too
+ window.ratesToMXN={MXN:1,EUR:liveEUR,PLN:livePLN,CZK:liveCZK,USD:17.28};
  calcUpdate();
+ // Auto-refresh if has signal
+ if(navigator.onLine&&(!fxTs||fxAge>25)){
+  fetchExchangeRates().then(ok=>{if(ok)renderMonedas();});
+ }
 }
 // Tasas vs MXN (cuántos MXN vale 1 unidad)
 const USD_MXN=17.28;
@@ -1318,10 +1591,10 @@ function calcUpdate(){
   out.innerHTML=`<div style="text-align:center;color:var(--dim);font-size:13px;padding:14px">Ingresa una cantidad para convertir</div>`;
   return;
  }
- const inMXN=v*ratesToMXN[from];
+ const inMXN=v*(window.ratesToMXN||ratesToMXN)[from];
  const targets=['MXN','EUR','PLN','CZK','USD'].filter(c=>c!==from);
  out.innerHTML=targets.map(c=>{
-  const result=inMXN/ratesToMXN[c];
+  const result=inMXN/(window.ratesToMXN||ratesToMXN)[c];
   const m=currencyMeta[c];
   const isMXN=c==='MXN';
   return `<div class="calc-result-row${isMXN?' highlight':''}"><div class="cr-label"><span class="cr-flag">${m.flag}</span>${m.name}</div><div class="cr-value">${m.sym} ${fmtNum(result,c)}</div></div>`;
