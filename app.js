@@ -770,170 +770,409 @@ const cities=[
 },
 ];
 
-const tourPkgs=[
-{id:"p1",label:"Paquete 1 — $679 USD",tours:[
- {id:"pot",wlat:52.3906,wlon:13.0645,name:"Potsdam",flag:"🇩🇪",base:"Desde Berlín · 35 km · 35 min",
-  desc:"Capital del estado de Brandeburgo. Famosa por sus impresionantes palacios y jardines, especialmente el Palacio de Sanssouci, residencia de verano de Federico el Grande, que es Patrimonio de la Humanidad por la UNESCO.",
+const tours=[
+ {id:"pot",wlat:52.3906,wlon:13.0645,name:"Potsdam",flag:"🇩🇪",
+  precio:"$90 USD",base:"Desde Berlín · 35 km · 35 min",
+  desc:"Potsdam lleva una pinta real con los palacios de los reyes de Prusia y sus parques. En Potsdam se celebró la Conferencia de Paz después de la Segunda Guerra Mundial. Durante nuestro recorrido veremos el Palacio de la ciudad, la iglesia de San Nicolás, la Puerta de Brandenburgo, el exquisito Palacio de Sanssouci y el fabuloso Palacio de Cecilienhof.",
   atractivos:[
-   ["Palacio Sanssouci","Patrimonio UNESCO · residencia de verano de Federico el Grande del s.XVIII"],
-   ["Palacio Cecilienhof","donde se firmó el Tratado de Potsdam (agosto 1945)"],
-   ["Palacio Nuevo (Neues Palais)","el mayor del conjunto · barroco prusiano"],
-   ["Parque Sanssouci","300 hectáreas de jardines y palacios interconectados"],
-   ["Barrio Hollandisches Viertel","casas de estilo holandés del s.XVIII · fotogénico"],
+   ["Palacio de Sanssouci","residencia de verano de Federico el Grande · Patrimonio UNESCO"],
+   ["Palacio de Cecilienhof","sede de la Conferencia de Potsdam (1945) · donde se firmó el Tratado de Paz"],
+   ["Palacio de la Ciudad (Stadtschloss)","palacio reconstruido · sede del Parlamento de Brandeburgo"],
+   ["Iglesia de San Nicolás","iglesia neoclásica con gran cúpula · en el centro histórico"],
+   ["Puerta de Brandenburgo de Potsdam","no confundir con la de Berlín · barroca del s.XVIII"],
   ],
-  gastronomia:["Misma gastronomía alemana que Berlín (30 km distancia)","Cafés junto al parque con ambiente más refinado que en Berlín"],
-  video:{t:"Potsdam Germany - Sanssouci Palace & Park Tour",u:"https://www.youtube.com/watch?v=Wd9GIW0RQTM"}
- },
- {id:"aus",wlat:50.0274,wlon:19.2037,name:"Auschwitz-Birkenau",flag:"🇵🇱",base:"Desde Cracovia · 75 km · 1h 15min",
-  desc:"El complejo más grande de campos de concentración y exterminio nazi. Una visita profundamente emotiva e histórica, considerada un monumento a las víctimas del Holocausto.",
-  atractivos:[
-   ["Campo Auschwitz I","campo principal con la entrada 'Arbeit Macht Frei'"],
-   ["Campo Auschwitz II-Birkenau","el mayor campo de exterminio · ruinas de cámaras de gas y hornos"],
-   ["Museo Estatal","uno de los sitios históricos más visitados del mundo"],
-   ["Memorial del Holocausto","Patrimonio UNESCO desde 1979 · visita profundamente emotiva"],
+  recomendados:[
+   ["Parque Sanssouci","300 hectáreas de jardines y palacios interconectados · muy fotogénico"],
+   ["Barrio holandés (Holländisches Viertel)","casas de estilo holandés del s.XVIII · único en Alemania"],
   ],
-  gastronomia:["Visita memorial · llevar agua y snack · no hay servicios de restauración","Pueblo de Oświęcim a 2 km con restaurantes polacos básicos"],
-  video:{t:"Auschwitz-Birkenau Memorial - Guided Tour",u:"https://www.youtube.com/watch?v=1tHDMFJxaFY"}
- },
- {id:"mol",wlat:50.0755,wlon:14.4378,name:"Barco Río Moldava",flag:"🇨🇿",base:"Centro de Praga",
-  desc:"Un tranquilo recorrido en barco que ofrece una perspectiva única de Praga, pasando bajo el Puente de Carlos y brindando vistas panorámicas del Castillo de Praga y otros monumentos importantes de la ciudad.",
-  atractivos:[
-   ["Crucero panorámico por el Moldava","vistas del Puente de Carlos desde el agua"],
-   ["Castillo de Praga visto desde el río","perspectiva única que no se logra desde tierra"],
-   ["15 puentes históricos del centro","vistos desde abajo durante el trayecto"],
-   ["Opción nocturna disponible","crucero de noche con puentes y castillo iluminados"],
+  gastronomia:["Misma gastronomía alemana que Berlín · bratwurst, pretzels, schnitzel","Cafés junto al parque Sanssouci con ambiente más refinado que en Berlín","Restaurantes en el barrio holandés con ambiente bohemio"],
+  restaurantes:[
+   ["Café Lubitsch","frente al palacio · café histórico con terraza"],
+   ["Restaurant Juliette","cocina francesa-alemana en el barrio holandés"],
   ],
-  gastronomia:["Algunos cruceros incluyen cena checa o bebidas a bordo","Opciones de crucero-cena con música tradicional bohemia"],
-  video:{t:"Prague Vltava River Cruise - Best Views of the City",u:"https://www.youtube.com/watch?v=v_XlJVJaVHc"}
+  saludos:{idioma:"Alemán (Deutsch)",nota:"El alemán hannoveriano es considerado el alemán más puro. Potsdam es 100% alemana — un saludo en alemán siempre se agradece.",frases:[
+   {cat:"🌅 Buenos días",local:"Guten Morgen",pron:"Gú-ten Mór-jen",tip:"Hasta aprox. las 11:00"},
+   {cat:"☀️ Buen día",local:"Guten Tag",pron:"Gú-ten Tak",tip:"Saludo neutro y seguro durante el día"},
+   {cat:"🙏 Por favor",local:"Bitte",pron:"Bí-te",tip:"También significa 'de nada' al entregar algo"},
+   {cat:"😊 Gracias",local:"Danke schön",pron:"Dán-ke shön",tip:"Solo Danke también funciona"},
+   {cat:"🍺 ¡Salud!",local:"Prost!",pron:"Prost",tip:"El brindis alemán clásico"},
+  ]},
+  mapa:{centro:"Potsdam Germany",pois:[["Palacio Sanssouci","Sanssouci Palace Potsdam"],["Palacio Cecilienhof","Cecilienhof Palace Potsdam"],["Puerta de Brandenburgo Potsdam","Brandenburg Gate Potsdam"],["Iglesia San Nicolás","St Nicholas Church Potsdam"]]},
+  video:{t:"Potsdam: Sanssouci, Cecilienhof y Centro Histórico — Tour Completo 2025",u:"https://www.youtube.com/watch?v=uC7UuvrTgrA"}
  },
- {id:"rot",wlat:49.3774,wlon:10.1798,name:"Rothenburg ob der Tauber",flag:"🇩🇪",base:"Desde Núremberg · 100 km · 1h",
-  desc:"Una de las ciudades medievales mejor conservadas de Alemania, famosa por sus murallas, casas de entramado de madera y ambiente de cuento de hadas. Es parte de la Ruta Romántica.",
+ {id:"aus",wlat:50.0274,wlon:19.2037,name:"Auschwitz-Birkenau",flag:"🇵🇱",
+  precio:"$95 USD",base:"Desde Cracovia · 75 km · 1h 15min",
+  desc:"El museo engloba dos campos de concentración: Auschwitz I y Auschwitz-Birkenau, con sus torres de guardia, el bloque de la muerte, crematorio, muro de la muerte, vía de trenes con rampa, cabañas y torres de vigilancia. Una visita profundamente emotiva e histórica, considerada un monumento a las víctimas del Holocausto.",
   atractivos:[
-   ["Murallas medievales del s.XIV","3.5 km caminables en perfecto estado de conservación"],
-   ["Plaza del Mercado y Rathaus","ayuntamiento renacentista con panorámica sobre la ciudad"],
-   ["Kriminalmuseum","museo de justicia medieval con instrumentos de tortura"],
+   ["Campo Auschwitz I","campo principal · entrada con letrero 'Arbeit Macht Frei' · bloque de la muerte · crematorio"],
+   ["Campo Auschwitz II-Birkenau","el mayor campo de exterminio · ruinas de cámaras de gas · vía de trenes con rampa"],
+   ["Muro de la muerte","lugar de ejecuciones entre los bloques 10 y 11"],
+   ["Torres de vigilancia","preservadas tal como estaban en 1945"],
+   ["Museo Estatal","Patrimonio UNESCO desde 1979 · uno de los sitios históricos más visitados del mundo"],
+  ],
+  recomendados:[
+   ["Visita guiada oficial","muy recomendada · los guías del memorial aportan contexto histórico invaluable"],
+   ["Llegada temprana","el memorial abre a las 7:30 · llegar antes de las 9:00 para evitar aglomeraciones"],
+  ],
+  gastronomia:["Visita memorial · llevar agua y snack · no hay restaurantes en el recinto","Pueblo de Oświęcim a 2 km con restaurantes polacos tradicionales","Cafetería básica disponible en la entrada del memorial"],
+  restaurantes:[
+   ["Restaurantes en Oświęcim","a 2 km del memorial · cocina polaca tradicional"],
+  ],
+  saludos:{idioma:"Polaco (Polski)",nota:"Cualquier intento en polaco genera enorme simpatía. La visita al memorial es solemne — los saludos son discretos.",frases:[
+   {cat:"🌅 Buenos días",local:"Dzień dobry",pron:"Yén do-bri",tip:"El saludo más seguro y formal"},
+   {cat:"🙏 Por favor",local:"Proszę",pron:"Pró-she",tip:"También significa 'aquí tienes' y 'de nada'"},
+   {cat:"😊 Gracias",local:"Dziękuję",pron:"Yen-kú-ye",tip:"Versión rápida: Dzięki (Yén-ki)"},
+   {cat:"🤝 De nada",local:"Nie ma za co",pron:"Nie-ma-za-tso",tip:"Literalmente 'no hay por qué'"},
+  ]},
+  mapa:{centro:"Auschwitz-Birkenau Memorial Poland",pois:[["Campo Auschwitz I","Auschwitz I Memorial Museum"],["Campo Birkenau","Auschwitz II Birkenau"],["Entrada principal","Auschwitz Memorial entrance"]]},
+  video:{t:"Auschwitz-Birkenau: La fábrica de la muerte del Holocausto — Visita narrada 2025",u:"https://www.youtube.com/watch?v=D28ew7ZpxD8"}
+ },
+ {id:"mol",wlat:50.0755,wlon:14.4378,name:"Barco por el Río Moldava",flag:"🇨🇿",
+  precio:"$66 USD",base:"Desde el centro de Praga",
+  desc:"Subiremos a bordo de un barco de recreo para un romántico crucero nocturno por el corazón de Praga. Veremos majestuosos lugares de interés como el Puente de Carlos, la Casa Danzante, la Torre Petrin y el histórico fuerte de Vysehrad. Admiraremos la sala de conciertos neorrenacentista del Rudolfinum y el mayor complejo de castillos del mundo, el Castillo de Praga.",
+  atractivos:[
+   ["Puente de Carlos","visto desde el agua · perspectiva única imposible desde tierra"],
+   ["Casa Danzante (Ginger & Fred)","icónico edificio deconstructivista de Frank Gehry"],
+   ["Torre Petrin","torre mirador sobre la colina · iluminada de noche"],
+   ["Fuerte de Vysehrad","fortaleza histórica sobre el río · legendaria en la historia checa"],
+   ["Rudolfinum","sala de conciertos neorrenacentista · sede de la Filarmónica Checa"],
+   ["Castillo de Praga","el mayor complejo de castillos del mundo · visto en toda su majestuosidad"],
+  ],
+  recomendados:[
+   ["Crucero nocturno","la versión nocturna con Praga iluminada es la más impresionante"],
+   ["Crucero con cena","algunas opciones incluyen cena checa y música en vivo a bordo"],
+  ],
+  gastronomia:["Algunos cruceros incluyen cena checa y bebidas a bordo","Opciones de crucero-cena con música tradicional bohemia en vivo","Svíčková (lomo en salsa de crema) · el plato checo más representativo"],
+  restaurantes:[
+   ["Restaurantes frente al Moldava","terraza junto al río · vistas al Puente de Carlos"],
+  ],
+  saludos:{idioma:"Checo (Čeština)",nota:"Los checos pueden parecer fríos al principio, pero al oírte intentar su idioma cambian completamente de actitud.",frases:[
+   {cat:"👋 Hola (todo el día)",local:"Dobrý den",pron:"Dob-rí den",tip:"El más versátil · saludo formal de todo el día"},
+   {cat:"👋 Hola (informal)",local:"Ahoj",pron:"A-joy",tip:"Informal y amistoso · igual que el inglés 'ahoy'"},
+   {cat:"🙏 Por favor",local:"Prosím",pron:"Pro-sím",tip:"También 'aquí tienes' y respuesta a 'gracias'"},
+   {cat:"😊 Gracias",local:"Děkuji",pron:"Dyé-ku-yi",tip:"Informal: Díky (Dí-ki) · muy común"},
+   {cat:"🍺 ¡Salud!",local:"Na zdraví!",pron:"Na zdra-ví",tip:"¡Imprescindible! · mira a los ojos al brindar"},
+  ]},
+  mapa:{centro:"Vltava River Prague",pois:[["Puente de Carlos","Charles Bridge Prague"],["Casa Danzante","Dancing House Prague"],["Rudolfinum","Rudolfinum Prague"],["Vysehrad","Vysehrad Fortress Prague"]]},
+  video:{t:"Prague Vltava River Night Cruise - Romantic Tour",u:"https://www.youtube.com/watch?v=v_XlJVJaVHc"}
+ },
+ {id:"rot",wlat:49.3774,wlon:10.1798,name:"Rothenburg ob der Tauber",flag:"🇩🇪",
+  precio:"$90 USD",base:"Desde Núremberg · 100 km · 1h",
+  desc:"El Castillo Rojo sobre el Río Tauber. Entramos por debajo de la Torre de Entrada y nos saludan las casas típicas de Alemania medieval con filas de flores en las fachadas. Veremos el edificio del Ayuntamiento y la Torre Defensiva. La visita a Rothenburg ob der Tauber es una experiencia única.",
+  atractivos:[
+   ["Torre de Entrada (Rödertor)","entrada principal a la ciudad amurallada medieval"],
+   ["Ayuntamiento (Rathaus)","renacentista del s.XIII con torre panorámica · en la Marktplatz"],
+   ["Torre Defensiva","parte del sistema de murallas medievales perfectamente conservado"],
+   ["Murallas medievales","3.5 km caminables en perfecto estado de conservación · vistas al valle"],
    ["Käthe Wohlfahrt","la tienda de navidad más famosa del mundo · abierta todo el año"],
-   ["El Guardián Nocturno","tour vespertino guiado por las murallas · muy popular"],
   ],
-  gastronomia:["Schneeballen: bolas de masa frita espolvoreadas · el dulce local icónico","Cordero y cerdo asado con recetas franconias en la plaza medieval"],
-  video:{t:"Rothenburg ob der Tauber - Medieval Germany",u:"https://www.youtube.com/watch?v=3ZSjMaJSaM0"}
+  recomendados:[
+   ["Tour del Guardián Nocturno","recorrido vespertino guiado por las murallas al atardecer · muy popular"],
+   ["Kriminalmuseum","museo de justicia medieval con instrumentos de tortura del s.XIII"],
+  ],
+  gastronomia:["Schneeballen: bolas de masa frita espolvoreadas con azúcar · el dulce local icónico","Schäufele: paleta de cerdo al horno con costra crujiente · receta franconiana","Cordero asado con guarnición medieval en restaurantes de la plaza"],
+  restaurantes:[
+   ["Restaurantes en la Marktplatz","plaza central medieval · menús turísticos con cocina franconiana"],
+   ["Café en la muralla","cafés dentro de las torres de la muralla con vistas al valle"],
+  ],
+  saludos:{idioma:"Alemán (Deutsch) · dialecto franconiano",nota:"Rothenburg es 100% alemana. El dialecto local tiene influencia franconiana pero el alemán estándar funciona perfectamente.",frases:[
+   {cat:"🌅 Buenos días",local:"Guten Morgen",pron:"Gú-ten Mór-jen",tip:"Estándar y siempre correcto"},
+   {cat:"👋 Hola (franconiano)",local:"Grüß Gott",pron:"Grüs Got",tip:"Saludo tradicional bávaro-franconiano"},
+   {cat:"🙏 Por favor",local:"Bitte",pron:"Bí-te",tip:"Universal en toda Alemania"},
+   {cat:"😊 Gracias",local:"Danke schön",pron:"Dán-ke shön",tip:"También: Vergelt's Gott en dialecto local"},
+   {cat:"🍺 ¡Salud!",local:"Prost!",pron:"Prost",tip:"Con cerveza franconiana · la experiencia completa"},
+  ]},
+  mapa:{centro:"Rothenburg ob der Tauber Germany",pois:[["Ayuntamiento","Rothenburg Rathaus"],["Torre de Entrada","Rödertor Rothenburg"],["Murallas medievales","Medieval Walls Rothenburg"],["Käthe Wohlfahrt","Kathe Wohlfahrt Rothenburg"]]},
+  video:{t:"Qué ver en Rothenburg ob der Tauber — Guía narrada en español 2024",u:"https://www.youtube.com/watch?v=uSCZtaUAX8k"}
  },
- {id:"lxp",wlat:49.6116,wlon:6.1319,name:"Ciudad de Luxemburgo",flag:"🇱🇺",base:"Desde Metz · 55 km · 45 min",
-  desc:"Capital del Gran Ducado de Luxemburgo. Destaca por sus fortificaciones históricas (las 'casamatas'), sus profundos barrancos y su función como uno de los centros financieros y políticos de Europa.",
+ {id:"lxp",wlat:49.6116,wlon:6.1319,name:"Ciudad de Luxemburgo",flag:"🇱🇺",
+  precio:"$54 USD",base:"Desde Metz · 55 km · 45 min",
+  desc:"Luxemburgo, la capital del Gran Ducado de Luxemburgo, uno de los estados más pequeños de Europa, cuya capital se encuentra ubicada sobre un peñón. Durante nuestro recorrido veremos los edificios del Palacio Gran Ducal, la Legislatura Nacional, la Abadía de Neumünster y el pintoresco valle del Río Alzette.",
   atractivos:[
+   ["Palacio Gran Ducal","residencia oficial del Gran Duque · cambio de guardia · arquitectura renacentista española"],
+   ["Legislatura Nacional (Chambre des Députés)","parlamento del Gran Ducado de Luxemburgo"],
+   ["Abadía de Neumünster","antigua abadía benedictina convertida en centro cultural"],
+   ["Valle del Río Alzette","pintoresco valle que rodea la ciudad · vistas desde la Corniche"],
    ["Casamatas del Bock","21 km de túneles subterráneos excavados en roca · Patrimonio UNESCO"],
-   ["Casco Antiguo (Ville Haute)","Patrimonio UNESCO · callejuelas medievales perfectamente conservadas"],
-   ["Palacio Gran Ducal","residencia oficial del Gran Duque · cambio de guardia"],
-   ["Puente Adolphe","puente de piedra de 1903 · símbolo de la ciudad · vistas al barranco"],
+  ],
+  recomendados:[
    ["Chemin de la Corniche","'el balcón más bello de Europa' · vistas panorámicas sobre el Alzette"],
+   ["Casco Antiguo (Ville Haute)","Patrimonio UNESCO · callejuelas medievales perfectamente conservadas"],
   ],
-  gastronomia:["Judd mat Gaardebounen: cuello de cerdo ahumado con habas · plato nacional luxemburgués","Vinos Mosela luxemburgueses en bodegas del centro · blancos secos excelentes","Gromperekichelcher: tortitas de papa especiadas · street food típico"],
-  video:{t:"Luxembourg City - Hidden Gem of Europe",u:"https://www.youtube.com/watch?v=Z1jvCnUTKnE"}
+  gastronomia:["Judd mat Gaardebounen: cuello de cerdo ahumado con habas · plato nacional luxemburgués","Gromperekichelcher: tortitas de papa especiadas · street food típico","Vinos del Mosela luxemburgués en bodegas del centro · blancos secos excelentes"],
+  restaurantes:[
+   ["Restaurantes en la Place d'Armes","plaza central · muchas opciones gastronómicas"],
+   ["Mercado Guillaume","productos locales frescos · ambiente animado"],
+  ],
+  saludos:{idioma:"Luxemburgués · Francés · Alemán",nota:"Luxemburgo tiene 3 idiomas oficiales. El francés es el más práctico. Un saludo en luxemburgués es muy especial.",frases:[
+   {cat:"🌅 Buenos días (lux.)",local:"Gudde Moien",pron:"Gú-de Móy-en",tip:"El saludo más especial que puedes dar"},
+   {cat:"☀️ Buen día (fr.)",local:"Bonjour",pron:"Bon-yur",tip:"Seguro y universal en toda la ciudad"},
+   {cat:"🙏 Por favor (fr.)",local:"S'il vous plaît",pron:"Sil-vu-plé",tip:"Imprescindible en tiendas y cafés"},
+   {cat:"😊 Gracias",local:"Merci",pron:"Mer-sí",tip:"Igual en los 3 idiomas"},
+   {cat:"🍺 ¡Salud!",local:"Prost! / Santé!",pron:"Prost / San-té",tip:"Prost alemán y Santé francés · los dos son correctos"},
+  ]},
+  mapa:{centro:"Luxembourg City Luxembourg",pois:[["Palacio Gran Ducal","Grand Ducal Palace Luxembourg"],["Abadía Neumünster","Neumünster Abbey Luxembourg"],["Casamatas del Bock","Bock Casemates Luxembourg"],["Chemin de la Corniche","Corniche Luxembourg"]]},
+  video:{t:"Qué ver en Luxemburgo en un día — mi ruta perfecta 🇱🇺 (Sep 2025)",u:"https://www.youtube.com/watch?v=gX76bDVBpDc"}
  },
- {id:"str",wlat:48.5734,wlon:7.7521,name:"Estrasburgo y Colmar",flag:"🇫🇷",base:"Desde Metz · 215 km · 2h",
-  desc:"Estrasburgo es famosa por su catedral gótica y ser sede del Parlamento Europeo. Colmar es una joya pintoresca conocida por su arquitectura de cuento y el barrio de la 'Pequeña Venecia'.",
+ {id:"str",wlat:48.5734,wlon:7.7521,name:"Estrasburgo y Colmar",flag:"🇫🇷",
+  precio:"$186 USD",base:"Desde Metz · 215 km · 2h",
+  desc:"En Estrasburgo veremos la arquitectura medieval con sus diseños blanco-negros, la iglesia estilo antiguo románico, la enorme catedral estilo gótico y los famosos puentes sobre el Rin. Entrando a la ciudad francesa de Colmar veremos la Iglesia de San Martín, la Casa Pfister, la Casa de las Cabezas y los numerosos canales con sus orillas cubiertas de flores.",
   atractivos:[
-   ["Catedral de Notre-Dame (Estrasburgo)","gótica del s.XIV · 142 m · una de las más altas del mundo"],
-   ["Barrio Petite France (Estrasburgo)","canales y casas de entramado medieval · Patrimonio UNESCO"],
-   ["Parlamento Europeo (Estrasburgo)","sede del PE · visitable con cita previa"],
-   ["Barrio Petite Venise (Colmar)","canales con casas alsacianas de cuento · muy fotogénico"],
-   ["Museo Unterlinden (Colmar)","con el Retablo de Issenheim de Grünewald (s.XVI)"],
+   ["Catedral de Notre-Dame (Estrasburgo)","gótica del s.XIV · 142 m · estilo gótico · una de las más altas del mundo"],
+   ["Arquitectura medieval blanco-negra","entramado de madera alsaciano · diseños únicos en Europa"],
+   ["Puentes sobre el Rin","vista panorámica de los famosos puentes entre Francia y Alemania"],
+   ["Iglesia de San Martín (Colmar)","iglesia gótica del s.XIII · corazón del casco histórico de Colmar"],
+   ["Casa Pfister (Colmar)","edificio del s.XVI · joya del Renacimiento alsaciano"],
+   ["Casa de las Cabezas (Colmar)","fachada decorada con 106 cabezas grotescas del s.XVII"],
+   ["Canales con flores (Colmar)","barrio de la Pequeña Venecia · canales bordeados de flores · muy fotogénico"],
   ],
-  gastronomia:["Choucroute garnie: chucrut con embutidos y papas · plato regional definitivo","Flammekueche (Tarte flambée): pizza alsaciana con crema, cebolla y lardons","Kougelhopf: bizcocho alsaciano con almendras y pasas · ideal para llevar"],
-  video:{t:"Strasbourg & Colmar - Alsace France Travel Guide",u:"https://www.youtube.com/watch?v=Jl-X3_bAk-Y"}
+  recomendados:[
+   ["Barrio Petite France (Estrasburgo)","canales y casas de entramado medieval · Patrimonio UNESCO · el más fotogénico"],
+   ["Barrio Petite Venise (Colmar)","los canales de Colmar son más pintorescos que los de Estrasburgo"],
+  ],
+  gastronomia:["Choucroute garnie: chucrut con embutidos y papas · el plato regional definitivo de Alsacia","Flammekueche (Tarte flambée): pizza alsaciana con crema, cebolla y lardons","Kougelhopf: bizcocho alsaciano con almendras y pasas · ideal para llevar","Vinos de Alsacia: Riesling y Gewürztraminer · los mejores de Francia"],
+  restaurantes:[
+   ["Winstubs de Estrasburgo","restaurantes tradicionales alsacianos · ambiente íntimo y auténtico"],
+   ["Restaurantes junto a los canales de Colmar","terraza sobre el agua · choucroute y vinos locales"],
+  ],
+  saludos:{idioma:"Francés (Français) · Alsacia",nota:"Alsacia tiene una identidad única entre Francia y Alemania. El francés es el idioma oficial pero muchos hablan alemán y dialecto alsaciano.",frases:[
+   {cat:"🌅 Buenos días",local:"Bonjour",pron:"Bon-yur",tip:"El saludo más importante en Francia · siempre antes de cualquier pregunta"},
+   {cat:"🙏 Por favor",local:"S'il vous plaît",pron:"Sil-vu-plé",tip:"Obligatorio antes de pedir cualquier cosa"},
+   {cat:"😊 Gracias",local:"Merci beaucoup",pron:"Mer-sí bo-kú",tip:"Beaucoup = mucho · solo Merci también es perfecto"},
+   {cat:"🍺 ¡Salud!",local:"Santé!",pron:"San-té",tip:"Obligatorio mirar a los ojos · tradición francesa"},
+   {cat:"😋 ¡Buen provecho!",local:"Bon appétit!",pron:"Bon a-pe-tí",tip:"Dilo al sentarse a comer"},
+  ]},
+  mapa:{centro:"Strasbourg France",pois:[["Catedral Notre-Dame Estrasburgo","Strasbourg Cathedral"],["Barrio Petite France","Petite France Strasbourg"],["Iglesia San Martín Colmar","Eglise Saint-Martin Colmar"],["Pequeña Venecia Colmar","Petite Venise Colmar"]]},
+  video:{t:"Alsacia: Ruta 10 lugares — Estrasburgo, Colmar y más — Guía 2025",u:"https://www.youtube.com/watch?v=fPZ114r-aaQ"}
  },
- {id:"brug",wlat:51.2093,wlon:3.2247,name:"Brujas y Gante",flag:"🇧🇪",base:"Brujas: 96 km (1h) · Gante: 55 km (35min) desde Bruselas",
-  desc:"Brujas es conocida como la 'Venecia del Norte', famosa por sus canales, plazas medievales y arquitectura flamenca. Gante es una ciudad vibrante con un impresionante castillo medieval y un rico pasado.",
+ {id:"brug",wlat:51.2093,wlon:3.2247,name:"Brujas y Gante",flag:"🇧🇪",
+  precio:"$114 USD",base:"Brujas: 96 km (1h) · Gante: 55 km (35min) desde Bruselas",
+  desc:"La ciudad belga de Brujas es una de las perlas de la arquitectura europea. El edificio más destacado que se puede ver contra el encaje de estrechas calles medievales y canales es el asombroso Campanario de Brujas. Gante es otra ciudad belga famosa en Europa. Durante nuestra visita gozaremos de la vista de estos edificios que siguen rodeando las orillas de los dos ríos como las cuentas de un exquisito collar.",
   atractivos:[
-   ["Brujas — Canales y casco histórico","la 'Venecia del Norte' · Patrimonio UNESCO completo"],
-   ["Belfry de Brujas (Belfort)","torre del s.XIII · 366 escalones · vistas únicas sobre la ciudad"],
-   ["Begijnhof de Brujas","complejo monástico medieval junto al lago del amor"],
-   ["Gante — Castillo de los Condes (Gravensteen)","fortaleza medieval del s.IX perfectamente conservada"],
-   ["Catedral de San Bavón (Gante)","con el Políptico del Cordero Místico de Van Eyck (s.XV)"],
+   ["Campanario de Brujas (Belfort)","83 m · símbolo de Brujas · Patrimonio UNESCO · vistas desde la cima"],
+   ["Calles medievales y canales de Brujas","la 'Venecia del Norte' · encaje de adoquines y puentes del s.XIII"],
+   ["Orillas de los dos ríos (Gante)","Lys y Escalda · edificios históricos flanqueando las riberas"],
+   ["Graslei y Korenlei (Gante)","los dos muelles más fotogénicos de Gante · guildhalls medievales"],
+   ["Castillo de los Condes (Gante)","Gravensteen · castillo medieval del s.XII · perfectamente conservado"],
   ],
-  gastronomia:["Brujas: chocolate artesanal en tiendas independientes desde €3","Gante: Gentse Stoverij, estofado de ternera a la cerveza local","Gaufres de Lieja (esponjosas con perlas de azúcar) en puestos callejeros"],
-  video:{t:"Bruges & Ghent Belgium - Complete Travel Guide",u:"https://www.youtube.com/watch?v=Teh5OGhLKQ0"}
+  recomendados:[
+   ["Paseo en barco por los canales de Brujas","ver la ciudad desde el agua · imprescindible · 30 min"],
+   ["Mercado de chocolate de Gante","el mejor chocolate belga artesanal · tiendas en el centro histórico"],
+  ],
+  gastronomia:["Carbonnade flamande: guiso de ternera con cerveza belga · plato tradicional de Brujas","Waterzooi de Gante: guiso cremoso de pollo o pescado · el plato nacional de Gante","Gaufres de Bruselas y Lieja: waffles belgas auténticos · en puestos de la calle","Cerveza trapense belga: más de 1,500 variedades · Bruges Zot y Gentse Strop son locales"],
+  restaurantes:[
+   ["Restaurantes en el Burg (Brujas)","plaza histórica principal · cocina flamenca tradicional"],
+   ["Restaurantes en Graslei (Gante)","frente al canal · ambiente único · cocina gantoise"],
+  ],
+  saludos:{idioma:"Neerlandés (Flamenco) · Francés",nota:"Brujas y Gante están en Flandes (región flamenca). El neerlandés/flamenco es el idioma principal. Un saludo en flamenco abre todas las puertas.",frases:[
+   {cat:"🌅 Buenos días",local:"Goedemorgen",pron:"Jú-de-mor-jen",tip:"En flamenco · igual que en Amsterdam"},
+   {cat:"👋 Hola (informal)",local:"Hoi / Dag",pron:"Jói / Daj",tip:"Dag es más típico de Flandes que de Amsterdam"},
+   {cat:"🙏 Por favor",local:"Alstublieft",pron:"Als-tú-blift",tip:"Imprescindible en tiendas y cafés"},
+   {cat:"😊 Gracias",local:"Dank u wel",pron:"Dank ú vel",tip:"Formal · informal: Dank je (dank ye)"},
+   {cat:"🍺 ¡Salud!",local:"Proost!",pron:"Próost",tip:"Con cerveza belga · la experiencia completa"},
+  ]},
+  mapa:{centro:"Bruges Belgium",pois:[["Campanario de Brujas","Belfort Bruges"],["Canales de Brujas","Bruges Canals"],["Graslei Gante","Graslei Ghent"],["Castillo de los Condes","Gravensteen Ghent"]]},
+  video:{t:"La Mejor Guía de Bélgica 2025 — Brujas, Gante, Bruselas y Amberes",u:"https://www.youtube.com/watch?v=OonsDkgaZsA"}
  },
-]},
-{id:"p2",label:"Paquete 2 — $669 USD",tours:[
- {id:"wie",wlat:49.9839,wlon:20.055,name:"Minas Wieliczka",flag:"🇵🇱",base:"Desde Cracovia · 15 km · 20 min",
-  desc:"Una de las minas de sal operativas más antiguas del mundo, famosa por sus impresionantes cámaras, lagos subterráneos, y capillas esculpidas completamente en roca de sal, incluyendo la Capilla de Santa Kinga.",
+ {id:"wie",wlat:49.9839,wlon:20.0550,name:"Minas de sal de Wieliczka",flag:"🇵🇱",
+  precio:"$95 USD",base:"Desde Cracovia · 15 km · 20 min",
+  desc:"Por su grandeza estas minas que siguen produciendo sal desde el siglo XIII han recibido el nombre de La Catedral Subterránea. Tienen profundidad de 327 metros y longitud de más de 300 km. Durante el recorrido se pueden ver estatuas de personajes míticos e históricos, esculpidas en las rocas de sal por los mineros.",
   atractivos:[
-   ["Minas de sal de Wieliczka","Patrimonio UNESCO · operativas desde el siglo XIII"],
-   ["Capilla de Santa Kinga","esculpida completamente en sal · una de las obras más sorprendentes del mundo"],
-   ["Lagos subterráneos","a 135 metros de profundidad · efecto espejo increíble"],
-   ["300 km de galerías en 9 niveles","visita guiada de 2-3 horas · escala impresionante"],
+   ["Capilla de Santa Kinga","capilla esculpida completamente en roca de sal · la más impresionante del mundo subterráneo"],
+   ["Estatuas de sal","esculturas de personajes míticos e históricos esculpidas por los mineros"],
+   ["Lago subterráneo","espejos de agua salada verde · paisaje único"],
+   ["Profundidad de 327 metros","9 niveles · más de 300 km de galerías"],
+   ["Patrimonio UNESCO","en la lista desde 1978 · una de las primeras minas del mundo en recibirlo"],
   ],
-  gastronomia:["Restaurante subterráneo dentro de la mina · experiencia única","Comida polaca en el pueblo de Wieliczka antes o después de la visita"],
-  video:{t:"Wieliczka Salt Mine - Underground Cathedral Poland",u:"https://www.youtube.com/watch?v=QiPmCkPkGy0"}
+  recomendados:[
+   ["Visita guiada oficial","obligatoria · los guías tienen acceso a zonas especiales"],
+   ["Ruta del minero","alternativa más aventurera · en zonas menos turísticas"],
+  ],
+  gastronomia:["Obwarzanek krakowski: rosquilla trenzada · ícono gastronómico de Cracovia desde el siglo XIV","Pierogi de Cracovia: versión local con rellenos distintos · los mejores de Polonia","Restaurantes en el pueblo de Wieliczka · cocina polaca tradicional a precios locales"],
+  restaurantes:[
+   ["Restaurante dentro de las minas","restaurante subterráneo a 135 m de profundidad · experiencia única"],
+   ["Restaurantes en Wieliczka","pueblo adyacente · cocina polaca auténtica"],
+  ],
+  saludos:{idioma:"Polaco (Polski)",nota:"Cualquier intento en polaco genera enorme simpatía en los locales de Wieliczka.",frases:[
+   {cat:"🌅 Buenos días",local:"Dzień dobry",pron:"Yén do-bri",tip:"Funciona todo el día · el saludo más seguro"},
+   {cat:"🙏 Por favor",local:"Proszę",pron:"Pró-she",tip:"También significa 'aquí tienes' y 'de nada'"},
+   {cat:"😊 Gracias",local:"Dziękuję",pron:"Yen-kú-ye",tip:"Versión rápida: Dzięki (Yén-ki)"},
+   {cat:"🍺 ¡Salud!",local:"Na zdrowie!",pron:"Na zdró-vye",tip:"El brindis polaco · cerveza polaca excelente"},
+  ]},
+  mapa:{centro:"Wieliczka Salt Mine Poland",pois:[["Entrada principal Wieliczka","Wieliczka Salt Mine entrance"],["Capilla Santa Kinga","Chapel of St Kinga Wieliczka"],["Pueblo de Wieliczka","Wieliczka town center"]]},
+  video:{t:"Minas de Sal de Wieliczka — Guía de viaje 4K en español 2025",u:"https://www.youtube.com/watch?v=VlY2fjqM2jY"}
  },
- {id:"kv",wlat:50.2316,wlon:12.8716,name:"Karlovy Vary",flag:"🇨🇿",base:"Desde Praga · 130 km · 1h 30min",
-  desc:"Un famoso y elegante balneario conocido por sus doce fuentes termales. Frecuentado históricamente por la realeza y celebridades, es un lugar ideal para la relajación y el paseo por sus colonnades.",
+ {id:"kv",wlat:50.2316,wlon:12.8716,name:"Karlovy Vary",flag:"🇨🇿",
+  precio:"$90 USD",base:"Desde Praga · 130 km · 1h 30min",
+  desc:"Karlovy Vary es uno de los más famosos balnearios europeos, ubicado en la confluencia de los ríos Eger y Teplá. Tendremos un paseo para disfrutar de su pintoresca arquitectura y naturaleza.",
   atractivos:[
-   ["Colonadas y 12 fuentes termales","cada fuente con agua a diferente temperatura · icónicas"],
-   ["Mlýnská kolonáda","la colonada más imponente del balneario · neorrenacentista"],
-   ["Colina del castillo","vistas panorámicas sobre el valle de los ríos"],
-   ["Moser Glass Factory","fábrica de cristal de Bohemia del s.XIX · visitable"],
+   ["Fuentes termales","12 fuentes · cada una con temperatura y propiedades minerales distintas"],
+   ["Colonada Mill (Mlýnská kolonáda)","la más grande e imponente · neorrenacentista · s.XIX"],
+   ["Colonada del Mercado","la más antigua y animada · en el centro del balneario"],
+   ["Arquitectura del s.XIX","elegantes edificios de época que albergaron a reyes, escritores y músicos"],
+   ["Río Teplá","paseo junto al río entre los grandes hoteles balnearios"],
   ],
-  gastronomia:["Becherovka: licor herbáceo destilado aquí desde 1807 · imperdible","Oplatky: obleas azucaradas rellenas · el souvenir gastronómico del balneario"],
-  video:{t:"Karlovy Vary Czech Republic - Spa Town Guide",u:"https://www.youtube.com/watch?v=B4MuEKO1UNE"}
+  recomendados:[
+   ["Catar las fuentes termales","llevar taza especial (becherovka cup) · cada fuente tiene sabor distinto"],
+   ["Licor Becherovka","el famoso licor de hierbas creado en Karlovy Vary en 1807 · visitar la fábrica"],
+  ],
+  gastronomia:["Oplatky: obleas de oblea de spa · el souvenir comestible de Karlovy Vary · en todos los puestos","Becherovka: licor de hierbas amargo · creado aquí en 1807 · probar en la fuente original","Cocina checa tradicional: svíčková, guláš y knedlíky en los restaurantes del centro"],
+  restaurantes:[
+   ["Restaurantes en la Colonada","frente a las fuentes · ambiente elegante de balneario"],
+   ["Cafés del centro histórico","arquitectura de época · café checo y pasteles locales"],
+  ],
+  saludos:{idioma:"Checo (Čeština)",nota:"La ciudad de spa más elegante de Chequia. Los checos aprecian mucho el intento de hablar su idioma.",frases:[
+   {cat:"👋 Hola (todo el día)",local:"Dobrý den",pron:"Dob-rí den",tip:"El más versátil · saludo formal de todo el día"},
+   {cat:"👋 Hola (informal)",local:"Ahoj",pron:"A-joy",tip:"Informal y amistoso · muy común entre jóvenes"},
+   {cat:"🙏 Por favor",local:"Prosím",pron:"Pro-sím",tip:"También 'aquí tienes' y respuesta a 'gracias'"},
+   {cat:"😊 Gracias",local:"Děkuji",pron:"Dyé-ku-yi",tip:"Informal: Díky (Dí-ki)"},
+   {cat:"🍺 ¡Salud!",local:"Na zdraví!",pron:"Na zdra-ví",tip:"Brindis checo · mira a los ojos"},
+  ]},
+  mapa:{centro:"Karlovy Vary Czech Republic",pois:[["Colonada Mill","Mlynska Kolonada Karlovy Vary"],["Fuentes termales","Hot Springs Karlovy Vary"],["Colonada del Mercado","Market Colonnade Karlovy Vary"]]},
+  video:{t:"Karlovy Vary y Český Krumlov — 2 destinos cerca de Praga en español 2024",u:"https://www.youtube.com/watch?v=gnGA1MNWrvg"}
  },
- {id:"mun",wlat:48.1351,wlon:11.582,name:"Múnich",flag:"🇩🇪",base:"Desde Núremberg · 170 km · 1h 45min",
-  desc:"Capital de Baviera, famosa por el Oktoberfest, sus elegantes plazas (Marienplatz), edificios históricos como el Nuevo Ayuntamiento y su rica cultura cervecera.",
+ {id:"mun",wlat:48.1351,wlon:11.5820,name:"Múnich",flag:"🇩🇪",
+  precio:"$174 USD",base:"Desde Núremberg · 170 km · 1h 45min",
+  desc:"La ciudad de Múnich existe en las orillas del río Isar por lo menos 4,000 años. Durante nuestro recorrido por las calles reales veremos los edificios de la Catedral de Múnich, el Ayuntamiento con sus elaboradas torretas y esculturas de maestría, y la Feldherrnhalle — logia dedicada al ejército de Baviera con su bellísima decoración.",
   atractivos:[
-   ["Marienplatz y Nuevo Ayuntamiento","reloj glockenspiel que toca a las 11h y 17h"],
-   ["Englischer Garten","el parque urbano más grande del mundo · mayor que Central Park"],
-   ["Hofbräuhaus","cervecería histórica del s.XVI · la más famosa de Baviera"],
-   ["Museo Alemán (Deutsches Museum)","el mayor museo de ciencia y tecnología del mundo"],
-   ["Frauenkirche","catedral con torres gemelas · símbolo de Múnich"],
+   ["Catedral de Múnich (Frauenkirche)","dos torres gemelas de 99 m · símbolo de la ciudad · s.XV"],
+   ["Ayuntamiento Nuevo (Neues Rathaus)","elaboradas torretas y esculturas · el Glockenspiel toca a las 11h y 12h"],
+   ["Feldherrnhalle","logia neorrenacentista dedicada al ejército de Baviera · exquisita decoración"],
+   ["Marienplatz","plaza central de Múnich · corazón de la ciudad desde el s.XIII"],
+   ["Hofbräuhaus","la cervecería más famosa del mundo · fundada en 1589 por el Duque de Baviera"],
   ],
-  gastronomia:["Weisswurst: salchicha blanca bávara · se sirve antes del mediodía con pretzel y mostaza dulce","Schweinshaxe: codillo de cerdo a la parrilla · el plato bávaro más contundente","Pretzel gigante con Obatzda (crema de queso bávara) en las cervecerías"],
-  video:{t:"Munich Germany - Top Things To Do Travel Guide",u:"https://www.youtube.com/watch?v=e3R9rxgSTOE"}
+  recomendados:[
+   ["Jardín Inglés (Englischer Garten)","el parque urbano más grande del mundo · surfistas en el río Eisbach"],
+   ["Mercado de la Victoria (Viktualienmarkt)","mercado gourmet al aire libre · desde 1807 · gastronomía bávara"],
+  ],
+  gastronomia:["Weisswurst: salchicha blanca bávara · se come solo antes del mediodía · con pretzel y mostaza dulce","Schweinshaxe: codillo de cerdo asado · piel crujiente · acompañado de chucrut y knödel","Masa (cerveza) en el Hofbräuhaus · la experiencia bávara definitiva · litros de 1 euro en Oktoberfest"],
+  restaurantes:[
+   ["Hofbräuhaus","la cervecería más famosa del mundo · turístico pero auténtico"],
+   ["Viktualienmarkt","mercado gourmet con puestos de comida bávara tradicional"],
+  ],
+  saludos:{idioma:"Alemán (Deutsch) · dialecto bávaro",nota:"Múnich tiene su propio dialecto bávaro muy marcado. Un saludo local genera gran simpatía.",frases:[
+   {cat:"🌅 Buenos días",local:"Guten Morgen",pron:"Gú-ten Mór-jen",tip:"Estándar y siempre correcto"},
+   {cat:"👋 Hola (bávaro)",local:"Grüß Gott",pron:"Grüs Got",tip:"El saludo tradicional bávaro · 'Dios te salude'"},
+   {cat:"👋 Hola (muy informal)",local:"Servus",pron:"Sér-vus",tip:"Muy típico de Múnich · casual y cercano"},
+   {cat:"🙏 Por favor",local:"Bitte",pron:"Bí-te",tip:"Universal en toda Alemania"},
+   {cat:"🍺 ¡Salud!",local:"Prost!",pron:"Prost",tip:"En el Hofbräuhaus con un Mass (litro) de cerveza"},
+  ]},
+  mapa:{centro:"Munich Germany",pois:[["Frauenkirche","Frauenkirche Munich"],["Ayuntamiento Nuevo","Neues Rathaus Munich"],["Feldherrnhalle","Feldherrnhalle Munich"],["Hofbräuhaus","Hofbrauhaus Munich"],["Marienplatz","Marienplatz Munich"]]},
+  video:{t:"La Guía Más Completa por Múnich — Con precios y día a día 2026",u:"https://www.youtube.com/watch?v=m_Ynqhjdwd4"}
  },
- {id:"noc",name:"Noche Checa con cena",flag:"🇨🇿",base:"En Praga",
-  desc:"Una experiencia nocturna y cultural que generalmente incluye una cena tradicional checa, acompañada de música folclórica, bailes típicos y posiblemente vino o cerveza local.",
+ {id:"noc",wlat:50.0755,wlon:14.4378,name:"Noche Checa con cena",flag:"🇨🇿",
+  precio:"$90 USD",base:"En Praga (noche)",
+  desc:"Capturaremos el espíritu edificante del folclore checo durante un espectáculo folclórico tradicional de 2 horas que incluye la cena. Se trata de una forma realmente diferente y entretenida de pasar una noche en Praga.",
   atractivos:[
-   ["Cena tradicional checa","svíčková, guláš y knedlíky en ambiente de época"],
-   ["Música folclórica checa en vivo","canciones y danzas típicas de Bohemia"],
-   ["Bailes típicos checos","demostración y participación incluidas"],
-   ["Cerveza checa de barril","Pilsner Urquell, Kozel o Budvar directamente de la fuente"],
+   ["Espectáculo folclórico checo","2 horas de danzas y música tradicional bohemia en vivo"],
+   ["Cena incluida","menú completo de cocina checa tradicional · 3 platos · bebidas locales"],
+   ["Música en vivo","instrumentos tradicionales checos · acordeón, violín y percusión bohemia"],
+   ["Trajes regionales","los artistas visten trajes folclóricos auténticos de distintas regiones checas"],
   ],
-  gastronomia:["Menú completo de cocina checa incluido · 3 platos + bebidas","Ambiente íntimo en restaurante histórico del casco antiguo de Praga"],
-  video:{t:"Prague Czech Evening - Folk Music Dinner Show",u:"https://www.youtube.com/watch?v=v_XlJVJaVHc"}
+  recomendados:[
+   ["Pedir cerveza checa local","la mejor cerveza del mundo · Pilsner Urquell o Budvar · incluida o a muy bajo costo"],
+   ["Svíčková en la cena","el plato estrella checo · lomo en salsa de crema con knedlíky"],
+  ],
+  gastronomia:["Cena checa incluida en el tour · 3 platos tradicionales","Svíčková na smetaně: lomo en salsa de crema con knedlíky · plato nacional checo","Pilsner Urquell o Budvar: la mejor cerveza del mundo · disponible a bordo","Trdelník: pastel enrollado en palo · postre tradicional bohemio"],
+  restaurantes:[
+   ["Local del espectáculo folclórico","cena incluida en el precio del tour · cocina checa auténtica"],
+  ],
+  saludos:{idioma:"Checo (Čeština)",nota:"Una noche folclórica checa es la experiencia cultural más auténtica de Praga. Los anfitriones aprecian el intento de hablar checo.",frases:[
+   {cat:"😊 Gracias",local:"Děkuji",pron:"Dyé-ku-yi",tip:"Para agradecer la cena y el espectáculo"},
+   {cat:"🍺 ¡Salud!",local:"Na zdraví!",pron:"Na zdra-ví",tip:"El brindis obligatorio · mira a los ojos"},
+   {cat:"😋 ¡Buen provecho!",local:"Dobrou chuť",pron:"Dob-rou khut",tip:"Antes de la cena checa"},
+   {cat:"👏 ¡Bravo!",local:"Výborně!",pron:"Ví-bor-nye",tip:"Para aplaudir al espectáculo folclórico"},
+  ]},
+  mapa:{centro:"Prague Czech Republic",pois:[["Centro de Praga","Prague Old Town Square"],["Teatro de folclore","Prague folk show restaurants"]]},
+  video:{t:"Czech Folk Evening - Traditional Prague Dinner Show",u:"https://www.youtube.com/watch?v=v_XlJVJaVHc"}
  },
- {id:"bar",wlat:50.1109,wlon:8.6821,name:"Barco Río Meno (Frankfurt)",flag:"🇩🇪",base:"En Frankfurt",
-  desc:"Un recorrido en el río Meno que permite apreciar el contraste de Frankfurt: desde el centro histórico (Römer) hasta la impresionante línea del horizonte con sus rascacielos financieros.",
+ {id:"bar",wlat:50.1109,wlon:8.6821,name:"Barco por el Río Meno",flag:"🇩🇪",
+  precio:"$42 USD",base:"En Frankfurt (desde el Römerberg)",
+  desc:"Este paseo ofrece una oportunidad única de observar la vida en el frenético centro comercial y financiero desde la tranquilidad del poderoso Río Meno.",
   atractivos:[
-   ["Crucero nocturno por el río Meno","contraste entre el Römerberg medieval y los rascacielos financieros"],
-   ["Vistas del skyline de Frankfurt","la silueta más única de Alemania vista desde el agua"],
-   ["Puentes históricos del centro","iluminados de noche durante el crucero"],
+   ["Skyline financiero de Frankfurt","los rascacielos del distrito financiero vistos desde el agua · contraste único"],
+   ["Römerberg desde el río","el casco histórico medieval visto desde perspectiva acuática"],
+   ["Orillas del Meno (Museumsufer)","paseo de museos a lo largo del río · la ribera más cultural de Alemania"],
+   ["Puentes históricos del Meno","varios puentes históricos peatonales con vistas al centro"],
   ],
-  gastronomia:["Algunos cruceros incluyen aperitivo de Äppelwoi (sidra local) a bordo","Disponible aperitivo ligero con bocadillos francofortianos"],
-  video:{t:"Frankfurt Main River Cruise - City Skyline Tour",u:"https://www.youtube.com/watch?v=7cMyFVEvKSk"}
+  recomendados:[
+   ["Combinar con visita al Römerberg","hacer el barco después de visitar el centro histórico a pie"],
+   ["Atardecer en el Meno","el crucero al atardecer con el skyline iluminado es especialmente impresionante"],
+  ],
+  gastronomia:["Ebbelwoi (Apfelwein): vino de manzana de Frankfurt · sabor ácido · en las tabernas de Sachsenhausen","Grüne Soße: salsa verde de 7 hierbas frescas · especialidad única de Frankfurt","Handkäse mit Musik: queso fuerte con cebolla y vinagreta · el aperitivo hessiano por excelencia"],
+  restaurantes:[
+   ["Tabernas de Sachsenhausen","barrio de las sidrerías · cruzando el Meno desde el centro"],
+   ["Restaurantes en el Römerberg","plaza histórica central · cocina alemana tradicional"],
+  ],
+  saludos:{idioma:"Alemán (Deutsch) · dialecto hessiano",nota:"Frankfurt es la ciudad más cosmopolita de Alemania. El inglés es muy hablado pero un saludo en alemán siempre abre puertas.",frases:[
+   {cat:"👋 Hola (hessiano)",local:"Guude!",pron:"Gú-de",tip:"El saludo típico de Frankfurt · muy local y apreciado"},
+   {cat:"🙏 Por favor",local:"Bitte",pron:"Bí-te",tip:"Multiuso: pedir, agradecer y entregar"},
+   {cat:"😊 Gracias",local:"Danke",pron:"Dán-ke",tip:"Rápido y efectivo"},
+   {cat:"🍺 ¡Salud!",local:"Prost! / Ebbelwei!",pron:"Prost / É-bel-vai",tip:"Ebbelwei es el vino de manzana de Frankfurt"},
+  ]},
+  mapa:{centro:"Main River Frankfurt Germany",pois:[["Embarque barco Meno","Main River Cruise Frankfurt"],["Römerberg","Römerberg Frankfurt"],["Sachsenhausen","Sachsenhausen Frankfurt"],["Museumsufer","Museum Embankment Frankfurt"]]},
+  video:{t:"Frankfurt Main River Cruise - Financial City from the Water",u:"https://www.youtube.com/watch?v=7cMyFVEvKSk"}
  },
- {id:"sch",wlat:49.4667,wlon:6.3667,name:"Ciudad de Schengen",flag:"🇱🇺",base:"Desde Metz · 60 km · 50 min",
-  desc:"Un pequeño pueblo que es mundialmente conocido por ser el lugar donde se firmó el Acuerdo de Schengen en 1985, que abolió los controles fronterizos entre los países europeos signatarios.",
+ {id:"sch",wlat:49.4667,wlon:6.3667,name:"Ciudad de Schengen",flag:"🇱🇺",
+  precio:"$54 USD",base:"Desde Metz · 60 km · 50 min",
+  desc:"Schengen es una de las localidades más conocidas en el mundo de hoy. Aquí se unen las fronteras de Luxemburgo, Alemania y Francia, y fue aquí donde se firmó el Acuerdo de Schengen bajo el cual varios países europeos suprimieron los controles en las fronteras entre sí, estableciendo un espacio de circulación libre de personas y bienes.",
   atractivos:[
-   ["Espacio Schengen (Museo)","donde se firmó el Acuerdo Schengen (1985) que abolió las fronteras internas europeas"],
-   ["Monumento del Acuerdo","a orillas del Mosela · donde se unen Francia, Luxemburgo y Alemania"],
-   ["Paseo por el río Mosela","viñedos y paisaje pittoresco de la región"],
+   ["Monumento al Acuerdo de Schengen","en la orilla del Mosela · donde se unen las tres fronteras"],
+   ["Confluencia de tres países","Luxemburgo, Alemania y Francia · se pueden ver los tres países desde un punto"],
+   ["Museo Europeo de Schengen","documenta la historia del acuerdo y la Europa sin fronteras"],
+   ["Río Mosela","pintoresco río fronterizo · paseo en las orillas entre viñedos"],
+   ["Viñedos del Mosela","vinos blancos de Luxemburgo en las laderas junto al río"],
   ],
-  gastronomia:["Vino Mosela luxemburgués en bodegas locales · blancos secos excelentes","Pueblo pequeño con un par de restaurantes de cocina regional"],
-  video:{t:"Schengen Luxembourg - Historic Village Tour",u:"https://www.youtube.com/watch?v=Z1jvCnUTKnE"}
+  recomendados:[
+   ["Pisar los tres países","existe un punto exacto donde puedes tener un pie en cada país"],
+   ["Crucero por el Mosela","pequeño crucero fluvial por el río fronterizo · paisaje de viñedos"],
+  ],
+  gastronomia:["Vinos blancos del Mosela luxemburgués · Riesling y Pinot Gris · excelentes","Judd mat Gaardebounen: plato nacional de Luxemburgo en restaurantes locales","Cocina de la Mosela: mezcla de influencias francesas, alemanas y luxemburguesas"],
+  restaurantes:[
+   ["Restaurantes en Schengen","cocina de la región fronteriza · vinos del Mosela locales"],
+   ["Bodegas del Mosela","cata de vinos luxemburgueses directamente en las bodegas"],
+  ],
+  saludos:{idioma:"Luxemburgués · Francés · Alemán",nota:"Schengen es el símbolo de la Europa unida. Los tres idiomas se hablan con fluidez. Cualquier saludo en cualquiera de ellos funciona.",frases:[
+   {cat:"🌅 Buenos días (lux.)",local:"Gudde Moien",pron:"Gú-de Móy-en",tip:"El más especial · luxemburgués en tierra luxemburguesa"},
+   {cat:"☀️ Buenos días (fr.)",local:"Bonjour",pron:"Bon-yur",tip:"Seguro y universal"},
+   {cat:"☀️ Buenos días (al.)",local:"Guten Tag",pron:"Gú-ten Tak",tip:"Para el lado alemán de la frontera"},
+   {cat:"🍺 ¡Salud!",local:"Prost! / Santé!",pron:"Prost / San-té",tip:"Con vino del Mosela · los tres países brindan así"},
+  ]},
+  mapa:{centro:"Schengen Luxembourg",pois:[["Monumento Schengen","Schengen Monument Luxembourg"],["Museo Europeo","European Museum Schengen"],["Confluencia tres fronteras","Schengen tripoint border"]]},
+  video:{t:"Schengen y Echternach — Recorriendo el famoso pueblo de Luxemburgo en español",u:"https://www.youtube.com/watch?v=zReAcS63g8w"}
  },
- {id:"vol",wlat:52.4946,wlon:5.0703,name:"Volendam, Marken y La Haya",flag:"🇳🇱",base:"Desde Ámsterdam: Volendam 22 km · La Haya 60 km",
-  desc:"Volendam y Marken son pintorescos pueblos pesqueros conocidos por sus casas de madera y trajes tradicionales. La ciudad de La Haya (Den Haag) es la sede del gobierno neerlandés y hogar de la Corte Internacional de Justicia.",
+ {id:"vol",wlat:52.4946,wlon:5.0703,name:"Volendam, Marken y La Haya",flag:"🇳🇱",
+  precio:"$138 USD",base:"Desde Ámsterdam: Volendam 22 km · La Haya 60 km",
+  desc:"Esta visita nos sumerge en la vida diaria de los pescadores de los Países Bajos, con sus típicas casas de madera de colores y vistas al IJsselmeer. La ciudad de La Haya (Den Haag) es la capital administrativa del Reino de los Países Bajos, situada en la costa del Mar del Norte. La Haya contemporánea asombra a sus visitantes con las vistas de sus rascacielos impresionantes y el Binnenhof. Paseando por las calles del casco histórico veremos las lujosas residencias de personajes importantes, la Catedral y el Palacio de la Paz.",
   atractivos:[
-   ["Volendam","pueblo pesquero con casas de madera y trajes tradicionales holandeses"],
-   ["Marken","isla-pueblo con casas verdes sobre pilotes · muy fotogénico"],
-   ["La Haya (Den Haag)","sede del gobierno neerlandés y la Corte Internacional de Justicia"],
-   ["Mauritshuis (La Haya)","museo con La Joven de la Perla de Vermeer"],
+   ["Volendam","pueblo pesquero con casas de madera de colores · trajes tradicionales holandeses · fotogénico"],
+   ["Marken","isla-pueblo en el IJsselmeer · arquitectura tradicional única · sin coches"],
+   ["Binnenhof (La Haya)","complejo histórico del parlamento neerlandés · s.XIII · en uso continuo"],
+   ["Palacio de la Paz (La Haya)","sede de la Corte Internacional de Justicia de la ONU"],
+   ["Catedral de La Haya","imponente catedral neogótica en el centro histórico"],
+   ["Rascacielos de La Haya","contraste impresionante entre el centro histórico y los modernos rascacielos"],
   ],
-  gastronomia:["Haring fresco en Volendam directamente del puerto · el más fresco del país","Stroopwafels artesanales en mercados locales","Poffertjes (mini panqueques con mantequilla) en puestos de Volendam"],
-  video:{t:"Volendam & The Hague - Day Trip from Amsterdam",u:"https://www.youtube.com/watch?v=sn9dVPMvk1A"}
+  recomendados:[
+   ["Foto con traje tradicional en Volendam","los fotógrafos locales tienen trajes auténticos · souvenir único"],
+   ["Mauritshuis (La Haya)","museo con 'La Joven de la Perla' de Vermeer · una de las pinturas más famosas del mundo"],
+  ],
+  gastronomia:["Haring fresco en Volendam directamente del puerto · el más fresco de los Países Bajos","Stroopwafels artesanales en mercados locales · recién hechos son infinitamente mejores","Poffertjes: mini panqueques con mantequilla y azúcar · en puestos de Volendam"],
+  restaurantes:[
+   ["Restaurantes en el puerto de Volendam","pescado fresco del IJsselmeer · ambiente marinero auténtico"],
+   ["Restaurantes en el centro de La Haya","cocina neerlandesa e internacional · elegante y cosmopolita"],
+  ],
+  saludos:{idioma:"Neerlandés (Nederlands)",nota:"El neerlandés es la lengua oficial. El inglés lo habla casi todo el mundo, pero un saludo local siempre causa buena impresión.",frases:[
+   {cat:"🌅 Buenos días",local:"Goedemorgen",pron:"Jú-de-mor-jen",tip:"Úsalo hasta aprox. las 12:00"},
+   {cat:"👋 Hola (informal)",local:"Hoi / Hallo",pron:"Jói / Já-lo",tip:"Hoi es muy común entre jóvenes"},
+   {cat:"🙏 Por favor",local:"Alstublieft",pron:"Als-tú-blift",tip:"A menudo abreviado como s.v.p. en señales"},
+   {cat:"😊 Gracias",local:"Dank u wel",pron:"Dank ú vel",tip:"Informal: Dank je (dank ye)"},
+   {cat:"🍺 ¡Salud!",local:"Proost!",pron:"Próost",tip:"Al brindar · muy común en bares"},
+  ]},
+  mapa:{centro:"Volendam Netherlands",pois:[["Puerto de Volendam","Volendam harbor Netherlands"],["Marken","Marken island Netherlands"],["Binnenhof La Haya","Binnenhof The Hague"],["Palacio de la Paz","Peace Palace The Hague"]]},
+  video:{t:"Así es viajar a La Haya — Cultura, historia y días mágicos en Países Bajos 2025",u:"https://www.youtube.com/watch?v=8DeDiIKc_x0"}
  },
-]},
 ];
+
 
 const distMain=[
  {de:"Ámsterdam",a:"Hannover",km:280,t:"2h 30min"},
@@ -964,7 +1203,7 @@ const distTours=[
  {de:"Ámsterdam",a:"La Haya (Den Haag)",km:60,t:"50min"},
 ];
 
-let curView='home',curCity=0,curSub='itinerario',curPkg=0,curTour=0;
+let curView='home',curCity=0,curSub='itinerario',curTour=0;
 
 function sv(v){
  curView=v;
@@ -1481,50 +1720,89 @@ async function viewDoc(id){
 
 let curTourSub='info';
 function renderTours(){
- document.getElementById('pkg-pills').innerHTML=tourPkgs.map((p,i)=>
-  `<button class="pill${i===curPkg?' active':''}" onclick="selP(${i})">${i===0?'🟡':'🔵'} ${p.label}</button>`
- ).join('');
- const pkg=tourPkgs[curPkg];
- document.getElementById('tour-pills').innerHTML=pkg.tours.map((t,i)=>
+ // No more packages — all tours are independent
+ document.getElementById('pkg-pills').innerHTML=''; // hide pkg pills
+ document.getElementById('tour-pills').innerHTML=tours.map((t,i)=>
   `<button class="pill${i===curTour?' active':''}" onclick="selT(${i})">${t.flag} ${t.name.split(' ')[0]}</button>`
  ).join('');
- const tourTabs=[['info','📋 Info'],['gastronomia','🍽️ Gastronomía'],['notas','📝 Notas'],['clima','🌤️ Clima'],['video','📺 Video']];
+ const tourTabs=[['info','📋 Info'],['recomendados','⭐ Recomendados'],['gastronomia','🍽️ Gastronomía'],['restaurantes','🍴 Dónde comer'],['saludos','🗣️ Saludos'],['mapa','🗺️ Mapa'],['fotos','📸 Fotos'],['clima','🌤️ Clima'],['video','📺 Video']];
  document.getElementById('tour-subtabs').innerHTML=tourTabs.map(s=>
   `<button class="subpill${curTourSub===s[0]?' active':''}" onclick="selTS('${s[0]}')">${s[1]}</button>`
  ).join('');
  renderTourBody();
 }
 function renderTourBody(){
- const t=tourPkgs[curPkg].tours[curTour];
- const pkgLabel=tourPkgs[curPkg].label;
+ const t=tours[curTour];
  let h='';
+ // Notas section appended at end of every tab
+ const notasH=renderNotes('tour_'+t.id,'tour');
  if(curTourSub==='info'){
-  h+=`<div class="card"><div class="card-header"><div class="card-title">${t.flag} ${t.name}</div><div class="card-sub">${t.base}</div><span class="tag">${pkgLabel}</span></div>`;
-  if(t.desc)h+=`<div style="padding:12px 14px;font-size:14px;color:var(--cream);line-height:1.6;border-bottom:1px solid rgba(201,168,76,0.1)">${t.desc}</div>`;
+  h+=`<div class="card"><div class="card-header"><div class="card-title">${t.flag} ${t.name}</div><div class="card-sub">${t.base}</div><span class="tag" style="background:rgba(201,168,76,0.15);color:var(--gold2)">${t.precio}</span></div>`;
+  if(t.desc)h+=`<div style="padding:12px 14px;font-size:14px;color:var(--cream);line-height:1.7;border-bottom:1px solid rgba(201,168,76,0.1)">${t.desc}</div>`;
   h+=`<div class="section-label">Lugares y atractivos principales</div>`;
   h+=t.atractivos.map(a=>`<div class="list-item"><span class="lb">◆</span><div class="list-text">${a[0]}<div class="list-sub">${a[1]}</div></div></div>`).join('');
   h+='</div>';
+  h+=notasH;
+ } else if(curTourSub==='recomendados'){
+  h+=`<div class="card"><div class="card-header"><div class="card-title">⭐ Recomendados en ${t.name}</div></div>`;
+  const recs=t.recomendados||[];
+  if(recs.length){
+   h+=recs.map(a=>`<div class="list-item"><span class="lb2">◇</span><div class="list-text">${a[0]}<div class="list-sub">${a[1]}</div></div></div>`).join('');
+  }else{
+   h+=`<div style="padding:14px;font-size:13px;color:var(--dim);text-align:center">Sin recomendados adicionales</div>`;
+  }
+  h+='</div>';
+  h+=notasH;
  } else if(curTourSub==='gastronomia'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">🍽️ Gastronomía en ${t.name}</div></div>`;
   h+=t.gastronomia.map(g=>`<div class="list-item"><span class="lb">◆</span><span class="list-text">${g}</span></div>`).join('');
   h+='</div>';
- } else if(curTourSub==='notas'){
-  h+=renderNotes('tour_'+t.id,'tour');
+  h+=notasH;
+ } else if(curTourSub==='restaurantes'){
+  h+=`<div class="card"><div class="card-header"><div class="card-title">🍴 Dónde comer en ${t.name}</div></div>`;
+  const rests=t.restaurantes||[];
+  if(rests.length){
+   h+=rests.map(r=>`<div class="list-item"><span class="lb">◆</span><div class="list-text">${r[0]}<div class="list-sub">${r[1]}</div></div></div>`).join('');
+  }else{
+   h+=`<div style="padding:14px;font-size:13px;color:var(--dim);text-align:center">Sin restaurantes registrados aún</div>`;
+  }
+  h+='</div>';
+  h+=notasH;
+ } else if(curTourSub==='saludos'){
+  const s=t.saludos;
+  h+=`<div class="card"><div class="card-header"><div class="card-title">🗣️ Frases útiles en ${s.idioma}</div><div class="card-sub">${s.nota}</div></div>`;
+  h+=s.frases.map(f=>`<div class="list-item"><span class="lb">◆</span><div class="list-text"><span style="color:var(--gold2);font-weight:500">${f.cat}</span><div style="font-size:15px;color:var(--cream);margin:3px 0">${f.local}</div><div style="font-size:12px;color:var(--gold);font-style:italic">Pronunciación: ${f.pron}</div><div class="list-sub">${f.tip}</div></div></div>`).join('');
+  h+='</div>';
+  h+=notasH;
+ } else if(curTourSub==='mapa'){
+  const m=t.mapa||{centro:t.name,pois:[]};
+  const murl=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(m.centro)}`;
+  h+=`<div class="card"><div class="card-header"><div class="card-title">🗺️ Mapa de ${t.name}</div><div class="card-sub">Toca cualquier lugar para abrirlo en Google Maps</div></div>`;
+  h+=`<a class="map-poi" href="${murl}" target="_blank" rel="noopener"><span class="poi-icon">🗺️</span><span class="poi-name">Ver mapa general de ${t.name}</span><span class="poi-arrow">›</span></a>`;
+  if(m.pois&&m.pois.length){
+   h+=`<div class="section-label">📌 Lugares de interés</div>`;
+   h+=m.pois.map(p=>`<a class="map-poi" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p[1])}" target="_blank" rel="noopener"><span class="poi-icon">📍</span><span class="poi-name">${p[0]}</span><span class="poi-arrow">›</span></a>`).join('');
+  }
+  h+='</div>';
+  h+=notasH;
+ } else if(curTourSub==='fotos'){
+  h+=renderPhotos(t.id,t.name);
+  h+=notasH;
  } else if(curTourSub==='clima'){
-  h+=`<div class="card" id="tour-wx-${t.id}"><div class="card-header"><div class="card-title">🌤️ Clima en ${t.name}</div><div class="card-sub">Actualiza con señal de internet · último dato guardado si offline</div></div><div id="tour-wx-body-${t.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:13px">⏳ Cargando clima...</div></div>`;
+  h+=`<div class="card" id="tour-wx-${t.id}"><div class="card-header"><div class="card-title">🌤️ Clima en ${t.name}</div><div class="card-sub">Actualiza con señal · último dato guardado si offline</div></div><div id="tour-wx-body-${t.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:13px">⏳ Cargando clima...</div></div>`;
   if(t.wlat){setTimeout(()=>fetchWeather(t.id,t.name,t.wlat,t.wlon,'tour-wx-body-'+t.id),50);}
-  else{setTimeout(()=>{const el=document.getElementById('tour-wx-body-'+t.id);if(el)el.innerHTML='Sin datos de ubicación para esta excursión.';},50);}
+  else{setTimeout(()=>{const el=document.getElementById('tour-wx-body-'+t.id);if(el)el.innerHTML='Sin datos de ubicación.';},50);}
+  h+=notasH;
  } else if(curTourSub==='video'){
   h+=renderTourVideo(t);
+  h+=notasH;
  }
  document.getElementById('tour-body').innerHTML=h;
 }
-function selP(i){curPkg=i;curTour=0;curTourSub='info';renderTours();}
+function selP(i){} // no longer used
 function selT(i){curTour=i;curTourSub='info';renderTours();}
-function selTS(s){curTourSub=s;renderTourBody();
- document.querySelectorAll('#tour-subtabs .subpill').forEach(b=>{b.classList.toggle('active',b.textContent.trim().includes(s)||b.onclick.toString().includes("'"+s+"'"));});
- document.getElementById('tour-subtabs').innerHTML=document.getElementById('tour-subtabs').innerHTML;
- const tourTabs=[['info','📋 Info'],['gastronomia','🍽️ Gastronomía'],['notas','📝 Notas'],['clima','🌤️ Clima'],['video','📺 Video']];
+function selTS(s){curTourSub=s;
+ const tourTabs=[['info','📋 Info'],['recomendados','⭐ Recomendados'],['gastronomia','🍽️ Gastronomía'],['restaurantes','🍴 Dónde comer'],['saludos','🗣️ Saludos'],['mapa','🗺️ Mapa'],['fotos','📸 Fotos'],['clima','🌤️ Clima'],['video','📺 Video']];
  document.getElementById('tour-subtabs').innerHTML=tourTabs.map(st=>
   `<button class="subpill${curTourSub===st[0]?' active':''}" onclick="selTS('${st[0]}')">${st[1]}</button>`
  ).join('');
@@ -1534,12 +1812,12 @@ function renderTourVideo(t){
  const savedUrl=localStorage.getItem('tourvid_'+t.id);
  const vid=t.video||null;
  const displayUrl=savedUrl||(vid?vid.u:'');
- const displayTitle=vid?vid.t:'Video del destino';
+ const displayTitle=savedUrl?'Video personalizado':(vid?vid.t:'Video del destino');
  let h=`<div class="card"><div class="card-header"><div class="card-title">📺 Video de ${t.name}</div><div class="card-sub">Toca para abrir en YouTube · puedes personalizar el enlace</div></div>`;
  if(displayUrl){
-  h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div class="vdesc" style="font-size:11px;color:var(--gold);margin-top:4px">📺 Toca para ver en YouTube</div></div></a>`;
- } else {
-  h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:13px">No hay video asignado. Agrega un enlace de YouTube abajo.</div>`;
+  h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div style="font-size:11px;color:var(--gold);margin-top:4px">📺 Toca para ver en YouTube</div></div></a>`;
+ }else{
+  h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:13px">No hay video asignado. Agrega un enlace abajo.</div>`;
  }
  h+=`<div class="note-add" style="border-top:1px solid rgba(201,168,76,0.15)">
   <div style="font-size:12px;color:var(--gold);margin-bottom:6px;font-weight:500">✏️ Cambiar enlace de YouTube:</div>
@@ -1555,7 +1833,7 @@ function saveTourVideo(tid){
  const inp=document.getElementById('vid-input-'+tid);
  if(!inp)return;
  const url=inp.value.trim();
- if(url&&!url.includes('youtube'))return alert('Por favor ingresa un enlace de YouTube válido');
+ if(url&&!url.includes('youtube')&&!url.includes('youtu.be'))return alert('Por favor ingresa un enlace de YouTube válido');
  if(url)localStorage.setItem('tourvid_'+tid,url);
  renderTourBody();
 }
@@ -1564,6 +1842,7 @@ function deleteTourVideo(tid){
  localStorage.removeItem('tourvid_'+tid);
  renderTourBody();
 }
+
 
 function renderDist(){
  const total=distMain.reduce((s,r)=>s+r.km,0);
@@ -1793,3 +2072,25 @@ window.addEventListener('beforeinstallprompt',e=>{
  b.addEventListener('click',()=>{deferred.prompt();deferred.userChoice.then(()=>b.style.display='none');});
 });
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+// ===== ONLINE / OFFLINE BADGE =====
+function updateOnlineBadge(){
+ const badge=document.getElementById('offline-badge');
+ if(!badge)return;
+ if(navigator.onLine){
+  badge.style.display='none';
+ } else {
+  badge.style.display='flex';
+ }
+}
+// Check on load
+updateOnlineBadge();
+// Listen for changes
+window.addEventListener('online', ()=>{
+ updateOnlineBadge();
+ // Auto-refresh exchange rates when connection returns
+ fetchExchangeRates().then(ok=>{
+  if(ok&&document.getElementById('monedas-card'))renderMonedas();
+ });
+});
+window.addEventListener('offline', updateOnlineBadge);

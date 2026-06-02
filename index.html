@@ -229,9 +229,9 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
     <span style="font-size:22px">✈️</span>
     <div>
       <div class="header-title">Europa Inmortal 2026</div>
-      <div class="header-sub">6–23 Sep · 11 ciudades · 6 países · v18 ✓</div>
+      <div class="header-sub">6–23 Sep · 11 ciudades · 6 países · v23 ✓</div>
     </div>
-    <div class="offline-badge">📴 Offline</div>
+    <div class="offline-badge" id="offline-badge" style="display:none">📴 Offline</div>
   </div>
 </header>
 <div class="main">
@@ -281,7 +281,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
     <div id="city-body"></div>
   </div>
   <div class="view" id="view-tours">
-    <div class="fade-right"><div class="pills-wrap" id="pkg-pills"></div></div>
+    <div class="fade-right"><div class="pills-wrap" id="pkg-pills" style="display:none"></div></div>
     <div class="fade-right"><div class="pills-wrap" id="tour-pills" style="padding-top:0"></div></div>
     <div class="fade-right"><div class="subpills-wrap" id="tour-subtabs"></div></div>
     <div id="tour-body"></div>
@@ -293,7 +293,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
     <div class="card" id="dist-tour-card"></div>
   </div>
   <div class="view" id="view-monedas">
-    <div class="sec-hdr">Tipo de cambio — 18 May 2026</div>
+    <div class="sec-hdr">💱 Tipo de cambio</div>
     <div class="card" id="monedas-card"></div>
     <div class="sec-hdr" style="margin-top:4px">🧮 Calculadora de divisas</div>
     <div class="card calc-card">
