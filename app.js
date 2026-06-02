@@ -1039,10 +1039,48 @@ function renderCityBody(){
   h+=`<div class="card"><div class="card-header"><div class="card-title">🌤️ Clima en ${c.name}</div><div class="card-sub">Actualiza automáticamente con señal · guarda último dato offline</div></div><div id="city-wx-body-${c.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:13px">⏳ Cargando clima...</div></div>`;
   if(c.wlat){setTimeout(()=>fetchWeather(c.id,c.name,c.wlat,c.wlon,'city-wx-body-'+c.id),50);}
  } else if(curSub==='video'){
-  h+=`<div class="card"><div class="card-header"><div class="card-title">📺 Mejor video en YouTube</div><div class="card-sub">En español · mejor valorado disponible para esta ciudad</div></div>`;
-  h+=`<a class="vlink" href="${c.video.u}" target="_blank"><div class="pbtn">▶</div><div><div class="vtitle">${c.video.t}</div><div class="vdesc">${c.video.d}</div><div style="font-size:12px;color:var(--gold);margin-top:4px">Canal: ${c.video.canal}</div></div></a></div>`;
+  const savedVidUrl=localStorage.getItem('cityvid_url_'+c.id);
+  const savedVidTitle=localStorage.getItem('cityvid_title_'+c.id);
+  const displayUrl=savedVidUrl||c.video.u;
+  const displayTitle=savedVidTitle||c.video.t;
+  const displayCanal=savedVidUrl?'Video personalizado':c.video.canal;
+  const displayDesc=savedVidUrl?'Video agregado manualmente':c.video.d;
+  h+=`<div class="card"><div class="card-header"><div class="card-title">📺 Video de ${c.name}</div><div class="card-sub">Toca para ver en YouTube · puedes cambiar el enlace</div></div>`;
+  if(displayUrl){
+   h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div class="vdesc">${displayDesc}</div><div style="font-size:12px;color:var(--gold);margin-top:4px">Canal: ${displayCanal}</div></div></a>`;
+  } else {
+   h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:13px">No hay video asignado. Agrega un enlace abajo.</div>`;
+  }
+  h+=`<div class="note-add" style="border-top:1px solid rgba(201,168,76,0.15)">
+   <div style="font-size:12px;color:var(--gold);margin-bottom:4px;font-weight:500">✏️ Cambiar video:</div>
+   <input type="url" id="cityvid-url-${c.id}" placeholder="https://www.youtube.com/watch?v=..." value="${displayUrl||''}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:6px">
+   <input type="text" id="cityvid-title-${c.id}" placeholder="Título del video (opcional)" value="${displayTitle||''}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box">
+   <div style="display:flex;gap:8px;margin-top:8px">
+    <button class="note-add-btn" style="flex:1" onclick="saveCityVideo('${c.id}')">💾 Guardar</button>
+    <button class="note-add-btn" style="flex:0.6;background:rgba(255,80,80,0.08);border-color:rgba(255,80,80,0.35);color:#ff6464" onclick="deleteCityVideo('${c.id}')">🗑 Eliminar</button>
+   </div>
+   ${savedVidUrl?'<div style="font-size:10px;color:var(--gold);margin-top:6px;text-align:center">⚡ Video personalizado activo · el original queda guardado en el código</div>':''}
+  </div></div>`;
  }
  document.getElementById('city-body').innerHTML=h;
+}
+function saveCityVideo(cityId){
+ const urlInp=document.getElementById('cityvid-url-'+cityId);
+ const titleInp=document.getElementById('cityvid-title-'+cityId);
+ if(!urlInp)return;
+ const url=urlInp.value.trim();
+ const title=titleInp?titleInp.value.trim():'';
+ if(!url){alert('Por favor ingresa un enlace de YouTube');return;}
+ if(!url.includes('youtube')&&!url.includes('youtu.be')){alert('Por favor ingresa un enlace de YouTube válido');return;}
+ localStorage.setItem('cityvid_url_'+cityId,url);
+ if(title)localStorage.setItem('cityvid_title_'+cityId,title);
+ renderCityBody();
+}
+function deleteCityVideo(cityId){
+ if(!confirm('¿Eliminar el video personalizado y volver al original?'))return;
+ localStorage.removeItem('cityvid_url_'+cityId);
+ localStorage.removeItem('cityvid_title_'+cityId);
+ renderCityBody();
 }
 
 // ========= NOTES SYSTEM =========
