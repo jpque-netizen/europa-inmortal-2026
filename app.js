@@ -142,15 +142,21 @@ function fetchWeatherForTour(tid,name,lat,lon){
 const cities=[
 {id:"ams",wlat:52.3676,wlon:4.9041,name:"Ámsterdam",flag:"🇳🇱",country:"Países Bajos",days:"Días 2-3 y 17-18",dates:"Dom 7 Sep – Lun 8 Sep\nVie 22 Sep – Sáb 23 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
  libre:[],
- tourPersonal:"⭐ Día 17 (Vie 22 Sep): Si no contratas el Paquete 2 (Volendam, La Haya, Giethoorn) tienes Ámsterdam libre. Ideal para el Rijksmuseum, barrio Jordaan y canales a tu ritmo antes del vuelo del día 18.",
+ tourPersonal:"⭐ Día 17 (Vie 22 Sep): Si no contratas las excursiones opcionales (Volendam, La Haya, Giethoorn) tienes Ámsterdam libre. Ideal para el Rijksmuseum, barrio Jordaan y canales a tu ritmo antes del vuelo del día 18.",
+ descripcion_dia:[
+  {t:`📅 Día 1 — Dom 6 Sep`,c:`✈️ México → Ámsterdam`,full:`Presentarse en el Aeropuerto Internacional de la Ciudad de México 3 horas antes para tomar el vuelo trasatlántico con destino a Ámsterdam. Noche a bordo.`},
+  {t:`📅 Día 2 — Lun 7 Sep`,c:`🇳🇱 Ámsterdam`,full:`Llegada a Ámsterdam, la capital del Reino de los Países Bajos. Por su belleza, el casco histórico de Ámsterdam está incluido en la Lista del Patrimonio Mundial de la UNESCO. Después del recorrido por la ciudad, recepción y traslado al hotel. Alojamiento.`},
+  {t:`📅 Día 17 — Mar 22 Sep`,c:`🇧🇪→🇳🇱 Bruselas · Ámsterdam ⭐ TOUR PERSONAL`,full:`Desayuno. Después nos dirigimos a la ciudad de Ámsterdam. Tiempo libre para realizar actividades personales o bien realizar una excursión opcional. Alojamiento.`},
+  {t:`📅 Día 18 — Mié 23 Sep`,c:`🇳🇱 Ámsterdam → ✈️ México`,full:`Desayuno. A la hora indicada, traslado al aeropuerto para tomar el vuelo de regreso a la Ciudad de México.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 2 — Lun 7 Sep","Llegada a Ámsterdam · recepción y traslado al hotel"],
   ["Casco histórico de Ámsterdam","Patrimonio Mundial UNESCO · recorrido panorámico incluido en el tour"],
   ["📅 DÍA 3 — Mar 8 Sep","Desayuno · después nos dirigimos hacia Hannover y Berlín"],
   ["📅 DÍA 17 — Vie 22 Sep ⭐ TOUR PERSONAL","Tiempo libre para actividades personales o excursión opcional"],
-  ["Volendam y Marken (Paquete 2)","Pintorescos pueblos pesqueros · casas de madera · trajes tradicionales (Paquete 2)"],
-  ["La Haya — Den Haag (Paquete 2)","Sede del gobierno neerlandés · Parlamento · Corte Internacional de Justicia de la ONU"],
-  ["Pueblo de Giethoorn (Paquete 2)","La 'Venecia de los Países Bajos' · sin calles, solo canales · solo opera si el vuelo sale después de las 20:00 hrs"],
+  ["Volendam y Marken","Pintorescos pueblos pesqueros · casas de madera · trajes tradicionales"],
+  ["La Haya — Den Haag","Sede del gobierno neerlandés · Parlamento · Corte Internacional de Justicia de la ONU"],
+  ["Pueblo de Giethoorn","La 'Venecia de los Países Bajos' · sin calles, solo canales · solo opera si el vuelo sale después de las 20:00 hrs"],
   ["📅 DÍA 18 — Sáb 23 Sep","Desayuno · traslado al aeropuerto · vuelo de regreso a México"],
  ],
  atractivos_recomendados:[
@@ -206,6 +212,9 @@ const cities=[
  ]}
 },
 {id:"han",wlat:52.3759,wlon:9.732,name:"Hannover",flag:"🇩🇪",country:"Alemania",days:"Día 3 (tránsito)",dates:"Lun 8 Sep (parada en ruta Ámsterdam–Berlín)",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
+ descripcion_dia:[
+  {t:`📅 Día 3 — Mar 8 Sep`,c:`🇳🇱→🇩🇪 Ámsterdam · Hannover · Berlín`,full:`Desayuno. Después nos dirigimos a la ciudad de Hannover en la República Federal de Alemania. Situada en orilla del río Leine la ciudad lleva el nombre con este mismo significado "La Orilla Alta". Hannover fue fundada en época medieval por barqueros, pescadores y comerciantes que llevaban los barcos llenos de mercancías por el río. Durante nuestro recorrido veremos los bellos edificios del Palacio de la Opera, las ruinas de la iglesia San Gil (Aegidienkirche), la Iglesia del Mercado, los edificios del Ayuntamiento, Nuevo y Viejo. Luego seguiremos hacia la ciudad de Berlín, la capital de la República Federal de Alemania. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["Palacio de la Ópera (Opernhaus)","uno de los teatros más importantes de Alemania"],
   ["Ruinas de la Iglesia Aegidienkirche","conservadas como memorial a las víctimas de la WWII"],
@@ -251,6 +260,10 @@ const cities=[
  ]}
 },
 {id:"ber",wlat:52.52,wlon:13.405,name:"Berlín",flag:"🇩🇪",country:"Alemania",days:"Días 3-5",dates:"Lun 8 Sep – Mié 10 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
+ descripcion_dia:[
+  {t:`📅 Día 3 — Mar 8 Sep`,c:`🇳🇱→🇩🇪 Ámsterdam · Hannover · Berlín`,full:`Desayuno. Después nos dirigimos a la ciudad de Hannover en la República Federal de Alemania. Situada en orilla del río Leine la ciudad lleva el nombre con este mismo significado "La Orilla Alta". Hannover fue fundada en época medieval por barqueros, pescadores y comerciantes que llevaban los barcos llenos de mercancías por el río. Durante nuestro recorrido veremos los bellos edificios del Palacio de la Opera, las ruinas de la iglesia San Gil (Aegidienkirche), la Iglesia del Mercado, los edificios del Ayuntamiento, Nuevo y Viejo. Luego seguiremos hacia la ciudad de Berlín, la capital de la República Federal de Alemania. Alojamiento.`},
+  {t:`📅 Día 4 — Mié 9 Sep`,c:`🇩🇪 Berlín`,full:`Desayuno. Realizaremos una breve visita panorámica de Berlín. Situada en las orillas de dos ríos, Spree y Havel que confluyen dentro de la ciudad, Berlín ofrece unas vistas inolvidables. Durante nuestro recorrido vamos a ver la Plaza Gendarmenmarkt, La Puerta de Brandenburgo, Potsdamer Platz, Frauenkirche, el Palacio Zwinger, la Terraza Bruhl, el Camino del Rey, la Estatua de Martín Lutero y gozar de la belleza majestuosa de la milenaria ciudad. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 3 — Lun 8 Sep","Llegada a Berlín desde Hannover · alojamiento"],
   ["📅 DÍA 4 — Mar 9 Sep","Desayuno · visita panorámica de Berlín"],
@@ -262,7 +275,7 @@ const cities=[
   ["Terraza Brühl","promenade real con vistas al río"],
   ["Camino del Rey","paseo histórico mencionado en el itinerario"],
   ["Estatua de Martín Lutero","en la Iglesia Marienkirche"],
-  ["Ciudad de Potsdam (Paquete 1)","Capital de Brandeburgo · Palacio Sanssouci UNESCO · residencia de verano de Federico el Grande"],
+  ["Ciudad de Potsdam","Capital de Brandeburgo · Palacio Sanssouci UNESCO · residencia de verano de Federico el Grande"],
   ["📅 DÍA 5 — Mié 10 Sep","Desayuno · partida hacia Varsovia"],
  ],
  atractivos_recomendados:[
@@ -311,6 +324,9 @@ const cities=[
  ]}
 },
 {id:"var",wlat:52.2297,wlon:21.0122,name:"Varsovia",flag:"🇵🇱",country:"Polonia",days:"Días 5-6",dates:"Mié 10 Sep – Jue 11 Sep",moneda:"Złoty (zł / PLN)",cambio:`1 zł = $${PLN.toFixed(2)} MXN · 100 zł ≈ $${(PLN*100).toFixed(0)} MXN`,libre:[],tourPersonal:"",
+ descripcion_dia:[
+  {t:`📅 Día 5 — Jue 10 Sep`,c:`🇩🇪→🇵🇱 Berlín · Varsovia`,full:`Desayuno. Después nos dirigimos a la ciudad de Varsovia, la capital de la República de Polonia. Nadie sabe cuándo apareció el pequeño pueblo de pescadores que desde el siglo XIII se convirtió en una de las ciudades más hermosas del mundo. La Ciudad Vieja – su casco histórico está incluido en la Lista del Patrimonio de la Humanidad de la UNESCO. Durante nuestro recorrido veremos el Castillo Real, la famosa Columna de Segismundo, la hermosa Iglesia de las Visitacionistas, también denominada iglesia de las Hermanas de la Visitación de San José de Varsovia de la Orden de la Visitación. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["Ciudad Vieja (Stare Miasto)","Patrimonio UNESCO · reconstruida piedra a piedra tras la WWII"],
   ["Castillo Real (Zamek Królewski)","residencia oficial de los reyes de Polonia"],
@@ -360,8 +376,12 @@ const cities=[
  ]}
 },
 {id:"cra",wlat:50.0647,wlon:19.945,name:"Cracovia",flag:"🇵🇱",country:"Polonia",days:"Días 6-8",dates:"Jue 11 Sep – Sáb 13 Sep",moneda:"Złoty (zł / PLN)",cambio:`1 zł = $${PLN.toFixed(2)} MXN · 100 zł ≈ $${(PLN*100).toFixed(0)} MXN`,
- libre:["🟢 Día 7 — Vie 12 Sep (DÍA LIBRE): Auschwitz-Birkenau (Paquete 1) · Minas Wieliczka (Paquete 2) · o tour personal en Cracovia."],
+ libre:["🟢 Día 7 — Vie 12 Sep (DÍA LIBRE): Auschwitz-Birkenau · Minas Wieliczka · o tour personal en Cracovia."],
  tourPersonal:"⭐ Día 7 (Vie 12 Sep): Si no contratas ningún opcional, tienes Cracovia libre para el Barrio Kazimierz (antiguo barrio judío bohemio, lleno de cafés únicos), la Plaza del Mercado a tu ritmo, y el Castillo de Wawel con calma.",
+ descripcion_dia:[
+  {t:`📅 Día 6 — Vie 11 Sep`,c:`🇵🇱 Varsovia → Cracovia`,full:`Desayuno. Después nos dirigimos a la ciudad polaca de Cracovia. Otra bella ciudad europea con su casco histórico incluido en la Lista del Patrimonio de la Humanidad de la UNESCO. Durante nuestro breve recorrido panorámico veremos el Castillo de Wawel, la increíble catedral con nombre completo de Basílica de San Estanislao y San Wenceslao con sus numerosas capillas de distintas épocas y estilos arquitectónicos, La Basílica de Santa María, El Corte Renacentista, la Plaza del Mercado y la pequeña iglesia de San Adalberto. Alojamiento.`},
+  {t:`📅 Día 7 — Sáb 12 Sep`,c:`🇵🇱 Cracovia ★ DÍA LIBRE`,full:`Desayuno. Día libre para actividades personales o para realizar una excursión opcional. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 6 — Jue 11 Sep","Desayuno · llegada desde Varsovia · recorrido panorámico"],
   ["Castillo de Wawel","fortaleza real del siglo XI · símbolo máximo de Polonia"],
@@ -371,8 +391,8 @@ const cities=[
   ["Basílica de Santa María (Kościół Mariacki)","gótica con altar tallado de Veit Stoss del siglo XV"],
   ["Iglesia de San Adalberto","pequeña iglesia prerrománica del siglo X"],
   ["📅 DÍA 7 — Vie 12 Sep 🟢 DÍA LIBRE","Excursiones opcionales o tour personal en Cracovia"],
-  ["Campo de concentración Auschwitz-Birkenau (Paquete 1)","El complejo nazi más grande · visita profundamente emotiva · monumento a las víctimas del Holocausto"],
-  ["Minas de sal de Wieliczka (Paquete 2)","Mina de sal operativa más antigua del mundo · capillas en roca de sal · Capilla de Santa Kinga · UNESCO"],
+  ["Campo de concentración Auschwitz-Birkenau","El complejo nazi más grande · visita profundamente emotiva · monumento a las víctimas del Holocausto"],
+  ["Minas de sal de Wieliczka","Mina de sal operativa más antigua del mundo · capillas en roca de sal · Capilla de Santa Kinga · UNESCO"],
   ["📅 DÍA 8 — Sáb 13 Sep","Desayuno · partida hacia Praga"],
  ],
  atractivos_recomendados:[
@@ -420,8 +440,12 @@ const cities=[
  ]}
 },
 {id:"pra",wlat:50.0755,wlon:14.4378,name:"Praga",flag:"🇨🇿",country:"Rep. Checa",days:"Días 8-10",dates:"Sáb 13 Sep – Lun 15 Sep",moneda:"Corona checa (Kč / CZK)",cambio:`1 Kč = $${CZK.toFixed(2)} MXN · 100 Kč ≈ $${(CZK*100).toFixed(0)} MXN`,
- libre:["🟢 Día 9 — Dom 14 Sep (DÍA LIBRE): Barco Río Moldava (Paquete 1) · Karlovy Vary o Noche Checa con cena (Paquete 2) · o tour personal."],
+ libre:["🟢 Día 9 — Dom 14 Sep (DÍA LIBRE): Barco Río Moldava · Karlovy Vary o Noche Checa con cena · o tour personal."],
  tourPersonal:"⭐ Día 9 (Dom 14 Sep): Sin tours opcionales, visita el Castillo de Praga por tu cuenta (no incluido en el tour panorámico del día 8), cruza el Puente de Carlos al amanecer cuando está vacío, y explora Malá Strana con calma.",
+ descripcion_dia:[
+  {t:`📅 Día 8 — Dom 13 Sep`,c:`🇵🇱→🇨🇿 Cracovia · Praga`,full:`Desayuno. Después nos dirigimos a la ciudad de Praga, la capital de la República Checa y la capital histórica de Bohemia. Construida en el siglo IX como un pequeño pueblo fronterizo en las orillas del río Moldava, en el siglo XVII-XIX llegó a tener tal esplendor que todo Europa la llamaba Praga Dorada. En nuestro tour panorámico de la ciudad pasaremos por la Plaza Vaclav Havel, que es una de las plazas más grandes de Praga, luego llegaremos a la Plaza de la Ciudad Vieja, que se encuentra entre la Plaza Vaclac Havel y el Puente Carlos (Karluv Most). En la Plaza de la Ciudad Vieja veremos la Torre del Reloj Astronómico, la Iglesia de Tyn, el Ayuntamiento Viejo, la Iglesia de San Nicolás y el Monumento a Jan Hus. Después del almuerzo continuaremos hacia la orilla opuesta de Praga. De paso veremos el Puente de Carlos, que fue construido en el siglo XIV. Alojamiento.`},
+  {t:`📅 Día 9 — Lun 14 Sep`,c:`🇨🇿 Praga ★ DÍA LIBRE`,full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 8 — Sáb 13 Sep","Desayuno · llegada desde Cracovia · recorrido panorámico por la mañana y tarde"],
   ["Plaza Václav Havel (Wenceslas Square)","una de las plazas más grandes de Praga · bulevar histórico central"],
@@ -433,9 +457,9 @@ const cities=[
   ["Monumento a Jan Hus","en la Plaza de la Ciudad Vieja · reformador checo del siglo XV"],
   ["Puente de Carlos (Karlův Most)","construido en el siglo XIV · 30 estatuas barrocas"],
   ["📅 DÍA 9 — Dom 14 Sep 🟢 DÍA LIBRE","Excursiones opcionales o tour personal en Praga"],
-  ["Paseo en barco por el Río Moldava (Paquete 1)","Recorrido en barco · pasa bajo el Puente de Carlos · vistas del Castillo de Praga"],
-  ["Excursión a Karlovy Vary (Paquete 2)","Elegante balneario · 12 fuentes termales · frecuentado por realeza y celebridades"],
-  ["Noche checa con cena tradicional (Paquete 2)","Cena tradicional checa · música folclórica · danzas típicas · vino o cerveza local"],
+  ["Paseo en barco por el Río Moldava","Recorrido en barco · pasa bajo el Puente de Carlos · vistas del Castillo de Praga"],
+  ["Excursión a Karlovy Vary","Elegante balneario · 12 fuentes termales · frecuentado por realeza y celebridades"],
+  ["Noche checa con cena tradicional","Cena tradicional checa · música folclórica · danzas típicas · vino o cerveza local"],
   ["📅 DÍA 10 — Lun 15 Sep","Desayuno · partida hacia Núremberg"],
  ],
  atractivos_recomendados:[
@@ -487,8 +511,12 @@ const cities=[
  ]}
 },
 {id:"nur",wlat:49.4521,wlon:11.0767,name:"Núremberg",flag:"🇩🇪",country:"Alemania",days:"Días 10-12",dates:"Lun 15 Sep – Mié 17 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
- libre:["🟢 Día 11 — Mar 16 Sep (DÍA LIBRE): Rothenburg ob der Tauber (Paquete 1) · Múnich (Paquete 2) · o tour personal."],
+ libre:["🟢 Día 11 — Mar 16 Sep (DÍA LIBRE): Rothenburg ob der Tauber · Múnich · o tour personal."],
  tourPersonal:"⭐ Día 11 (Mar 16 Sep): Si no contratas opcionales, Núremberg ofrece el Tribunal de Núremberg (Sala 600 donde se juzgaron los crímenes nazis), las murallas medievales caminables de 5 km y el Castillo Imperial, todo a pie desde el hotel.",
+ descripcion_dia:[
+  {t:`📅 Día 10 — Mar 15 Sep`,c:`🇨🇿→🇩🇪 Praga · Núremberg`,full:`Desayuno. Después nos dirigimos a la ciudad alemana de Núremberg. El fabuloso Castillo de Núremberg fue construido en lo alto de una colina hace unos mil años. En los siguientes siglos ese pintoresco complejo de edificios se convirtió en núcleo vivo de una ciudad creciendo rápidamente alrededor suyo. Durante nuestro recorrido por Núremberg veremos los impresionantes edificios de la Iglesia de Nuestra Señora, la Casa de la Opera, el Viejo Ayuntamiento y por supuesto las vistas fascinantes del río Pegnitz. Alojamiento.`},
+  {t:`📅 Día 11 — Mié 16 Sep`,c:`🇩🇪 Núremberg ★ DÍA LIBRE`,full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 10 — Lun 15 Sep","Desayuno · llegada desde Praga · recorrido por la ciudad"],
   ["Castillo Imperial de Núremberg (Kaiserburg)","construido en lo alto de una colina hace unos mil años · núcleo vivo de la ciudad"],
@@ -497,8 +525,8 @@ const cities=[
   ["Viejo Ayuntamiento (Altes Rathaus)","con calabozos medievales visitables"],
   ["Río Pegnitz","fascinantes vistas del río que cruza el centro medieval"],
   ["📅 DÍA 11 — Mar 16 Sep 🟢 DÍA LIBRE","Excursiones opcionales o tour personal en Núremberg"],
-  ["Ciudad Rothenburg ob der Tauber (Paquete 1)","Ciudad medieval mejor conservada de Alemania · murallas · casas de entramado · Ruta Romántica"],
-  ["Ciudad de Múnich (Paquete 2)","Capital de Baviera · Oktoberfest · Marienplatz · Nuevo Ayuntamiento · cultura cervecera"],
+  ["Ciudad Rothenburg ob der Tauber","Ciudad medieval mejor conservada de Alemania · murallas · casas de entramado · Ruta Romántica"],
+  ["Ciudad de Múnich","Capital de Baviera · Oktoberfest · Marienplatz · Nuevo Ayuntamiento · cultura cervecera"],
   ["📅 DÍA 12 — Mié 17 Sep","Desayuno · partida hacia Frankfurt"],
  ],
  atractivos_recomendados:[
@@ -545,6 +573,9 @@ const cities=[
  ]}
 },
 {id:"fra",wlat:50.1109,wlon:8.6821,name:"Frankfurt",flag:"🇩🇪",country:"Alemania",days:"Días 12-13",dates:"Mié 17 Sep – Jue 18 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,libre:[],tourPersonal:"",
+ descripcion_dia:[
+  {t:`📅 Día 12 — Jue 17 Sep`,c:`🇩🇪 Núremberg → Frankfurt`,full:`Desayuno. Después nos dirigimos a la ciudad de Frankfurt ubicada en el centro de Alemania a orillas del Rio Meno, importante centro financiero mundial. Los orígenes de la ciudad se pierden en lo hondo de los primeros siglos del Medioevo, pero siempre en la colina de Romer. Aquí veremos los impresionantes edificios de la familia de comerciantes Romer construidos en los siglos XIII y XIV, la iglesia de San Nicolás, la Catedral Imperial de la Colegiata de San Bartolomé y gozaremos de las majestuosas siluetas del Banco Central Europeo, el Banco de Alemania y la Bolsa de Frankfurt que son unas de las instituciones financieras más importantes del mundo. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 12 — Mié 17 Sep","Desayuno · llegada desde Núremberg · visita a Frankfurt"],
   ["Edificios de la familia Römer (ss.XIII-XIV)","el ayuntamiento histórico más fotogénico de Frankfurt"],
@@ -553,7 +584,7 @@ const cities=[
   ["Banco Central Europeo (BCE)","silueta majestuosa mencionada en el itinerario"],
   ["Banco de Alemania (Deutsche Bundesbank)","una de las instituciones financieras más importantes del mundo"],
   ["Bolsa de Frankfurt (Börse)","famosas estatuas del toro y el oso en su exterior"],
-  ["Paseo nocturno en barco por el Río Meno (Paquete 2)","Recorrido nocturno en barco · contraste entre el Römer histórico y el skyline financiero"],
+  ["Paseo nocturno en barco por el Río Meno","Recorrido nocturno en barco · contraste entre el Römer histórico y el skyline financiero"],
   ["📅 DÍA 13 — Jue 18 Sep","Desayuno · partida hacia Luxemburgo y Metz"],
  ],
  atractivos_recomendados:[
@@ -602,11 +633,14 @@ const cities=[
  ]}
 },
 {id:"lux",wlat:49.6116,wlon:6.1319,name:"Luxemburgo",flag:"🇱🇺",country:"Gran Ducado de Luxemburgo",days:"Día 13 (excursión) y 14",dates:"Jue 18 Sep – Vie 19 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
- libre:["Día 14 — Vie 19 Sep: Luxemburgo es excursión opcional del Paquete 1 desde Metz (55 km · 45 min en tren)."],
+ libre:["Día 14 — Vie 19 Sep: Luxemburgo es excursión opcional del excursión opcional desde Metz (55 km · 45 min en tren)."],
  tourPersonal:"⭐ Día 14 (Vie 19 Sep): Si no contratas el tour a Luxemburgo, puedes ir por tu cuenta desde Metz en tren (€10-15 ida y vuelta). La Ciudad de Luxemburgo es visitable en un día completo caminando.",
+ descripcion_dia:[
+  {t:`📅 Día 13 — Vie 18 Sep`,c:`🇩🇪→🇱🇺🇫🇷 Frankfurt · Luxemburgo · Metz`,full:`Desayuno. Después nos dirigimos a la ciudad francesa de Metz o a la ciudad francesa de Thionville. Tiempo libre para realizar excursiones opcionales a la ciudad de Luxemburgo en el estado de Gran Ducado de Luxemburgo y a la ciudad de Schengen. Alojamiento.`}
+ ],
  atractivos_itinerario:[
-  ["Ciudad de Luxemburgo (excursión opcional Paquete 1)","Patrimonio UNESCO · incluida en el tour opcional"],
-  ["Ciudad de Schengen (Paquete 2)","Donde se firmó el Acuerdo de Schengen (1985) que abolió los controles fronterizos en Europa"],
+  ["Ciudad de Luxemburgo (excursión opcional excursión opcional)","Patrimonio UNESCO · incluida en el tour opcional"],
+  ["Ciudad de Schengen","Donde se firmó el Acuerdo de Schengen (1985) que abolió los controles fronterizos en Europa"],
  ],
  atractivos_recomendados:[
   ["Casco Antiguo y barrancos del Pétrusse","ciudad sobre profundos valles · vistas únicas"],
@@ -651,16 +685,20 @@ const cities=[
  ]}
 },
 {id:"met",wlat:49.1193,wlon:6.1757,name:"Metz",flag:"🇫🇷",country:"Francia (Lorena)",days:"Días 13-15 (ciudad base)",dates:"Jue 18 Sep – Sáb 20 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
- libre:["🟢 Día 14 — Vie 19 Sep (DÍA LIBRE): Estrasburgo/Colmar (Paq.1) · Luxemburgo (Paq.1) · Schengen (Paq.2) · o Metz por libre."],
+ libre:["🟢 Día 14 — Vie 19 Sep (DÍA LIBRE): Estrasburgo/Colmar · Luxemburgo · Schengen · o Metz por libre."],
  tourPersonal:"⭐ Día 14 (Vie 19 Sep): Si no contratas excursiones, Metz misma ofrece la Catedral de San Esteban (vitrales medievales más grandes del mundo), el Centre Pompidou-Metz y el Barrio del Temple, todo caminable en un día muy agradable.",
+ descripcion_dia:[
+  {t:`📅 Día 13 — Vie 18 Sep`,c:`🇩🇪→🇱🇺🇫🇷 Frankfurt · Luxemburgo · Metz`,full:`Desayuno. Después nos dirigimos a la ciudad francesa de Metz o a la ciudad francesa de Thionville. Tiempo libre para realizar excursiones opcionales a la ciudad de Luxemburgo en el estado de Gran Ducado de Luxemburgo y a la ciudad de Schengen. Alojamiento.`},
+  {t:`📅 Día 14 — Sáb 19 Sep`,c:`🇫🇷 Metz / Thionville ★ DÍA LIBRE`,full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 13 — Jue 18 Sep","Desayuno · llegada desde Frankfurt · tiempo libre para excursiones opcionales"],
-  ["Ciudad de Luxemburgo (Paquete 1)","Capital del Gran Ducado · Casamatas UNESCO · uno de los centros financieros y políticos de Europa"],
-  ["Ciudad de Schengen (Paquete 2)","Donde se firmó el Acuerdo de Schengen (1985) que abolió los controles fronterizos en Europa"],
+  ["Ciudad de Luxemburgo","Capital del Gran Ducado · Casamatas UNESCO · uno de los centros financieros y políticos de Europa"],
+  ["Ciudad de Schengen","Donde se firmó el Acuerdo de Schengen (1985) que abolió los controles fronterizos en Europa"],
   ["Metz / Thionville como ciudad base","alojamiento durante los días 13-15"],
   ["📅 DÍA 14 — Vie 19 Sep 🟢 DÍA LIBRE","Excursiones opcionales o exploración libre de Metz"],
-  ["Estrasburgo (Paquete 1)","Catedral gótica · sede del Parlamento Europeo · excursión junto con Colmar (Paquete 1)"],
-  ["Colmar (Paquete 1)","Arquitectura de cuento de hadas · barrio 'Pequeña Venecia' · excursión junto con Estrasburgo (Paquete 1)"],
+  ["Estrasburgo","Catedral gótica · sede del Parlamento Europeo · excursión junto con Colmar"],
+  ["Colmar","Arquitectura de cuento de hadas · barrio 'Pequeña Venecia' · excursión junto con Estrasburgo"],
   ["📅 DÍA 15 — Sáb 20 Sep","Desayuno · partida hacia Bruselas"],
  ],
  atractivos_recomendados:[
@@ -707,8 +745,12 @@ const cities=[
  ]}
 },
 {id:"bru",wlat:50.8503,wlon:4.3517,name:"Bruselas",flag:"🇧🇪",country:"Bélgica",days:"Días 15-17",dates:"Sáb 20 Sep – Lun 22 Sep",moneda:"Euro (€)",cambio:`1 € = $${EUR.toFixed(2)} MXN`,
- libre:["🟢 Día 16 — Dom 21 Sep (DÍA LIBRE): Brujas y Gante (Paquete 1) · o Bruselas por libre."],
+ libre:["🟢 Día 16 — Dom 21 Sep (DÍA LIBRE): Brujas y Gante · o Bruselas por libre."],
  tourPersonal:"Día 16 (Dom 21 Sep): Si no tomas el tour a Brujas/Gante, Bruselas ofrece el Atomium, los Museos Reales de Bellas Artes (Magritte, Bruegel, Rubens) y el Barrio Europeo, todo a pie.",
+ descripcion_dia:[
+  {t:`📅 Día 15 — Dom 20 Sep`,c:`🇫🇷→🇧🇪 Metz · Bruselas`,full:`Desayuno. Después nos dirigimos a la ciudad de Bruselas, la capital del Reino de Bélgica, sede la Comisión Europea, famosa por su cerveza y su chocolate. Aquí veremos la impresionante Plaza del Mercado, las galerías reales de Saint-Hubert, la escultura del Manneken Pis, el Palacio Real de Bruselas, los museos reales de Bellas Artes. Alojamiento.`},
+  {t:`📅 Día 16 — Lun 21 Sep`,c:`🇧🇪 Bruselas ★ DÍA LIBRE`,full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`}
+ ],
  atractivos_itinerario:[
   ["📅 DÍA 15 — Sáb 20 Sep","Desayuno · llegada desde Metz · recorrido por Bruselas"],
   ["Grand Place (Plaza Mayor)","Patrimonio UNESCO · considerada la plaza más bella del mundo"],
@@ -717,7 +759,7 @@ const cities=[
   ["Palacio Real de Bruselas","residencia oficial del rey belga"],
   ["Museos Reales de Bellas Artes","Bruegel, Rubens y Magritte bajo el mismo techo"],
   ["📅 DÍA 16 — Dom 21 Sep 🟢 DÍA LIBRE","Excursiones opcionales o Bruselas por libre"],
-  ["Ciudades de Brujas y Gante (Paquete 1)","Brujas: 'Venecia del Norte' · canales medievales · arquitectura flamenca. Gante: castillo medieval · ciudad vibrante"],
+  ["Ciudades de Brujas y Gante","Brujas: 'Venecia del Norte' · canales medievales · arquitectura flamenca. Gante: castillo medieval · ciudad vibrante"],
   ["📅 DÍA 17 — Lun 22 Sep","Desayuno · partida hacia Ámsterdam"],
  ],
  atractivos_recomendados:[
@@ -1217,6 +1259,13 @@ function sv(v){
  if(v==='monedas')renderMonedas();
 }
 
+function goToCity(idx){
+ curCity=idx;
+ curSub='itinerario';
+ sv('ciudades');
+ window.scrollTo(0,0);
+}
+
 function renderCities(){
  document.getElementById('city-pills').innerHTML=cities.map((c,i)=>
   `<button class="pill${i===curCity?' active':''}" onclick="selC(${i})">${c.flag} ${c.name}</button>`
@@ -1234,6 +1283,10 @@ function renderCityBody(){
  if(c.tourPersonal) h+=`<div class="tp-box"><div class="tpt">🌟 Tour personal sugerido</div><p>${c.tourPersonal}</p></div>`;
  if(curSub==='itinerario'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">${c.flag} ${c.name}</div><div class="card-sub">${c.country} · ${c.days}<br><span style="color:var(--gold)">${c.dates}</span></div><div class="tag">${c.moneda} · ${c.cambio}</div></div>`;
+  if(c.descripcion_dia&&c.descripcion_dia.length){
+   h+=`<div class="section-label">Itinerario día por día</div>`;
+   h+=c.descripcion_dia.map(d=>`<div class="day-desc"><div class="day-desc-title">${d.t}</div><div class="day-desc-city">${d.c}</div><div class="day-desc-full">${d.full}</div></div>`).join('');
+  }
   h+=`<div class="section-label">Atractivos que incluye el tour</div>`;
   h+=c.atractivos_itinerario.map(a=>{
    const isDay=a[0].startsWith('📅');
@@ -1930,89 +1983,68 @@ document.addEventListener('change',e=>{
 
 // HOME itinerary
 const itin=[
- {d:"1",wd:"Dom",dt:"6 Sep",c:"✈️ México → Ámsterdam",n:"Vuelo trasatlántico · noche a bordo",tipo:"normal",
+ {d:"1",cityIdx:0,wd:"Dom",dt:"6 Sep",c:"✈️ México → Ámsterdam",n:"Vuelo trasatlántico · noche a bordo",tipo:"normal",
   full:`Presentarse en el Aeropuerto Internacional de la Ciudad de México 3 horas antes para tomar el vuelo trasatlántico con destino a Ámsterdam. Noche a bordo.`},
- {d:"2",wd:"Lun",dt:"7 Sep",c:"🇳🇱 Ámsterdam",n:"Llegada · recepción · recorrido panorámico",tipo:"normal",
+ {d:"2",cityIdx:0,wd:"Lun",dt:"7 Sep",c:"🇳🇱 Ámsterdam",n:"Llegada · recepción · recorrido panorámico",tipo:"normal",
   full:`Llegada a Ámsterdam, la capital del Reino de los Países Bajos. Por su belleza, el casco histórico de Ámsterdam está incluido en la Lista del Patrimonio Mundial de la UNESCO. Después del recorrido por la ciudad, recepción y traslado al hotel. Alojamiento.`},
- {d:"3",wd:"Mar",dt:"8 Sep",c:"🇳🇱→🇩🇪 Ámsterdam · Hannover · Berlín",n:"Desayuno · parada Hannover · llegada Berlín",tipo:"normal",
+ {d:"3",cityIdx:2,wd:"Mar",dt:"8 Sep",c:"🇳🇱→🇩🇪 Ámsterdam · Hannover · Berlín",n:"Desayuno · parada Hannover · llegada Berlín",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad de Hannover en la República Federal de Alemania. Situada en orilla del río Leine la ciudad lleva el nombre con este mismo significado "La Orilla Alta". Hannover fue fundada en época medieval por barqueros, pescadores y comerciantes que llevaban los barcos llenos de mercancías por el río. Durante nuestro recorrido veremos los bellos edificios del Palacio de la Opera, las ruinas de la iglesia San Gil (Aegidienkirche), la Iglesia del Mercado, los edificios del Ayuntamiento, Nuevo y Viejo. Luego seguiremos hacia la ciudad de Berlín, la capital de la República Federal de Alemania. Alojamiento.`},
- {d:"4",wd:"Mié",dt:"9 Sep",c:"🇩🇪 Berlín",n:"Recorrido panorámico · opt. Potsdam (Paq.1)",tipo:"normal",
+ {d:"4",cityIdx:2,wd:"Mié",dt:"9 Sep",c:"🇩🇪 Berlín",n:"Recorrido panorámico · opt. Potsdam",tipo:"normal",
   full:`Desayuno. Realizaremos una breve visita panorámica de Berlín. Situada en las orillas de dos ríos, Spree y Havel que confluyen dentro de la ciudad, Berlín ofrece unas vistas inolvidables. Durante nuestro recorrido vamos a ver la Plaza Gendarmenmarkt, La Puerta de Brandenburgo, Potsdamer Platz, Frauenkirche, el Palacio Zwinger, la Terraza Bruhl, el Camino del Rey, la Estatua de Martín Lutero y gozar de la belleza majestuosa de la milenaria ciudad. Alojamiento.`,
   opcionales:["Ciudad de Potsdam"]},
- {d:"5",wd:"Jue",dt:"10 Sep",c:"🇩🇪→🇵🇱 Berlín · Varsovia",n:"Desayuno · viaje · recorrido Ciudad Vieja UNESCO",tipo:"normal",
+ {d:"5",cityIdx:3,wd:"Jue",dt:"10 Sep",c:"🇩🇪→🇵🇱 Berlín · Varsovia",n:"Desayuno · viaje · recorrido Ciudad Vieja UNESCO",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad de Varsovia, la capital de la República de Polonia. Nadie sabe cuándo apareció el pequeño pueblo de pescadores que desde el siglo XIII se convirtió en una de las ciudades más hermosas del mundo. La Ciudad Vieja – su casco histórico está incluido en la Lista del Patrimonio de la Humanidad de la UNESCO. Durante nuestro recorrido veremos el Castillo Real, la famosa Columna de Segismundo, la hermosa Iglesia de las Visitacionistas, también denominada iglesia de las Hermanas de la Visitación de San José de Varsovia de la Orden de la Visitación. Alojamiento.`},
- {d:"6",wd:"Vie",dt:"11 Sep",c:"🇵🇱 Varsovia → Cracovia",n:"Desayuno · viaje · recorrido panorámico Cracovia",tipo:"normal",
+ {d:"6",cityIdx:4,wd:"Vie",dt:"11 Sep",c:"🇵🇱 Varsovia → Cracovia",n:"Desayuno · viaje · recorrido panorámico Cracovia",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad polaca de Cracovia. Otra bella ciudad europea con su casco histórico incluido en la Lista del Patrimonio de la Humanidad de la UNESCO. Durante nuestro breve recorrido panorámico veremos el Castillo de Wawel, la increíble catedral con nombre completo de Basílica de San Estanislao y San Wenceslao con sus numerosas capillas de distintas épocas y estilos arquitectónicos, La Basílica de Santa María, El Corte Renacentista, la Plaza del Mercado y la pequeña iglesia de San Adalberto. Alojamiento.`},
- {d:"7",wd:"Sáb",dt:"12 Sep",c:"🇵🇱 Cracovia ★ DÍA LIBRE",n:"Opt. Auschwitz (Paq.1) · Wieliczka (Paq.2) · o tour personal",tipo:"libre",
+ {d:"7",cityIdx:4,wd:"Sáb",dt:"12 Sep",c:"🇵🇱 Cracovia ★ DÍA LIBRE",n:"Opt. Auschwitz · Wieliczka · o tour personal",tipo:"libre",
   full:`Desayuno. Día libre para actividades personales o para realizar una excursión opcional. Alojamiento.`,
   opcionales:["Campo de concentración de Auschwitz–Birkenau","Minas de sal de Wieliczka"]},
- {d:"8",wd:"Dom",dt:"13 Sep",c:"🇵🇱→🇨🇿 Cracovia · Praga",n:"Desayuno · viaje · recorrido panorámico Praga",tipo:"normal",
+ {d:"8",cityIdx:5,wd:"Dom",dt:"13 Sep",c:"🇵🇱→🇨🇿 Cracovia · Praga",n:"Desayuno · viaje · recorrido panorámico Praga",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad de Praga, la capital de la República Checa y la capital histórica de Bohemia. Construida en el siglo IX como un pequeño pueblo fronterizo en las orillas del río Moldava, en el siglo XVII-XIX llegó a tener tal esplendor que todo Europa la llamaba Praga Dorada. En nuestro tour panorámico de la ciudad pasaremos por la Plaza Vaclav Havel, que es una de las plazas más grandes de Praga, luego llegaremos a la Plaza de la Ciudad Vieja, que se encuentra entre la Plaza Vaclac Havel y el Puente Carlos (Karluv Most). En la Plaza de la Ciudad Vieja veremos la Torre del Reloj Astronómico, la Iglesia de Tyn, el Ayuntamiento Viejo, la Iglesia de San Nicolás y el Monumento a Jan Hus. Después del almuerzo continuaremos hacia la orilla opuesta de Praga. De paso veremos el Puente de Carlos, que fue construido en el siglo XIV. Alojamiento.`},
- {d:"9",wd:"Lun",dt:"14 Sep",c:"🇨🇿 Praga ★ DÍA LIBRE",n:"Opt. Barco Moldava (P1) · Karlovy Vary/Noche Checa (P2) · o personal",tipo:"libre",
+ {d:"9",cityIdx:5,wd:"Lun",dt:"14 Sep",c:"🇨🇿 Praga ★ DÍA LIBRE",n:"Opt. Barco Moldava · Karlovy Vary/Noche Checa · o personal",tipo:"libre",
   full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`,
   opcionales:["Paseo en barco por el Río Moldava","Excursión a Karlovy Vary","Noche checa con cena tradicional"]},
- {d:"10",wd:"Mar",dt:"15 Sep",c:"🇨🇿→🇩🇪 Praga · Núremberg",n:"Desayuno · viaje · recorrido Núremberg",tipo:"normal",
+ {d:"10",cityIdx:6,wd:"Mar",dt:"15 Sep",c:"🇨🇿→🇩🇪 Praga · Núremberg",n:"Desayuno · viaje · recorrido Núremberg",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad alemana de Núremberg. El fabuloso Castillo de Núremberg fue construido en lo alto de una colina hace unos mil años. En los siguientes siglos ese pintoresco complejo de edificios se convirtió en núcleo vivo de una ciudad creciendo rápidamente alrededor suyo. Durante nuestro recorrido por Núremberg veremos los impresionantes edificios de la Iglesia de Nuestra Señora, la Casa de la Opera, el Viejo Ayuntamiento y por supuesto las vistas fascinantes del río Pegnitz. Alojamiento.`},
- {d:"11",wd:"Mié",dt:"16 Sep",c:"🇩🇪 Núremberg ★ DÍA LIBRE",n:"Opt. Rothenburg (P1) · Múnich (P2) · o tour personal",tipo:"libre",
+ {d:"11",cityIdx:6,wd:"Mié",dt:"16 Sep",c:"🇩🇪 Núremberg ★ DÍA LIBRE",n:"Opt. Rothenburg · Múnich · o tour personal",tipo:"libre",
   full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`,
   opcionales:["Ciudad Rothenburg ob der Tauber","Ciudad de Múnich"]},
- {d:"12",wd:"Jue",dt:"17 Sep",c:"🇩🇪 Núremberg → Frankfurt",n:"Desayuno · viaje · visita Frankfurt",tipo:"normal",
+ {d:"12",cityIdx:7,wd:"Jue",dt:"17 Sep",c:"🇩🇪 Núremberg → Frankfurt",n:"Desayuno · viaje · visita Frankfurt",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad de Frankfurt ubicada en el centro de Alemania a orillas del Rio Meno, importante centro financiero mundial. Los orígenes de la ciudad se pierden en lo hondo de los primeros siglos del Medioevo, pero siempre en la colina de Romer. Aquí veremos los impresionantes edificios de la familia de comerciantes Romer construidos en los siglos XIII y XIV, la iglesia de San Nicolás, la Catedral Imperial de la Colegiata de San Bartolomé y gozaremos de las majestuosas siluetas del Banco Central Europeo, el Banco de Alemania y la Bolsa de Frankfurt que son unas de las instituciones financieras más importantes del mundo. Alojamiento.`,
   opcionales:["Paseo nocturno en barco por el Río Meno"]},
- {d:"13",wd:"Vie",dt:"18 Sep",c:"🇩🇪→🇱🇺🇫🇷 Frankfurt · Luxemburgo · Metz",n:"Desayuno · parada Luxemburgo (opc.) · base Metz",tipo:"normal",
+ {d:"13",cityIdx:9,wd:"Vie",dt:"18 Sep",c:"🇩🇪→🇱🇺🇫🇷 Frankfurt · Luxemburgo · Metz",n:"Desayuno · parada Luxemburgo (opc.) · base Metz",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad francesa de Metz o a la ciudad francesa de Thionville. Tiempo libre para realizar excursiones opcionales a la ciudad de Luxemburgo en el estado de Gran Ducado de Luxemburgo y a la ciudad de Schengen. Alojamiento.`,
   opcionales:["Ciudad de Luxemburgo","Ciudad de Schengen"]},
- {d:"14",wd:"Sáb",dt:"19 Sep",c:"🇫🇷 Metz / Thionville ★ DÍA LIBRE",n:"Opt. Luxemburgo/Estr./Colmar (P1) · Schengen (P2) · o Metz libre",tipo:"libre",
+ {d:"14",cityIdx:9,wd:"Sáb",dt:"19 Sep",c:"🇫🇷 Metz / Thionville ★ DÍA LIBRE",n:"Opt. Luxemburgo/Estr./Colmar · Schengen · o Metz libre",tipo:"libre",
   full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`,
   opcionales:["Ciudad de Estrasburgo","Ciudad de Colmar"]},
- {d:"15",wd:"Dom",dt:"20 Sep",c:"🇫🇷→🇧🇪 Metz · Bruselas",n:"Desayuno · viaje · recorrido Bruselas",tipo:"normal",
+ {d:"15",cityIdx:10,wd:"Dom",dt:"20 Sep",c:"🇫🇷→🇧🇪 Metz · Bruselas",n:"Desayuno · viaje · recorrido Bruselas",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad de Bruselas, la capital del Reino de Bélgica, sede la Comisión Europea, famosa por su cerveza y su chocolate. Aquí veremos la impresionante Plaza del Mercado, las galerías reales de Saint-Hubert, la escultura del Manneken Pis, el Palacio Real de Bruselas, los museos reales de Bellas Artes. Alojamiento.`},
- {d:"16",wd:"Lun",dt:"21 Sep",c:"🇧🇪 Bruselas ★ DÍA LIBRE",n:"Opt. Brujas y Gante (Paq.1) · o Bruselas por libre",tipo:"libre",
+ {d:"16",cityIdx:10,wd:"Lun",dt:"21 Sep",c:"🇧🇪 Bruselas ★ DÍA LIBRE",n:"Opt. Brujas y Gante · o Bruselas por libre",tipo:"libre",
   full:`Desayuno. Día libre para realizar actividades personales o posibilidad de realizar una excursión opcional. Alojamiento.`,
   opcionales:["Ciudades de Brujas y Gante"]},
- {d:"17",wd:"Mar",dt:"22 Sep",c:"🇧🇪→🇳🇱 Bruselas · Ámsterdam ⭐ TOUR PERSONAL",n:"Si no tomas P2: Ámsterdam libre → Rijksmuseum, Jordaan, canales",tipo:"tp",
+ {d:"17",cityIdx:0,wd:"Mar",dt:"22 Sep",c:"🇧🇪→🇳🇱 Bruselas · Ámsterdam ⭐ TOUR PERSONAL",n:"Si no tomas la excursión: Ámsterdam libre → Rijksmuseum, Jordaan, canales",tipo:"tp",
   full:`Desayuno. Después nos dirigimos a la ciudad de Ámsterdam. Tiempo libre para realizar actividades personales o bien realizar una excursión opcional. Alojamiento.`,
   opcionales:["Volendam y Marken","Ciudad de La Haya","Pueblo de Giethoorn"]},
- {d:"18",wd:"Mié",dt:"23 Sep",c:"🇳🇱 Ámsterdam → ✈️ México",n:"Desayuno · traslado aeropuerto · vuelo de regreso",tipo:"normal",
+ {d:"18",cityIdx:0,wd:"Mié",dt:"23 Sep",c:"🇳🇱 Ámsterdam → ✈️ México",n:"Desayuno · traslado aeropuerto · vuelo de regreso",tipo:"normal",
   full:`Desayuno. A la hora indicada, traslado al aeropuerto para tomar el vuelo de regreso a la Ciudad de México.`},
 ];
 document.getElementById('quick-itinerary').innerHTML=itin.map((i,idx)=>{
- const opc=i.opcionales&&i.opcionales.length?`<div class="iexp-opc-title">Excursiones opcionales</div>`+i.opcionales.map(o=>`<div class="iexp-opc-item">◆ ${o}</div>`).join(''):'';
- return `<div class="irow" data-day="${idx}" id="irow-${idx}" role="button" tabindex="0">
+ return `<div class="irow irow-link" data-day="${idx}" id="irow-${idx}" role="button" tabindex="0" onclick="goToCity(${i.cityIdx})">
   <div class="iday"><div class="idaynum">D${i.d}</div><div class="idaydate">${i.wd}<br>${i.dt}</div></div>
   <div style="flex:1;min-width:0">
-   <div class="icity${i.tipo==='libre'?' libre':i.tipo==='tp'?' tp':''}">${i.c}<span class="iexp-chev" id="ichev-${idx}">▸</span></div>
+   <div class="icity${i.tipo==='libre'?' libre':i.tipo==='tp'?' tp':''}">${i.c}<span class="irow-arrow">›</span></div>
    <div class="inote">${i.n}</div>
-   <div class="iexp" id="iexp-${idx}" style="display:none">
-    <div class="iexp-full">${i.full}</div>
-    ${opc}
-   </div>
   </div>
  </div>`;
 }).join('');
 
-// iOS-friendly: simple click handlers, no touchend interference
-(function attachItinClicks(){
- const rows=document.querySelectorAll('#quick-itinerary .irow');
- rows.forEach(function(row){
-  row.addEventListener('click',function(){
-   const idx=row.getAttribute('data-day');
-   const e=document.getElementById('iexp-'+idx);
-   const c=document.getElementById('ichev-'+idx);
-   if(!e)return;
-   const isOpen=e.style.display==='block';
-   e.style.display=isOpen?'none':'block';
-   if(c)c.textContent=isOpen?'▸':'▾';
-  });
- });
-})();
-
 document.getElementById('tp-home-box').innerHTML=`<div class="tph">5 oportunidades identificadas en el itinerario</div>`+[
- {d:"Día 7 · Sáb 12 Sep",c:"Cracovia",n:"Si no contratas Auschwitz (P1) ni Wieliczka (P2): Barrio Kazimierz + Plaza del Mercado a tu ritmo."},
+ {d:"Día 7 · Sáb 12 Sep",c:"Cracovia",n:"Si no contratas Auschwitz ni Wieliczka: Barrio Kazimierz + Plaza del Mercado a tu ritmo."},
  {d:"Día 9 · Lun 14 Sep",c:"Praga",n:"Sin tours opcionales: Castillo de Praga por tu cuenta + Puente de Carlos al amanecer."},
  {d:"Día 11 · Mié 16 Sep",c:"Núremberg",n:"Sin Rothenburg ni Múnich: Tribunal de Núremberg (Sala 600) + murallas medievales caminables."},
  {d:"Día 14 · Sáb 19 Sep",c:"Metz",n:"Sin excursiones: Catedral de San Esteban + Centre Pompidou-Metz + Barrio del Temple."},
- {d:"Día 17 · Mar 22 Sep ⭐",c:"Ámsterdam (recomendada)",n:"Si no tomas P2: Ámsterdam libre para Rijksmuseum, barrio Jordaan y canales sin prisas."},
+ {d:"Día 17 · Mar 22 Sep ⭐",c:"Ámsterdam (recomendada)",n:"Si no tomas la excursión: Ámsterdam libre para Rijksmuseum, barrio Jordaan y canales sin prisas."},
 ].map(t=>`<div class="tpi"><strong>${t.d} · ${t.c}</strong><br>${t.n}</div>`).join('');
 
 // Initialize home documents
