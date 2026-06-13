@@ -1823,7 +1823,12 @@ async function viewDoc(id){
     <button class="doc-overlay-open" onclick="window.open('${d.data}','_blank')">⤢ Abrir completo</button>
     <button class="doc-overlay-close" onclick="this.closest('.doc-overlay').remove()">✕ Cerrar</button>
    </div>
-   <div class="doc-overlay-pages" id="doc-pages"><div class="doc-loading">Cargando documento…</div></div>`;
+   <div class="doc-overlay-pages" id="doc-pages"><div class="doc-loading">Cargando documento…</div></div>
+   <div class="doc-zoom-controls">
+    <button class="doc-zoom-btn" id="doc-zoom-out">−</button>
+    <button class="doc-zoom-btn doc-zoom-reset" id="doc-zoom-reset">100%</button>
+    <button class="doc-zoom-btn" id="doc-zoom-in">+</button>
+   </div>`;
   document.body.appendChild(overlay);
   const cont=overlay.querySelector('#doc-pages');
   try{
@@ -1831,6 +1836,10 @@ async function viewDoc(id){
    const bytes=dataURItoUint8(d.data);
    const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
    cont.innerHTML='';
+   const inner=document.createElement('div');
+   inner.className='doc-pages-inner';
+   inner.id='doc-pages-inner';
+   cont.appendChild(inner);
    const scale=Math.min(2,(window.devicePixelRatio||1)*1.3);
    for(let p=1;p<=pdf.numPages;p++){
     const page=await pdf.getPage(p);
@@ -1839,13 +1848,53 @@ async function viewDoc(id){
     canvas.className='doc-page-canvas';
     canvas.width=viewport.width;
     canvas.height=viewport.height;
-    cont.appendChild(canvas);
+    inner.appendChild(canvas);
     await page.render({canvasContext:canvas.getContext('2d'),viewport:viewport}).promise;
    }
+   setupPdfZoom(overlay,inner,cont);
   }catch(err){
    cont.innerHTML=`<div class="doc-loading">No se pudo mostrar el PDF aquí.<br>Usa el botón "⤢ Abrir completo" para verlo en el navegador.<br><br><iframe class="doc-overlay-frame" src="${d.data}"></iframe></div>`;
   }
  };
+}
+
+function setupPdfZoom(overlay,inner,cont){
+ let zoom=1;
+ const MIN=0.5,MAX=4;
+ const lbl=overlay.querySelector('#doc-zoom-reset');
+ function apply(){
+  zoom=Math.max(MIN,Math.min(MAX,zoom));
+  inner.style.transform=`scale(${zoom})`;
+  lbl.textContent=Math.round(zoom*100)+'%';
+ }
+ overlay.querySelector('#doc-zoom-in').onclick=()=>{zoom+=0.25;apply();};
+ overlay.querySelector('#doc-zoom-out').onclick=()=>{zoom-=0.25;apply();};
+ overlay.querySelector('#doc-zoom-reset').onclick=()=>{zoom=1;apply();};
+ // Pinch to zoom
+ let startDist=0,startZoom=1;
+ function dist(t){const dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;return Math.hypot(dx,dy);}
+ cont.addEventListener('touchstart',e=>{
+  if(e.touches.length===2){startDist=dist(e.touches);startZoom=zoom;}
+ },{passive:true});
+ cont.addEventListener('touchmove',e=>{
+  if(e.touches.length===2&&startDist>0){
+   e.preventDefault();
+   zoom=startZoom*(dist(e.touches)/startDist);
+   apply();
+  }
+ },{passive:false});
+ cont.addEventListener('touchend',e=>{
+  if(e.touches.length<2)startDist=0;
+ },{passive:true});
+ // Double-tap to toggle zoom
+ let lastTap=0;
+ cont.addEventListener('touchend',e=>{
+  const now=Date.now();
+  if(now-lastTap<300&&e.changedTouches.length===1){
+   zoom=(zoom>1.2)?1:2;apply();
+  }
+  lastTap=now;
+ },{passive:true});
 }
 
 let curTourSub='info';
