@@ -86,9 +86,9 @@ async function fetchWeatherAPI(cityId,cityName,lat,lon,targetId){
   if(el){
    const cached=localStorage.getItem('wx_'+cityId);
    if(cached){try{renderWeatherCard(targetId,JSON.parse(cached),cityName,true);}catch(ex){
-    el.innerHTML='<div style="padding:14px;color:var(--dim);font-size:13px;text-align:center">Sin señal de internet. Abre la app con conexión para ver el clima.</div>';
+    el.innerHTML='<div style="padding:14px;color:var(--dim);font-size:14px;text-align:center">Sin señal de internet. Abre la app con conexión para ver el clima.</div>';
    }}else{
-    el.innerHTML='<div style="padding:14px;color:var(--dim);font-size:13px;text-align:center">Sin señal de internet. Abre la app con conexión para ver el clima.</div>';
+    el.innerHTML='<div style="padding:14px;color:var(--dim);font-size:14px;text-align:center">Sin señal de internet. Abre la app con conexión para ver el clima.</div>';
    }
   }
  }
@@ -109,28 +109,28 @@ function renderWeatherCard(targetId,d,cityName,offline){
     <div style="font-size:48px;line-height:1">${emoji}</div>
     <div>
      <div style="font-size:32px;font-weight:700;color:var(--cream)">${d.temp}°C</div>
-     <div style="font-size:13px;color:var(--muted);text-transform:capitalize">${d.desc}</div>
+     <div style="font-size:14px;color:var(--muted);text-transform:capitalize">${d.desc}</div>
     </div>
    </div>
    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
     <div style="background:var(--bg3);border-radius:8px;padding:10px">
      <div style="font-size:10px;color:var(--dim);margin-bottom:2px">SENSACIÓN</div>
-     <div style="font-size:15px;color:var(--cream);font-weight:500">${d.feels}°C</div>
+     <div style="font-size:16px;color:var(--cream);font-weight:500">${d.feels}°C</div>
     </div>
     <div style="background:var(--bg3);border-radius:8px;padding:10px">
      <div style="font-size:10px;color:var(--dim);margin-bottom:2px">HUMEDAD</div>
-     <div style="font-size:15px;color:var(--cream);font-weight:500">${d.humidity}%</div>
+     <div style="font-size:16px;color:var(--cream);font-weight:500">${d.humidity}%</div>
     </div>
     <div style="background:var(--bg3);border-radius:8px;padding:10px">
      <div style="font-size:10px;color:var(--dim);margin-bottom:2px">VIENTO</div>
-     <div style="font-size:15px;color:var(--cream);font-weight:500">${d.wind} km/h</div>
+     <div style="font-size:16px;color:var(--cream);font-weight:500">${d.wind} km/h</div>
     </div>
     <div style="background:var(--bg3);border-radius:8px;padding:10px">
      <div style="font-size:10px;color:var(--dim);margin-bottom:2px">ACTUALIZADO</div>
-     <div style="font-size:12px;color:${offline?'#ffa552':'var(--gold)'};font-weight:500">${offline?'📴 '+agoText:'🔄 '+agoText}</div>
+     <div style="font-size:13px;color:${offline?'#ffa552':'var(--gold)'};font-weight:500">${offline?'📴 '+agoText:'🔄 '+agoText}</div>
     </div>
    </div>
-   ${offline?'<div style="margin-top:10px;font-size:11px;color:#ffa552;text-align:center">⚠️ Datos de cuando tenías señal · abre con internet para actualizar</div>':''}
+   ${offline?'<div style="margin-top:10px;font-size:12px;color:#ffa552;text-align:center">⚠️ Datos de cuando tenías señal · abre con internet para actualizar</div>':''}
   </div>`;
 }
 
@@ -199,6 +199,8 @@ const cities=[
   ["Estación Central","Amsterdam+Centraal+Station"]
  ]},
  saludos:{idioma:"Neerlandés (Nederlands)",nota:"El neerlandés es la lengua oficial. El inglés lo habla casi todo el mundo, pero un saludo local siempre causa buena impresión.",frases:[
+  {cat:"✅ Sí",local:"Ja",pron:"Ya",tip:""},
+  {cat:"❌ No",local:"Nee",pron:"Néi",tip:""},
   {cat:"🌅 Buenos días",local:"Goedemorgen",pron:"Jú-de-mor-jen",tip:"Usa hasta aprox. las 12:00"},
   {cat:"☀️ Buenas tardes",local:"Goedemiddag",pron:"Jú-de-mi-daj",tip:"Desde mediodía hasta las 18:00"},
   {cat:"🌙 Buenas noches",local:"Goedenavond",pron:"Jú-den-á-font",tip:"A partir de las 18:00"},
@@ -247,6 +249,8 @@ const cities=[
   ["Río Leine","Leine+River+Hannover"]
  ]},
  saludos:{idioma:"Alemán (Deutsch)",nota:"El alemán hannoveriano es considerado el alemán más 'puro' y neutro de Alemania. Un saludo en alemán siempre se agradece.",frases:[
+  {cat:"✅ Sí",local:"Ja",pron:"Ya",tip:""},
+  {cat:"❌ No",local:"Nein",pron:"Náin",tip:""},
   {cat:"🌅 Buenos días",local:"Guten Morgen",pron:"Gú-ten Mór-jen",tip:"Hasta aprox. las 11:00"},
   {cat:"☀️ Buenas tardes",local:"Guten Tag",pron:"Gú-ten Tak",tip:"Saludo general de día · muy común"},
   {cat:"🌙 Buenas noches",local:"Guten Abend",pron:"Gú-ten Á-bent",tip:"A partir de las 18:00"},
@@ -310,6 +314,8 @@ const cities=[
   ["Estatua Martín Lutero","Martin+Luther+Statue+Berlin"]
  ]},
  saludos:{idioma:"Alemán (Deutsch) · dialecto berlinés",nota:"Berlín tiene su propio acento y jerga. El berlinés usa Ick (yo) en vez de Ich y tiene fama de ser directo y un poco brusco, pero un saludo siempre abre puertas.",frases:[
+  {cat:"✅ Sí",local:"Ja",pron:"Ya",tip:""},
+  {cat:"❌ No",local:"Nein",pron:"Náin",tip:""},
   {cat:"🌅 Buenos días",local:"Guten Morgen",pron:"Gú-ten Mór-jen",tip:"Berlín es ciudad de noctámbulos · no esperes caras sonrientes muy temprano"},
   {cat:"☀️ Buenas tardes",local:"Guten Tag",pron:"Gú-ten Tak",tip:"El más neutro y seguro durante el día"},
   {cat:"🌙 Buenas noches",local:"Guten Abend",pron:"Gú-ten Á-bent",tip:"Útil al llegar al hotel o restaurante"},
@@ -362,6 +368,8 @@ const cities=[
   ["Palacio de Cultura","Palace+of+Culture+Warsaw"]
  ]},
  saludos:{idioma:"Polaco (Polski)",nota:"El polaco tiene sonidos difíciles para hispanohablantes. No te preocupes por la perfección — cualquier intento en polaco genera enorme simpatía en los locales.",frases:[
+  {cat:"✅ Sí",local:"Tak",pron:"Tak",tip:""},
+  {cat:"❌ No",local:"Nie",pron:"Nie",tip:""},
   {cat:"🌅 Buenos días",local:"Dzień dobry",pron:"Yén do-bri",tip:"Funciona todo el día · es el saludo más seguro y formal"},
   {cat:"🌙 Buenas noches",local:"Dobry wieczór",pron:"Dó-bri vyé-choor",tip:"Al llegar a un lugar por la noche"},
   {cat:"👋 Hola (informal)",local:"Cześć",pron:"Cheshch",tip:"Solo para personas de tu edad o jóvenes · muy amistoso"},
@@ -426,6 +434,8 @@ const cities=[
   ["Minas de sal Wieliczka","Wieliczka+Salt+Mine"]
  ]},
  saludos:{idioma:"Polaco (Polski) · acento de Małopolska",nota:"Cracovia tiene el acento polaco más antiguo y melódico. Los cracovenses son conocidos por ser más cálidos que los varsovianoss. Un intento en polaco siempre genera una gran sonrisa.",frases:[
+  {cat:"✅ Sí",local:"Tak",pron:"Tak",tip:""},
+  {cat:"❌ No",local:"Nie",pron:"Nie",tip:""},
   {cat:"🌅 Buenos días",local:"Dzień dobry",pron:"Yén do-bri",tip:"El saludo estrella · funciona a toda hora · formal y siempre correcto"},
   {cat:"🌙 Buenas noches",local:"Dobry wieczór",pron:"Dó-bri vyé-choor",tip:"Al entrar a un restaurante o bar por la noche"},
   {cat:"👋 Hola (informal)",local:"Cześć",pron:"Cheshch",tip:"Con jóvenes y en ambiente informal · suena a 'honor' en latín"},
@@ -496,6 +506,8 @@ const cities=[
   ["Muro de John Lennon","Lennon+Wall+Prague"]
  ]},
  saludos:{idioma:"Checo (Čeština)",nota:"El checo es una lengua eslava con acentos en la primera sílaba. Los checos pueden parecer fríos al principio, pero al oírte intentar su idioma cambian completamente de actitud.",frases:[
+  {cat:"✅ Sí",local:"Ano",pron:"Á-no",tip:""},
+  {cat:"❌ No",local:"Ne",pron:"Ne",tip:""},
   {cat:"🌅 Buenos días",local:"Dobré ráno",pron:"Dob-ré rá-no",tip:"Solo hasta aprox. las 10:00"},
   {cat:"☀️ Buenas tardes",local:"Dobré odpoledne",pron:"Dob-ré od-pó-led-ne",tip:"Desde mediodía · algo formal"},
   {cat:"🌙 Buenas noches",local:"Dobrou noc",pron:"Dob-roh nots",tip:"Al despedirse por la noche"},
@@ -558,6 +570,8 @@ const cities=[
   ["Rothenburg ob der Tauber","Rothenburg+ob+der+Tauber"]
  ]},
  saludos:{idioma:"Alemán (Deutsch) · dialecto bávaro-franco",nota:"Núremberg está en Franconia, una región con su propio dialecto. El alemán estándar funciona perfecto, pero algunas expresiones locales te ganarán muchas simpatías.",frases:[
+  {cat:"✅ Sí",local:"Ja",pron:"Ya",tip:""},
+  {cat:"❌ No",local:"Nein",pron:"Náin",tip:""},
   {cat:"🌅 Buenos días",local:"Guten Morgen",pron:"Gú-ten Mór-jen",tip:"Estándar y siempre correcto"},
   {cat:"☀️ Buenas tardes",local:"Guten Tag",pron:"Gú-ten Tak",tip:"El más neutro durante el día"},
   {cat:"🌙 Buenas noches",local:"Guten Abend",pron:"Gú-ten Á-bent",tip:"Desde las 18:00 · al entrar a restaurantes"},
@@ -618,6 +632,8 @@ const cities=[
   ["Barrio Sachsenhausen","Sachsenhausen+Frankfurt"]
  ]},
  saludos:{idioma:"Alemán (Deutsch) · dialecto hessiano",nota:"Frankfurt es la ciudad más cosmopolita de Alemania. El inglés es muy hablado, especialmente en el área financiera. El dialecto local se llama Hessisch pero el alemán estándar es perfecto.",frases:[
+  {cat:"✅ Sí",local:"Ja",pron:"Ya",tip:""},
+  {cat:"❌ No",local:"Nein",pron:"Náin",tip:""},
   {cat:"🌅 Buenos días",local:"Guten Morgen",pron:"Gú-ten Mór-jen",tip:"Frankfurt madruga mucho — ciudad financiera"},
   {cat:"☀️ Buenas tardes",local:"Guten Tag",pron:"Gú-ten Tak",tip:"Seguro y formal durante el día"},
   {cat:"🌙 Buenas noches",local:"Guten Abend",pron:"Gú-ten Á-bent",tip:"Al llegar al Sachsenhausen para cenar"},
@@ -671,6 +687,8 @@ const cities=[
   ["Schengen","Schengen+Luxembourg"]
  ]},
  saludos:{idioma:"Luxemburgués (Lëtzebuergesch) · Francés · Alemán",nota:"Luxemburgo tiene 3 idiomas oficiales: luxemburgués, francés y alemán. Todos los hablan. El francés es el más práctico para turistas. Un saludo en luxemburgués es muy especial.",frases:[
+  {cat:"✅ Sí",local:"Jo",pron:"Yo",tip:""},
+  {cat:"❌ No",local:"Neen",pron:"Néin",tip:""},
   {cat:"🌅 Buenos días (lux.)",local:"Gudde Moien",pron:"Gú-de Móy-en",tip:"El saludo más especial que puedes dar · úsalo y verás las caras de sorpresa"},
   {cat:"☀️ Buenos días (fr.)",local:"Bonjour",pron:"Bon-yur",tip:"Seguro y universal en toda la ciudad"},
   {cat:"🌙 Buenas noches (fr.)",local:"Bonsoir",pron:"Bon-swár",tip:"A partir de las 18:00"},
@@ -730,6 +748,8 @@ const cities=[
   ["Colmar","Colmar+France"]
  ]},
  saludos:{idioma:"Francés (Français) · Lorena",nota:"Metz es una ciudad de la región de Lorena, frontera con Alemania y Luxemburgo. El francés es el idioma de uso diario. Los loreneneses aprecian mucho el esfuerzo por hablar su lengua.",frases:[
+  {cat:"✅ Sí",local:"Oui",pron:"Uí",tip:""},
+  {cat:"❌ No",local:"Non",pron:"Non",tip:""},
   {cat:"🌅 Buenos días",local:"Bonjour",pron:"Bon-yur",tip:"El saludo más importante en Francia · siempre primero que cualquier pregunta"},
   {cat:"🌙 Buenas noches",local:"Bonsoir",pron:"Bon-swár",tip:"A partir de las 18:00 · en restaurantes y tiendas"},
   {cat:"👋 Hola (informal)",local:"Salut",pron:"Sa-lú",tip:"Solo con personas de confianza o jóvenes · nunca a desconocidos"},
@@ -795,6 +815,8 @@ const cities=[
   ["Gante","Ghent+Belgium"]
  ]},
  saludos:{idioma:"Francés (Français) · Neerlandés (Nederlands)",nota:"Bruselas es oficialmente bilingüe pero en la práctica se usa más el francés. Los belgas son famosos por ser muy amables y tolerantes con los extranjeros que intentan su idioma.",frases:[
+  {cat:"✅ Sí",local:"Oui / Ja",pron:"Uí / Ya",tip:""},
+  {cat:"❌ No",local:"Non / Nee",pron:"Non / Néi",tip:""},
   {cat:"🌅 Buenos días (fr.)",local:"Bonjour",pron:"Bon-yur",tip:"El saludo que abre todas las puertas en Bruselas"},
   {cat:"🌙 Buenas noches (fr.)",local:"Bonsoir",pron:"Bon-swár",tip:"Al llegar a restaurantes o bares por la noche"},
   {cat:"👋 Hola (belga)",local:"Dag / Bonjour",pron:"Daj / Bon-yur",tip:"Dag es el saludo neerlandés · muy usado en Bruselas también"},
@@ -1332,7 +1354,7 @@ function renderCityBody(){
  } else if(curSub==='fotos'){
   h+=renderFotos(c.id,c.name);
  } else if(curSub==='clima'){
-  h+=`<div class="card"><div class="card-header"><div class="card-title">🌤️ Clima en ${c.name}</div><div class="card-sub">Actualiza automáticamente con señal · guarda último dato offline</div></div><div id="city-wx-body-${c.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:13px">⏳ Cargando clima...</div></div>`;
+  h+=`<div class="card"><div class="card-header"><div class="card-title">🌤️ Clima en ${c.name}</div><div class="card-sub">Actualiza automáticamente con señal · guarda último dato offline</div></div><div id="city-wx-body-${c.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:14px">⏳ Cargando clima...</div></div>`;
   if(c.wlat){setTimeout(()=>fetchWeather(c.id,c.name,c.wlat,c.wlon,'city-wx-body-'+c.id),50);}
  } else if(curSub==='video'){
   const savedVidUrl=localStorage.getItem('cityvid_url_'+c.id);
@@ -1343,14 +1365,14 @@ function renderCityBody(){
   const displayDesc=savedVidUrl?'Video agregado manualmente':c.video.d;
   h+=`<div class="card"><div class="card-header"><div class="card-title">📺 Video de ${c.name}</div><div class="card-sub">Toca para ver en YouTube · puedes cambiar el enlace</div></div>`;
   if(displayUrl){
-   h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div class="vdesc">${displayDesc}</div><div style="font-size:12px;color:var(--gold);margin-top:4px">Canal: ${displayCanal}</div></div></a>`;
+   h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div class="vdesc">${displayDesc}</div><div style="font-size:13px;color:var(--gold);margin-top:4px">Canal: ${displayCanal}</div></div></a>`;
   } else {
-   h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:13px">No hay video asignado. Agrega un enlace abajo.</div>`;
+   h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:14px">No hay video asignado. Agrega un enlace abajo.</div>`;
   }
   h+=`<div class="note-add" style="border-top:1px solid rgba(201,168,76,0.15)">
-   <div style="font-size:12px;color:var(--gold);margin-bottom:4px;font-weight:500">✏️ Cambiar video:</div>
-   <input type="url" id="cityvid-url-${c.id}" placeholder="https://www.youtube.com/watch?v=..." value="${displayUrl||''}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:6px">
-   <input type="text" id="cityvid-title-${c.id}" placeholder="Título del video (opcional)" value="${displayTitle||''}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box">
+   <div style="font-size:13px;color:var(--gold);margin-bottom:4px;font-weight:500">✏️ Cambiar video:</div>
+   <input type="url" id="cityvid-url-${c.id}" placeholder="https://www.youtube.com/watch?v=..." value="${displayUrl||''}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:6px">
+   <input type="text" id="cityvid-title-${c.id}" placeholder="Título del video (opcional)" value="${displayTitle||''}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box">
    <div style="display:flex;gap:8px;margin-top:8px">
     <button class="note-add-btn" style="flex:1" onclick="saveCityVideo('${c.id}')">💾 Guardar</button>
     <button class="note-add-btn" style="flex:0.6;background:rgba(255,80,80,0.08);border-color:rgba(255,80,80,0.35);color:#ff6464" onclick="deleteCityVideo('${c.id}')">🗑 Eliminar</button>
@@ -1394,34 +1416,39 @@ function renderNotes(cityId,section){
  const isTour=cityId.startsWith('tour_');
  const sectionTitle={itinerario:'itinerario',recomendados:'recomendados',gastronomia:'gastronomía',restaurantes:'dónde comer',tour:'excursión'}[section]||section;
  let h='<div class="card notes-card">';
- h+=`<div class="card-header"><div class="card-title">📝 Mis notas · ${sectionTitle}</div><div class="card-sub">Solo en este teléfono · ${notes.length} ${notes.length===1?'nota':'notas'} · toca para editar</div></div>`;
+ h+=`<div class="card-header"><div class="card-title">📝 Mis notas · ${sectionTitle}</div><div class="card-sub">Solo en este teléfono · ${notes.length} ${notes.length===1?'nota':'notas'}</div></div>`;
  if(notes.length){
   h+=notes.map((n,i)=>`
    <div class="note-row" id="note-row-${cityId}-${section}-${i}">
-    <div class="note-content" onclick="editNote('${cityId}','${section}',${i})" style="cursor:pointer" title="Toca para editar">
+    <div class="note-content">
      <div id="note-text-${cityId}-${section}-${i}">${escapeHtml(n.text)}</div>
-     <div class="note-date">${n.date} · ✏️ toca para editar</div>
+     <div class="note-date">${n.date}</div>
     </div>
-    <button class="note-del" onclick="delNote('${cityId}','${section}',${i})">🗑</button>
+    <button class="note-edit" onclick="editNote('${cityId}','${section}',${i})" title="Editar">✏️</button>
+    <button class="note-del" onclick="delNote('${cityId}','${section}',${i})" title="Borrar">🗑</button>
    </div>
    <div id="note-edit-${cityId}-${section}-${i}" style="display:none;padding:8px 14px;background:rgba(94,203,122,0.05);border-bottom:1px solid rgba(94,203,122,0.15)">
-    <textarea id="note-edit-ta-${cityId}-${section}-${i}" style="width:100%;background:var(--bg);border:1px solid #5ecb7a;border-radius:8px;padding:8px;font-size:14px;color:var(--cream);font-family:inherit;outline:none;resize:vertical;box-sizing:border-box">${escapeHtml(n.text)}</textarea>
+    <textarea id="note-edit-ta-${cityId}-${section}-${i}" style="width:100%;background:var(--bg);border:1px solid #5ecb7a;border-radius:8px;padding:8px;font-size:16px;color:var(--cream);font-family:inherit;outline:none;resize:vertical;box-sizing:border-box">${escapeHtml(n.text)}</textarea>
     <div style="display:flex;gap:8px;margin-top:6px">
      <button class="note-add-btn" style="flex:1" onclick="saveEditNote('${cityId}','${section}',${i})">💾 Guardar cambio</button>
      <button class="note-add-btn" style="flex:0.5;background:rgba(100,100,100,0.1);border-color:var(--border);color:var(--muted)" onclick="cancelEditNote('${cityId}','${section}',${i})">✕ Cancelar</button>
     </div>
    </div>`).join('');
  } else {
-  h+=`<div style="padding:12px 14px;font-size:13px;color:var(--dim);text-align:center">No has agregado notas todavía.<br>Úsalas como diario del viaje 📔</div>`;
+  h+=`<div style="padding:12px 14px;font-size:14px;color:var(--dim);text-align:center">No has agregado notas todavía.<br>Úsalas como diario del viaje 📔</div>`;
  }
  h+=`<div class="note-add">
-  <textarea id="note-input-${cityId}-${section}" placeholder="Escribe una nota (restaurante recomendado, lugar visto, etc.)" rows="2"></textarea>
+  <textarea id="note-input-${cityId}-${section}" placeholder="Escribe una nota (restaurante recomendado, lugar visto, etc.)" rows="1" oninput="autoGrow(this)"></textarea>
   <button class="note-add-btn" onclick="addNote('${cityId}','${section}')">➕ Agregar nota</button>
  </div>`;
  h+='</div>';
  return h;
 }
 function attachNoteEdit(cityId,section){}
+function autoGrow(el){
+ el.style.height='auto';
+ el.style.height=(el.scrollHeight)+'px';
+}
 function editNote(cityId,section,idx){
  const editDiv=document.getElementById(`note-edit-${cityId}-${section}-${idx}`);
  const textDiv=document.getElementById(`note-text-${cityId}-${section}-${idx}`);
@@ -1557,7 +1584,7 @@ function renderFotos(cityId,cityName){
    counter.style.color=isOver?'#ffa552':'';
   }
   if(photos.length===0){
-   grid.innerHTML='<div style="padding:18px 14px;font-size:13px;color:var(--dim);text-align:center;grid-column:1/-1">No has subido fotos todavía. Toca el botón verde para agregar.</div>';
+   grid.innerHTML='<div style="padding:18px 14px;font-size:14px;color:var(--dim);text-align:center;grid-column:1/-1">No has subido fotos todavía. Toca el botón verde para agregar.</div>';
   } else {
    grid.innerHTML=photos.sort((a,b)=>b.ts-a.ts).map(p=>`<div class="photo-tile" onclick="viewPhoto(${p.id})"><img src="${p.data}" loading="lazy" alt=""><button class="photo-del" onclick="event.stopPropagation();delPhotoUI(${p.id})">🗑</button></div>`).join('');
   }
@@ -1569,12 +1596,12 @@ function renderFotos(cityId,cityName){
   </div>
   <div id="photo-status-${cityId}" class="photo-status"></div>
   <div class="photo-grid" id="photo-grid-${cityId}">
-   <div style="padding:14px;font-size:13px;color:var(--dim);text-align:center;grid-column:1/-1">Cargando fotos...</div>
+   <div style="padding:14px;font-size:14px;color:var(--dim);text-align:center;grid-column:1/-1">Cargando fotos...</div>
   </div>
   <div class="photo-add">
    <input type="file" id="photo-input-${cityId}" accept="image/*" multiple style="display:none" onchange="uploadPhotos('${cityId}',this.files)">
    <button class="photo-add-btn" onclick="document.getElementById('photo-input-${cityId}').click()">📷 Subir fotos</button>
-   <div style="font-size:11px;color:var(--dim);text-align:center;margin-top:6px">Las originales en tu rollo no se modifican · esto es una copia comprimida</div>
+   <div style="font-size:12px;color:var(--dim);text-align:center;margin-top:6px">Las originales en tu rollo no se modifican · esto es una copia comprimida</div>
   </div>
  </div>`;
 }
@@ -1682,7 +1709,7 @@ function renderDocumentos(cityId,cityName){
   if(!grid)return;
   if(counter)counter.textContent=docs.length+' '+(docs.length===1?'documento':'documentos');
   if(docs.length===0){
-   grid.innerHTML='<div style="padding:18px 14px;font-size:13px;color:var(--dim);text-align:center">No has subido documentos todavía.<br>Toca el botón dorado para agregar un PDF.</div>';
+   grid.innerHTML='<div style="padding:18px 14px;font-size:14px;color:var(--dim);text-align:center">No has subido documentos todavía.<br>Toca el botón dorado para agregar un PDF.</div>';
   } else {
    grid.innerHTML=docs.sort((a,b)=>b.ts-a.ts).map(d=>`
     <div class="doc-row" onclick="viewDoc(${d.id})">
@@ -1702,12 +1729,12 @@ function renderDocumentos(cityId,cityName){
   </div>
   <div id="doc-status-${cityId}" class="photo-status"></div>
   <div id="doc-list-${cityId}">
-   <div style="padding:14px;font-size:13px;color:var(--dim);text-align:center">Cargando documentos...</div>
+   <div style="padding:14px;font-size:14px;color:var(--dim);text-align:center">Cargando documentos...</div>
   </div>
   <div class="doc-add">
    <input type="file" id="doc-input-${cityId}" accept=".pdf,application/pdf" multiple style="display:none" onchange="uploadDocs('${cityId}',this.files)">
    <button class="doc-add-btn" onclick="document.getElementById('doc-input-${cityId}').click()">📎 Subir PDF</button>
-   <div style="font-size:11px;color:var(--dim);text-align:center;margin-top:6px">Toca para abrir · guarda boletos, vouchers, reservaciones</div>
+   <div style="font-size:12px;color:var(--dim);text-align:center;margin-top:6px">Toca para abrir · guarda boletos, vouchers, reservaciones</div>
   </div>
  </div>`;
 }
@@ -1756,11 +1783,36 @@ async function delDocUI(id){
  await delDoc(id);
  renderCityBody();
 }
+function loadPdfJs(){
+ return new Promise((resolve,reject)=>{
+  if(window.pdfjsLib){resolve(window.pdfjsLib);return;}
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+  s.onload=()=>{
+   if(window.pdfjsLib){
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    resolve(window.pdfjsLib);
+   } else reject(new Error('pdfjs no cargó'));
+  };
+  s.onerror=()=>reject(new Error('no se pudo descargar pdf.js'));
+  document.head.appendChild(s);
+ });
+}
+
+function dataURItoUint8(dataURI){
+ const base64=dataURI.split(',')[1];
+ const bin=atob(base64);
+ const len=bin.length;
+ const bytes=new Uint8Array(len);
+ for(let i=0;i<len;i++)bytes[i]=bin.charCodeAt(i);
+ return bytes;
+}
+
 async function viewDoc(id){
  const db=await openDocsDB();
  const tx=db.transaction('docs','readonly');
  const req=tx.objectStore('docs').get(id);
- req.onsuccess=()=>{
+ req.onsuccess=async()=>{
   const d=req.result;
   if(!d)return;
   const overlay=document.createElement('div');
@@ -1768,10 +1820,31 @@ async function viewDoc(id){
   overlay.innerHTML=`
    <div class="doc-overlay-bar">
     <div class="doc-overlay-title">📄 ${escapeHtml(d.name)}</div>
+    <button class="doc-overlay-open" onclick="window.open('${d.data}','_blank')">⤢ Abrir completo</button>
     <button class="doc-overlay-close" onclick="this.closest('.doc-overlay').remove()">✕ Cerrar</button>
    </div>
-   <iframe class="doc-overlay-frame" src="${d.data}"></iframe>`;
+   <div class="doc-overlay-pages" id="doc-pages"><div class="doc-loading">Cargando documento…</div></div>`;
   document.body.appendChild(overlay);
+  const cont=overlay.querySelector('#doc-pages');
+  try{
+   const pdfjsLib=await loadPdfJs();
+   const bytes=dataURItoUint8(d.data);
+   const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+   cont.innerHTML='';
+   const scale=Math.min(2,(window.devicePixelRatio||1)*1.3);
+   for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const viewport=page.getViewport({scale:scale});
+    const canvas=document.createElement('canvas');
+    canvas.className='doc-page-canvas';
+    canvas.width=viewport.width;
+    canvas.height=viewport.height;
+    cont.appendChild(canvas);
+    await page.render({canvasContext:canvas.getContext('2d'),viewport:viewport}).promise;
+   }
+  }catch(err){
+   cont.innerHTML=`<div class="doc-loading">No se pudo mostrar el PDF aquí.<br>Usa el botón "⤢ Abrir completo" para verlo en el navegador.<br><br><iframe class="doc-overlay-frame" src="${d.data}"></iframe></div>`;
+  }
  };
 }
 
@@ -1795,7 +1868,7 @@ function renderTourBody(){
  const notasH=renderNotes('tour_'+t.id,'tour');
  if(curTourSub==='info'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">${t.flag} ${t.name}</div><div class="card-sub">${t.base}</div><span class="tag" style="background:rgba(201,168,76,0.15);color:var(--gold2)">${t.precio}</span></div>`;
-  if(t.desc)h+=`<div style="padding:12px 14px;font-size:14px;color:var(--cream);line-height:1.7;border-bottom:1px solid rgba(201,168,76,0.1)">${t.desc}</div>`;
+  if(t.desc)h+=`<div style="padding:12px 14px;font-size:15px;color:var(--cream);line-height:1.7;border-bottom:1px solid rgba(201,168,76,0.1)">${t.desc}</div>`;
   h+=`<div class="section-label">Lugares y atractivos principales</div>`;
   h+=t.atractivos.map(a=>`<div class="list-item"><span class="lb">◆</span><div class="list-text">${a[0]}<div class="list-sub">${a[1]}</div></div></div>`).join('');
   h+='</div>';
@@ -1806,7 +1879,7 @@ function renderTourBody(){
   if(recs.length){
    h+=recs.map(a=>`<div class="list-item"><span class="lb2">◇</span><div class="list-text">${a[0]}<div class="list-sub">${a[1]}</div></div></div>`).join('');
   }else{
-   h+=`<div style="padding:14px;font-size:13px;color:var(--dim);text-align:center">Sin recomendados adicionales</div>`;
+   h+=`<div style="padding:14px;font-size:14px;color:var(--dim);text-align:center">Sin recomendados adicionales</div>`;
   }
   h+='</div>';
   h+=notasH;
@@ -1821,14 +1894,14 @@ function renderTourBody(){
   if(rests.length){
    h+=rests.map(r=>`<div class="list-item"><span class="lb">◆</span><div class="list-text">${r[0]}<div class="list-sub">${r[1]}</div></div></div>`).join('');
   }else{
-   h+=`<div style="padding:14px;font-size:13px;color:var(--dim);text-align:center">Sin restaurantes registrados aún</div>`;
+   h+=`<div style="padding:14px;font-size:14px;color:var(--dim);text-align:center">Sin restaurantes registrados aún</div>`;
   }
   h+='</div>';
   h+=notasH;
  } else if(curTourSub==='saludos'){
   const s=t.saludos;
   h+=`<div class="card"><div class="card-header"><div class="card-title">🗣️ Frases útiles en ${s.idioma}</div><div class="card-sub">${s.nota}</div></div>`;
-  h+=s.frases.map(f=>`<div class="list-item"><span class="lb">◆</span><div class="list-text"><span style="color:var(--gold2);font-weight:500">${f.cat}</span><div style="font-size:15px;color:var(--cream);margin:3px 0">${f.local}</div><div style="font-size:12px;color:var(--gold);font-style:italic">Pronunciación: ${f.pron}</div><div class="list-sub">${f.tip}</div></div></div>`).join('');
+  h+=s.frases.map(f=>`<div class="list-item"><span class="lb">◆</span><div class="list-text"><span style="color:var(--gold2);font-weight:500">${f.cat}</span><div style="font-size:16px;color:var(--cream);margin:3px 0">${f.local}</div><div style="font-size:13px;color:var(--gold);font-style:italic">Pronunciación: ${f.pron}</div><div class="list-sub">${f.tip}</div></div></div>`).join('');
   h+='</div>';
   h+=notasH;
  } else if(curTourSub==='mapa'){
@@ -1846,7 +1919,7 @@ function renderTourBody(){
   h+=renderPhotos(t.id,t.name);
   h+=notasH;
  } else if(curTourSub==='clima'){
-  h+=`<div class="card" id="tour-wx-${t.id}"><div class="card-header"><div class="card-title">🌤️ Clima en ${t.name}</div><div class="card-sub">Actualiza con señal · último dato guardado si offline</div></div><div id="tour-wx-body-${t.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:13px">⏳ Cargando clima...</div></div>`;
+  h+=`<div class="card" id="tour-wx-${t.id}"><div class="card-header"><div class="card-title">🌤️ Clima en ${t.name}</div><div class="card-sub">Actualiza con señal · último dato guardado si offline</div></div><div id="tour-wx-body-${t.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:14px">⏳ Cargando clima...</div></div>`;
   if(t.wlat){setTimeout(()=>fetchWeather(t.id,t.name,t.wlat,t.wlon,'tour-wx-body-'+t.id),50);}
   else{setTimeout(()=>{const el=document.getElementById('tour-wx-body-'+t.id);if(el)el.innerHTML='Sin datos de ubicación.';},50);}
   h+=notasH;
@@ -1872,13 +1945,13 @@ function renderTourVideo(t){
  const displayTitle=savedUrl?'Video personalizado':(vid?vid.t:'Video del destino');
  let h=`<div class="card"><div class="card-header"><div class="card-title">📺 Video de ${t.name}</div><div class="card-sub">Toca para abrir en YouTube · puedes personalizar el enlace</div></div>`;
  if(displayUrl){
-  h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div style="font-size:11px;color:var(--gold);margin-top:4px">📺 Toca para ver en YouTube</div></div></a>`;
+  h+=`<a class="vlink" href="${displayUrl}" target="_blank" rel="noopener"><div class="pbtn">▶</div><div><div class="vtitle">${displayTitle}</div><div style="font-size:12px;color:var(--gold);margin-top:4px">📺 Toca para ver en YouTube</div></div></a>`;
  }else{
-  h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:13px">No hay video asignado. Agrega un enlace abajo.</div>`;
+  h+=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:14px">No hay video asignado. Agrega un enlace abajo.</div>`;
  }
  h+=`<div class="note-add" style="border-top:1px solid rgba(201,168,76,0.15)">
-  <div style="font-size:12px;color:var(--gold);margin-bottom:6px;font-weight:500">✏️ Cambiar enlace de YouTube:</div>
-  <input type="url" id="vid-input-${t.id}" placeholder="https://www.youtube.com/watch?v=..." value="${displayUrl}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box">
+  <div style="font-size:13px;color:var(--gold);margin-bottom:6px;font-weight:500">✏️ Cambiar enlace de YouTube:</div>
+  <input type="url" id="vid-input-${t.id}" placeholder="https://www.youtube.com/watch?v=..." value="${displayUrl}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px;color:var(--cream);font-family:inherit;outline:none;box-sizing:border-box">
   <div style="display:flex;gap:8px;margin-top:8px">
    <button class="note-add-btn" style="flex:1" onclick="saveTourVideo('${t.id}')">💾 Guardar</button>
    <button class="note-add-btn" style="flex:0.6;background:rgba(255,80,80,0.08);border-color:rgba(255,80,80,0.35);color:#ff6464" onclick="deleteTourVideo('${t.id}')">🗑 Eliminar</button>
@@ -1904,10 +1977,10 @@ function deleteTourVideo(tid){
 function renderDist(){
  const total=distMain.reduce((s,r)=>s+r.km,0);
  let h=`<div class="dist-row" style="background:rgba(201,168,76,0.07)"><span class="dcity" style="color:var(--gold)">Total del circuito</span><span></span><span class="dkm" style="color:var(--gold)">${total.toLocaleString()} km</span><span class="dtime"></span></div>`;
- h+=distMain.map(r=>`<div class="dist-row"><span class="dcity">${r.de}</span><span style="color:var(--dim);font-size:11px">→</span><span class="dcity" style="color:var(--cream)">${r.a}</span><span class="dkm">${r.km} km</span><span class="dtime">&nbsp;${r.t}</span></div>`).join('');
+ h+=distMain.map(r=>`<div class="dist-row"><span class="dcity">${r.de}</span><span style="color:var(--dim);font-size:12px">→</span><span class="dcity" style="color:var(--cream)">${r.a}</span><span class="dkm">${r.km} km</span><span class="dtime">&nbsp;${r.t}</span></div>`).join('');
  document.getElementById('dist-main-card').innerHTML=h;
  document.getElementById('dist-tour-card').innerHTML=distTours.map(r=>
-  `<div class="dist-row"><span class="dcity">${r.de}</span><span style="color:var(--dim);font-size:11px">→</span><span class="dcity" style="color:var(--cream)">${r.a}</span><span class="dkm">${r.km} km</span><span class="dtime">&nbsp;${r.t}</span></div>`
+  `<div class="dist-row"><span class="dcity">${r.de}</span><span style="color:var(--dim);font-size:12px">→</span><span class="dcity" style="color:var(--cream)">${r.a}</span><span class="dkm">${r.km} km</span><span class="dtime">&nbsp;${r.t}</span></div>`
  ).join('');
 }
 
@@ -1921,7 +1994,7 @@ function renderMonedas(){
  const fxLabel=fxTs?(fxAge<1?'ahora mismo':fxAge<60?`hace ${fxAge} min`:`hace ${Math.round(fxAge/60)}h`):'fijo (sin señal)';
  const isLive=fxTs&&fxAge<120;
  document.getElementById('monedas-card').innerHTML=`
-  <div style="padding:8px 14px;font-size:11px;color:${isLive?'#5ecb7a':'#ffa552'};background:${isLive?'rgba(94,203,122,0.06)':'rgba(255,165,82,0.06)'};border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px">
+  <div style="padding:8px 14px;font-size:12px;color:${isLive?'#5ecb7a':'#ffa552'};background:${isLive?'rgba(94,203,122,0.06)':'rgba(255,165,82,0.06)'};border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px">
    ${isLive?'🔄':'📴'} Tipo de cambio actualizado ${fxLabel} · ${isLive?'en tiempo real':'sin internet, usando último dato'}
    ${isLive?'':`<button onclick="fetchExchangeRates().then(ok=>{if(ok)renderMonedas();})" style="margin-left:auto;background:transparent;border:1px solid #ffa552;color:#ffa552;padding:2px 8px;border-radius:4px;font-size:10px;cursor:pointer">🔄 Actualizar</button>`}
   </div>
@@ -1962,7 +2035,7 @@ function calcUpdate(){
  const v=parseFloat(inp.value);
  const from=sel.value;
  if(!v||v<=0){
-  out.innerHTML=`<div style="text-align:center;color:var(--dim);font-size:13px;padding:14px">Ingresa una cantidad para convertir</div>`;
+  out.innerHTML=`<div style="text-align:center;color:var(--dim);font-size:14px;padding:14px">Ingresa una cantidad para convertir</div>`;
   return;
  }
  const inMXN=v*(window.ratesToMXN||ratesToMXN)[from];
@@ -2059,7 +2132,7 @@ document.getElementById('tp-home-box').innerHTML=`<div class="tph">5 oportunidad
  if(counter)counter.textContent=docs.length+' '+(docs.length===1?'documento':'documentos');
  if(list){
   if(docs.length===0){
-   list.innerHTML='<div style="padding:14px;font-size:13px;color:var(--dim);text-align:center">No has subido documentos todavía.<br>Toca el botón dorado para agregar PDFs del viaje.</div>';
+   list.innerHTML='<div style="padding:14px;font-size:14px;color:var(--dim);text-align:center">No has subido documentos todavía.<br>Toca el botón dorado para agregar PDFs del viaje.</div>';
   } else {
    list.innerHTML=docs.sort((a,b)=>b.ts-a.ts).map(d=>`
     <div class="doc-row" onclick="viewDoc(${d.id})">
@@ -2084,7 +2157,7 @@ async function delDocHomeUI(id){
  if(counter)counter.textContent=docs.length+' '+(docs.length===1?'documento':'documentos');
  if(list){
   if(docs.length===0){
-   list.innerHTML='<div style="padding:14px;font-size:13px;color:var(--dim);text-align:center">No has subido documentos todavía.</div>';
+   list.innerHTML='<div style="padding:14px;font-size:14px;color:var(--dim);text-align:center">No has subido documentos todavía.</div>';
   } else {
    list.innerHTML=docs.sort((a,b)=>b.ts-a.ts).map(d=>`
     <div class="doc-row" onclick="viewDoc(${d.id})">
