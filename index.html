@@ -209,19 +209,19 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
 .doc-add-btn{width:100%;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.35);color:var(--gold);padding:11px;border-radius:8px;font-size:16px;font-family:inherit;cursor:pointer;font-weight:500}
 .doc-add-btn:active{background:var(--gold);color:#0f1923}
 .doc-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.97);z-index:1000;display:flex;flex-direction:column}
-.doc-overlay-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.2)}
-.doc-overlay-title{font-size:15px;color:var(--gold);font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.doc-overlay-close{background:transparent;border:1px solid var(--border);color:var(--cream);padding:6px 14px;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;flex-shrink:0}
+.doc-overlay-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;background:rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.2)}
+.doc-overlay-title{font-size:13px;color:var(--gold);font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:40px}
+.doc-overlay-close{background:transparent;border:1px solid var(--border);color:var(--cream);width:36px;height:34px;border-radius:8px;font-size:15px;cursor:pointer;font-family:inherit;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
 .doc-overlay-frame{flex:1;width:100%;border:none;background:#fff}
-.doc-overlay-open{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;font-family:inherit;flex-shrink:0;margin-right:8px}
-.doc-overlay-pages{flex:1;overflow:auto;background:#525659;padding:12px;-webkit-overflow-scrolling:touch}
-.doc-pages-inner{display:flex;flex-direction:column;align-items:center;gap:12px;transform-origin:top center;transition:transform .08s ease-out;width:fit-content;margin:0 auto}
-.doc-page-canvas{max-width:100%;height:auto;box-shadow:0 2px 12px rgba(0,0,0,0.5);background:#fff}
+.doc-overlay-open{background:transparent;border:1px solid var(--gold);color:var(--gold);width:36px;height:34px;border-radius:8px;font-size:15px;cursor:pointer;font-family:inherit;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
+.doc-overlay-pages{flex:1;overflow:scroll;background:#525659;-webkit-overflow-scrolling:touch;position:relative;touch-action:auto}
+.doc-pages-inner{display:inline-flex;flex-direction:column;align-items:center;gap:12px;padding:12px;min-width:100%;box-sizing:border-box}
+.doc-page-canvas{height:auto;box-shadow:0 2px 12px rgba(0,0,0,0.5);background:#fff;display:block;flex-shrink:0}
 .doc-loading{color:#fff;text-align:center;padding:30px 16px;font-size:15px;line-height:1.6}
-.doc-zoom-controls{position:absolute;bottom:calc(20px + var(--safe-bot));left:50%;transform:translateX(-50%);display:flex;gap:2px;background:rgba(20,28,40,0.92);border:1px solid var(--gold);border-radius:24px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,0.5);z-index:1001}
-.doc-zoom-btn{background:transparent;border:none;color:var(--gold);font-size:22px;font-weight:600;width:44px;height:40px;cursor:pointer;border-radius:20px;font-family:inherit;display:flex;align-items:center;justify-content:center}
-.doc-zoom-btn:active{background:rgba(201,168,76,0.25)}
-.doc-zoom-reset{font-size:13px;width:58px}
+.doc-zoom-controls{display:flex;gap:4px;align-items:center;flex-shrink:0;margin-right:8px}
+.doc-zoom-btn{background:rgba(201,168,76,0.12);border:1px solid var(--gold);color:var(--gold);font-size:20px;font-weight:600;width:36px;height:34px;cursor:pointer;border-radius:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}
+.doc-zoom-btn:active{background:rgba(201,168,76,0.3)}
+.doc-zoom-reset{font-size:12px;width:46px}
 .notes-card{margin-top:8px;border-left:3px solid #5ecb7a}
 .note-row{display:flex;align-items:flex-start;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(94,203,122,0.1)}
 .note-row:last-of-type{border-bottom:none}
@@ -260,7 +260,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
     <span style="font-size:22px">✈️</span>
     <div>
       <div class="header-title">Europa Inmortal 2026</div>
-      <div class="header-sub">6–23 Sep · 11 ciudades · 6 países · v29 ✓</div>
+      <div class="header-sub">6–23 Sep · 11 ciudades · 6 países · v31 ✓</div>
     </div>
     <div class="offline-badge" id="offline-badge" style="display:none">📴 Offline</div>
   </div>

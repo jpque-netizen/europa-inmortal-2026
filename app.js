@@ -1820,15 +1820,15 @@ async function viewDoc(id){
   overlay.innerHTML=`
    <div class="doc-overlay-bar">
     <div class="doc-overlay-title">📄 ${escapeHtml(d.name)}</div>
-    <button class="doc-overlay-open" onclick="window.open('${d.data}','_blank')">⤢ Abrir completo</button>
-    <button class="doc-overlay-close" onclick="this.closest('.doc-overlay').remove()">✕ Cerrar</button>
+    <div class="doc-zoom-controls">
+     <button class="doc-zoom-btn" id="doc-zoom-out">−</button>
+     <button class="doc-zoom-btn doc-zoom-reset" id="doc-zoom-reset">100%</button>
+     <button class="doc-zoom-btn" id="doc-zoom-in">+</button>
+    </div>
+    <button class="doc-overlay-open" onclick="window.open('${d.data}','_blank')">⤢</button>
+    <button class="doc-overlay-close" onclick="this.closest('.doc-overlay').remove()">✕</button>
    </div>
-   <div class="doc-overlay-pages" id="doc-pages"><div class="doc-loading">Cargando documento…</div></div>
-   <div class="doc-zoom-controls">
-    <button class="doc-zoom-btn" id="doc-zoom-out">−</button>
-    <button class="doc-zoom-btn doc-zoom-reset" id="doc-zoom-reset">100%</button>
-    <button class="doc-zoom-btn" id="doc-zoom-in">+</button>
-   </div>`;
+   <div class="doc-overlay-pages" id="doc-pages"><div class="doc-loading">Cargando documento…</div></div>`;
   document.body.appendChild(overlay);
   const cont=overlay.querySelector('#doc-pages');
   try{
@@ -1841,6 +1841,7 @@ async function viewDoc(id){
    inner.id='doc-pages-inner';
    cont.appendChild(inner);
    const scale=Math.min(2,(window.devicePixelRatio||1)*1.3);
+   const canvases=[];
    for(let p=1;p<=pdf.numPages;p++){
     const page=await pdf.getPage(p);
     const viewport=page.getViewport({scale:scale});
@@ -1849,28 +1850,33 @@ async function viewDoc(id){
     canvas.width=viewport.width;
     canvas.height=viewport.height;
     inner.appendChild(canvas);
+    canvases.push(canvas);
     await page.render({canvasContext:canvas.getContext('2d'),viewport:viewport}).promise;
    }
-   setupPdfZoom(overlay,inner,cont);
+   setupPdfZoom(overlay,inner,cont,canvases);
   }catch(err){
-   cont.innerHTML=`<div class="doc-loading">No se pudo mostrar el PDF aquí.<br>Usa el botón "⤢ Abrir completo" para verlo en el navegador.<br><br><iframe class="doc-overlay-frame" src="${d.data}"></iframe></div>`;
+   cont.innerHTML=`<div class="doc-loading">No se pudo mostrar el PDF aquí.<br>Usa el botón "⤢" para abrirlo en el navegador.<br><br><iframe class="doc-overlay-frame" src="${d.data}"></iframe></div>`;
   }
  };
 }
 
-function setupPdfZoom(overlay,inner,cont){
+function setupPdfZoom(overlay,inner,cont,canvases){
  let zoom=1;
  const MIN=0.5,MAX=4;
  const lbl=overlay.querySelector('#doc-zoom-reset');
+ // base width = fit to container at zoom 1
+ const baseW=cont.clientWidth-24;
  function apply(){
   zoom=Math.max(MIN,Math.min(MAX,zoom));
-  inner.style.transform=`scale(${zoom})`;
+  const w=baseW*zoom;
+  canvases.forEach(cv=>{cv.style.width=w+'px';});
   lbl.textContent=Math.round(zoom*100)+'%';
  }
+ apply();
  overlay.querySelector('#doc-zoom-in').onclick=()=>{zoom+=0.25;apply();};
  overlay.querySelector('#doc-zoom-out').onclick=()=>{zoom-=0.25;apply();};
  overlay.querySelector('#doc-zoom-reset').onclick=()=>{zoom=1;apply();};
- // Pinch to zoom
+ // Pinch to zoom (two fingers)
  let startDist=0,startZoom=1;
  function dist(t){const dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;return Math.hypot(dx,dy);}
  cont.addEventListener('touchstart',e=>{
@@ -1886,12 +1892,12 @@ function setupPdfZoom(overlay,inner,cont){
  cont.addEventListener('touchend',e=>{
   if(e.touches.length<2)startDist=0;
  },{passive:true});
- // Double-tap to toggle zoom
+ // Double-tap toggles zoom
  let lastTap=0;
  cont.addEventListener('touchend',e=>{
   const now=Date.now();
-  if(now-lastTap<300&&e.changedTouches.length===1){
-   zoom=(zoom>1.2)?1:2;apply();
+  if(now-lastTap<300&&e.changedTouches.length===1&&startDist===0){
+   zoom=(zoom>1.2)?1:2.5;apply();
   }
   lastTap=now;
  },{passive:true});
