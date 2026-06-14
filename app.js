@@ -1825,12 +1825,32 @@ async function viewDoc(id){
      <button class="doc-zoom-btn doc-zoom-reset" id="doc-zoom-reset">100%</button>
      <button class="doc-zoom-btn" id="doc-zoom-in">+</button>
     </div>
-    <button class="doc-overlay-open" onclick="window.open('${d.data}','_blank')">⤢</button>
+    <button class="doc-overlay-open" id="doc-open-full" title="Abrir completo">⤢</button>
     <button class="doc-overlay-close" onclick="this.closest('.doc-overlay').remove()">✕</button>
    </div>
    <div class="doc-overlay-pages" id="doc-pages"><div class="doc-loading">Cargando documento…</div></div>`;
   document.body.appendChild(overlay);
   const cont=overlay.querySelector('#doc-pages');
+  // Open-full button: convert to blob URL (works on mobile, unlike giant data-URIs)
+  const openBtn=overlay.querySelector('#doc-open-full');
+  if(openBtn){
+   openBtn.onclick=()=>{
+    try{
+     const bytes=dataURItoUint8(d.data);
+     const blob=new Blob([bytes],{type:d.type||'application/pdf'});
+     const url=URL.createObjectURL(blob);
+     const w=window.open(url,'_blank');
+     if(!w){
+      // popup blocked: force download/open via temporary link
+      const a=document.createElement('a');
+      a.href=url;a.target='_blank';a.rel='noopener';
+      a.download=d.name||'documento.pdf';
+      document.body.appendChild(a);a.click();a.remove();
+     }
+     setTimeout(()=>URL.revokeObjectURL(url),60000);
+    }catch(e){alert('No se pudo abrir el documento.');}
+   };
+  }
   try{
    const pdfjsLib=await loadPdfJs();
    const bytes=dataURItoUint8(d.data);
