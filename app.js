@@ -2193,11 +2193,13 @@ document.getElementById('quick-itinerary').innerHTML=itin.map((i,idx)=>{
  </div>`;
 }).join('');
 
-document.getElementById('tp-home-box').innerHTML=`<div class="tph">5 oportunidades identificadas en el itinerario</div>`+[
+document.getElementById('tp-home-box').innerHTML=`<div class="tph">7 oportunidades identificadas en el itinerario</div>`+[
  {d:"Día 7 · Sáb 12 Sep",c:"Cracovia",n:"Si no contratas Auschwitz ni Wieliczka: Barrio Kazimierz + Plaza del Mercado a tu ritmo."},
  {d:"Día 9 · Lun 14 Sep",c:"Praga",n:"Sin tours opcionales: Castillo de Praga por tu cuenta + Puente de Carlos al amanecer."},
  {d:"Día 11 · Mié 16 Sep",c:"Núremberg",n:"Sin Rothenburg ni Múnich: Tribunal de Núremberg (Sala 600) + murallas medievales caminables."},
+ {d:"Día 13 · Vie 18 Sep",c:"Metz / Luxemburgo",n:"Si no tomas la excursión a Luxemburgo ni Schengen: Catedral de San Esteban + Centre Pompidou-Metz a tu ritmo."},
  {d:"Día 14 · Sáb 19 Sep",c:"Metz",n:"Sin excursiones: Catedral de San Esteban + Centre Pompidou-Metz + Barrio del Temple."},
+ {d:"Día 16 · Lun 21 Sep",c:"Bruselas",n:"Si no tomas Brujas ni Gante: Atomium + barrio Marolles + degustación de gofres y cerveza belga."},
  {d:"Día 17 · Mar 22 Sep ⭐",c:"Ámsterdam (recomendada)",n:"Si no tomas la excursión: Ámsterdam libre para Rijksmuseum, barrio Jordaan y canales sin prisas."},
 ].map(t=>`<div class="tpi"><strong>${t.d} · ${t.c}</strong><br>${t.n}</div>`).join('');
 
