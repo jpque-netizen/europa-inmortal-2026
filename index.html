@@ -67,10 +67,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
 .poi-name{flex:1;font-size:15px;color:var(--cream);line-height:1.4}
 .poi-arrow{font-size:13px;color:var(--gold);flex-shrink:0}
 .notes-card{margin-top:8px;border-left:3px solid #5ecb7a}
-.note-row{display:flex;align-items:flex-start;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(94,203,122,0.1)}
+.note-row{padding:10px 14px;border-bottom:1px solid rgba(94,203,122,0.1);overflow:hidden}
 .note-row:last-of-type{border-bottom:none}
-.note-content{flex:1;font-size:15px;color:var(--cream);line-height:1.5;white-space:pre-wrap;word-break:break-word}
-.note-date{font-size:12px;color:var(--dim);margin-top:4px}
+.note-actions{float:right;display:flex;gap:2px;margin:0 0 2px 8px}
+.note-content{font-size:15px;color:var(--cream);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.note-date{font-size:12px;color:var(--dim);margin-top:6px;clear:both}
 .note-del{background:transparent;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:2px 6px;flex-shrink:0;border-radius:4px}
 .note-del:active{background:rgba(255,80,80,0.15);color:#ff6464}
 .note-edit{background:transparent;border:none;color:var(--gold);font-size:17px;cursor:pointer;padding:2px 6px;flex-shrink:0;border-radius:4px}
@@ -223,10 +224,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
 .doc-zoom-btn:active{background:rgba(201,168,76,0.3)}
 .doc-zoom-reset{font-size:12px;width:46px}
 .notes-card{margin-top:8px;border-left:3px solid #5ecb7a}
-.note-row{display:flex;align-items:flex-start;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(94,203,122,0.1)}
+.note-row{padding:10px 14px;border-bottom:1px solid rgba(94,203,122,0.1);overflow:hidden}
 .note-row:last-of-type{border-bottom:none}
-.note-content{flex:1;font-size:15px;color:var(--cream);line-height:1.5;white-space:pre-wrap;word-break:break-word}
-.note-date{font-size:12px;color:var(--dim);margin-top:4px}
+.note-actions{float:right;display:flex;gap:2px;margin:0 0 2px 8px}
+.note-content{font-size:15px;color:var(--cream);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.note-date{font-size:12px;color:var(--dim);margin-top:6px;clear:both}
 .note-del{background:transparent;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:2px 6px;flex-shrink:0;border-radius:4px}
 .note-del:active{background:rgba(255,80,80,0.15);color:#ff6464}
 .note-edit{background:transparent;border:none;color:var(--gold);font-size:17px;cursor:pointer;padding:2px 6px;flex-shrink:0;border-radius:4px}
@@ -260,7 +262,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direct
     <span style="font-size:22px">✈️</span>
     <div>
       <div class="header-title">Europa Inmortal 2026</div>
-      <div class="header-sub">6–23 Sep · 11 ciudades · 6 países · v32 ✓</div>
+      <div class="header-sub">6–23 Sep · 11 ciudades · 6 países · v33 ✓</div>
     </div>
     <div class="offline-badge" id="offline-badge" style="display:none">📴 Offline</div>
   </div>

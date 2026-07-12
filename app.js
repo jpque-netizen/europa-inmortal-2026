@@ -1420,12 +1420,14 @@ function renderNotes(cityId,section){
  if(notes.length){
   h+=notes.map((n,i)=>`
    <div class="note-row" id="note-row-${cityId}-${section}-${i}">
+    <div class="note-actions">
+     <button class="note-edit" onclick="editNote('${cityId}','${section}',${i})" title="Editar">✏️</button>
+     <button class="note-del" onclick="delNote('${cityId}','${section}',${i})" title="Borrar">🗑</button>
+    </div>
     <div class="note-content">
      <div id="note-text-${cityId}-${section}-${i}">${escapeHtml(n.text)}</div>
      <div class="note-date">${n.date}</div>
     </div>
-    <button class="note-edit" onclick="editNote('${cityId}','${section}',${i})" title="Editar">✏️</button>
-    <button class="note-del" onclick="delNote('${cityId}','${section}',${i})" title="Borrar">🗑</button>
    </div>
    <div id="note-edit-${cityId}-${section}-${i}" style="display:none;padding:8px 14px;background:rgba(94,203,122,0.05);border-bottom:1px solid rgba(94,203,122,0.15)">
     <textarea id="note-edit-ta-${cityId}-${section}-${i}" style="width:100%;background:var(--bg);border:1px solid #5ecb7a;border-radius:8px;padding:8px;font-size:16px;color:var(--cream);font-family:inherit;outline:none;resize:vertical;box-sizing:border-box">${escapeHtml(n.text)}</textarea>
