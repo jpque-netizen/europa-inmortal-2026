@@ -2166,7 +2166,7 @@ const itin=[
  {d:"12",cityIdx:7,wd:"Jue",dt:"17 Sep",c:"🇩🇪 Núremberg → Frankfurt",n:"Desayuno · viaje · visita Frankfurt",tipo:"normal",
   full:`Desayuno. Después nos dirigimos a la ciudad de Frankfurt ubicada en el centro de Alemania a orillas del Rio Meno, importante centro financiero mundial. Los orígenes de la ciudad se pierden en lo hondo de los primeros siglos del Medioevo, pero siempre en la colina de Romer. Aquí veremos los impresionantes edificios de la familia de comerciantes Romer construidos en los siglos XIII y XIV, la iglesia de San Nicolás, la Catedral Imperial de la Colegiata de San Bartolomé y gozaremos de las majestuosas siluetas del Banco Central Europeo, el Banco de Alemania y la Bolsa de Frankfurt que son unas de las instituciones financieras más importantes del mundo. Alojamiento.`,
   opcionales:["Paseo nocturno en barco por el Río Meno"]},
- {d:"13",cityIdx:9,wd:"Vie",dt:"18 Sep",c:"🇩🇪→🇱🇺🇫🇷 Frankfurt · Luxemburgo · Metz",n:"Desayuno · parada Luxemburgo (opc.) · base Metz",tipo:"normal",
+ {d:"13",cityIdx:9,wd:"Vie",dt:"18 Sep",c:"🇩🇪→🇱🇺🇫🇷 Frankfurt · Luxemburgo · Metz",n:"Desayuno · parada Luxemburgo (opc.) · base Metz",tipo:"libre",
   full:`Desayuno. Después nos dirigimos a la ciudad francesa de Metz o a la ciudad francesa de Thionville. Tiempo libre para realizar excursiones opcionales a la ciudad de Luxemburgo en el estado de Gran Ducado de Luxemburgo y a la ciudad de Schengen. Alojamiento.`,
   opcionales:["Ciudad de Luxemburgo","Ciudad de Schengen"]},
  {d:"14",cityIdx:9,wd:"Sáb",dt:"19 Sep",c:"🇫🇷 Metz / Thionville ★ DÍA LIBRE",n:"Opt. Luxemburgo/Estr./Colmar · Schengen · o Metz libre",tipo:"libre",
@@ -2187,7 +2187,7 @@ document.getElementById('quick-itinerary').innerHTML=itin.map((i,idx)=>{
  return `<div class="irow irow-link" data-day="${idx}" id="irow-${idx}" role="button" tabindex="0" onclick="goToCity(${i.cityIdx})">
   <div class="iday"><div class="idaynum">D${i.d}</div><div class="idaydate">${i.wd}<br>${i.dt}</div></div>
   <div style="flex:1;min-width:0">
-   <div class="icity${i.tipo==='libre'?' libre':i.tipo==='tp'?' tp':''}">${i.c}<span class="irow-arrow">›</span></div>
+   <div class="icity${i.tipo==='libre'?' libre':i.tipo==='tp'?' tp':''}">${i.c}${(i.tipo==='libre'||i.tipo==='tp')?' <span class="irow-libre">🟢 LIBRE</span>':''}<span class="irow-arrow">›</span></div>
    <div class="inote">${i.n}</div>
   </div>
  </div>`;
