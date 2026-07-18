@@ -1277,6 +1277,13 @@ function sv(v){
  if(v==='tours')renderTours();
  if(v==='dist')renderDist();
  if(v==='monedas')renderMonedas();
+ if(v==='home')renderHomeNotes();
+}
+
+function renderHomeNotes(){
+ const hn=document.getElementById('home-notes');
+ if(hn)hn.innerHTML=renderNotes('app','general');
+ renderAllNotes();
 }
 
 function goToCity(idx){
@@ -1344,6 +1351,7 @@ function renderCityBody(){
   h+=`<div class="card"><div class="card-header"><div class="card-title">🗣️ Frases útiles en ${s.idioma}</div><div class="card-sub">${s.nota}</div></div>`;
   h+=s.frases.map(f=>`<div class="saludo-row"><div class="saludo-cat">${f.cat}</div><div class="saludo-local">${f.local}</div><div class="saludo-pron">🔊 <em>${f.pron}</em></div><div class="saludo-tip">💡 ${f.tip}</div></div>`).join('');
   h+='</div>';
+  h+=renderNotes(c.id,'saludos');
  } else if(curSub==='mapa'){
   const m=c.mapa;
   h+=`<div class="card"><div class="card-header"><div class="card-title">🗺️ Mapa de ${c.name}</div><div class="card-sub">Toca cualquier lugar para abrirlo en Google Maps</div></div>`;
@@ -1351,11 +1359,14 @@ function renderCityBody(){
   h+=`<div class="section-label">📌 Lugares del itinerario</div>`;
   h+=m.pois.map(p=>`<a class="map-poi" href="https://www.google.com/maps/search/?api=1&query=${p[1]}" target="_blank" rel="noopener"><span class="poi-icon">📍</span><div class="poi-name">${p[0]}</div><span class="poi-arrow">↗</span></a>`).join('');
   h+='</div>';
+  h+=renderNotes(c.id,'mapa');
  } else if(curSub==='fotos'){
   h+=renderFotos(c.id,c.name);
+  h+=renderNotes(c.id,'fotos');
  } else if(curSub==='clima'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">🌤️ Clima en ${c.name}</div><div class="card-sub">Actualiza automáticamente con señal · guarda último dato offline</div></div><div id="city-wx-body-${c.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:14px">⏳ Cargando clima...</div></div>`;
   if(c.wlat){setTimeout(()=>fetchWeather(c.id,c.name,c.wlat,c.wlon,'city-wx-body-'+c.id),50);}
+  h+=renderNotes(c.id,'clima');
  } else if(curSub==='video'){
   const savedVidUrl=localStorage.getItem('cityvid_url_'+c.id);
   const savedVidTitle=localStorage.getItem('cityvid_title_'+c.id);
@@ -1379,6 +1390,7 @@ function renderCityBody(){
    </div>
    ${savedVidUrl?'<div style="font-size:10px;color:var(--gold);margin-top:6px;text-align:center">⚡ Video personalizado activo · el original queda guardado en el código</div>':''}
   </div></div>`;
+  h+=renderNotes(c.id,'video');
  }
  document.getElementById('city-body').innerHTML=h;
 }
@@ -1407,6 +1419,100 @@ function getNotes(cityId,section){
   const raw=localStorage.getItem('notes_'+cityId+'_'+section);
   return raw?JSON.parse(raw):[];
  }catch(e){return [];}
+}
+
+// Migración única: copia las notas antiguas de tours (compartidas) a las 9 sub-pestañas
+function migrateTourNotes(){
+ try{
+  if(localStorage.getItem('notes_migrated_v37'))return;
+  const subs=['info','recomendados','gastronomia','restaurantes','saludos','mapa','fotos','clima','video'];
+  for(let i=0;i<localStorage.length;i++){
+   const k=localStorage.key(i);
+   if(k&&k.startsWith('notes_tour_')&&k.endsWith('_tour')){
+    const raw=localStorage.getItem(k);
+    if(!raw)continue;
+    const tourKey=k.slice(6,-5); // extrae 'tour_xxx'
+    subs.forEach(s=>{
+     const nk='notes_'+tourKey+'_'+s;
+     if(!localStorage.getItem(nk))localStorage.setItem(nk,raw);
+    });
+   }
+  }
+  localStorage.setItem('notes_migrated_v37','1');
+ }catch(e){}
+}
+migrateTourNotes();
+
+// ===== TODAS MIS NOTAS (vista consolidada) =====
+const SECTION_LABELS={itinerario:'Del itinerario',recomendados:'Recomendados',gastronomia:'Gastronomía',restaurantes:'Dónde comer',saludos:'Saludos',mapa:'Mapa',fotos:'Fotos',clima:'Clima',video:'Video',info:'Info',tour:'Excursión',distancias:'Km / Millas',monedas:'Monedas',general:'Notas generales'};
+
+function placeLabel(owner){
+ if(owner==='app')return 'App';
+ if(owner.startsWith('tour_')){
+  const tid=owner.slice(5);
+  const t=(typeof tours!=='undefined')?tours.find(x=>String(x.id)===tid):null;
+  return t?('🎫 '+t.name):'🎫 Excursión';
+ }
+ const c=(typeof cities!=='undefined')?cities.find(x=>x.id===owner):null;
+ return c?(c.flag+' '+c.name):owner;
+}
+
+function collectAllNotes(){
+ const out=[];
+ try{
+  for(let i=0;i<localStorage.length;i++){
+   const k=localStorage.key(i);
+   if(!k||!k.startsWith('notes_'))continue;
+   if(k==='notes_migrated_v37')continue;
+   const rest=k.slice(6);
+   const idx=rest.lastIndexOf('_');
+   if(idx<1)continue;
+   const owner=rest.slice(0,idx);
+   const section=rest.slice(idx+1);
+   let arr=[];
+   try{arr=JSON.parse(localStorage.getItem(k))||[];}catch(e){continue;}
+   if(!arr.length)continue;
+   arr.forEach((n,ni)=>{
+    out.push({owner,section,idx:ni,text:n.text,date:n.date,
+              place:placeLabel(owner),sec:SECTION_LABELS[section]||section});
+   });
+  }
+ }catch(e){}
+ return out;
+}
+
+function renderAllNotes(){
+ const box=document.getElementById('all-notes-box');
+ if(!box)return;
+ const all=collectAllNotes();
+ if(!all.length){
+  box.innerHTML=`<div class="card"><div style="padding:16px 14px;text-align:center;color:var(--dim);font-size:14px">Aún no has escrito notas.<br>Agrégalas en cualquier pestaña y aparecerán aquí reunidas 📔</div></div>`;
+  return;
+ }
+ // group by place
+ const groups={};
+ all.forEach(n=>{(groups[n.place]=groups[n.place]||[]).push(n);});
+ let h=`<div class="card"><div class="card-header"><div class="card-title">📝 Todas mis notas</div><div class="card-sub">Solo en este teléfono · ${all.length} ${all.length===1?'nota':'notas'} en total</div></div>`;
+ Object.keys(groups).sort().forEach(place=>{
+  h+=`<div class="section-label">${place}</div>`;
+  groups[place].forEach(n=>{
+   h+=`<div class="allnote-row">
+    <button class="allnote-del" onclick="delNoteFromAll('${n.owner}','${n.section}',${n.idx})" title="Borrar">🗑</button>
+    <div class="allnote-sec">${n.sec}</div>
+    <div class="allnote-text">${escapeHtml(n.text)}</div>
+    <div class="allnote-date">${n.date||''}</div>
+   </div>`;
+  });
+ });
+ h+='</div>';
+ box.innerHTML=h;
+}
+
+function delNoteFromAll(owner,section,i){
+ const arr=getNotes(owner,section);
+ arr.splice(i,1);
+ saveNotes(owner,section,arr);
+ renderAllNotes();
 }
 function saveNotes(cityId,section,arr){
  try{localStorage.setItem('notes_'+cityId+'_'+section,JSON.stringify(arr));}catch(e){}
@@ -1468,13 +1574,24 @@ function saveEditNote(cityId,section,idx){
  const now=new Date();
  notes[idx].date=now.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+' · '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})+' (editada)';
  saveNotes(cityId,section,notes);
- if(cityId.startsWith('tour_'))renderTourBody();else renderCityBody();
+ refreshAfterNote(cityId,section);
 }
 function cancelEditNote(cityId,section,idx){
  const editDiv=document.getElementById(`note-edit-${cityId}-${section}-${idx}`);
  if(editDiv)editDiv.style.display='none';
 }
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[c]);}
+function refreshAfterNote(owner,section){
+ if(owner==='app'){
+  if(section==='general'){renderHomeNotes();}
+  else if(section==='distancias'){renderDist();}
+  else if(section==='monedas'){renderMonedas();}
+  renderAllNotes();
+  return;
+ }
+ if(owner.startsWith('tour_'))renderTourBody();else renderCityBody();
+ renderAllNotes();
+}
 function addNote(cityId,section){
  const ta=document.getElementById('note-input-'+cityId+'-'+section);
  if(!ta)return;
@@ -1485,14 +1602,14 @@ function addNote(cityId,section){
  const dateStr=now.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+' · '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
  notes.push({text:text,date:dateStr});
  saveNotes(cityId,section,notes);
- if(cityId.startsWith('tour_'))renderTourBody();else renderCityBody();
+ refreshAfterNote(cityId,section);
 }
 function delNote(cityId,section,idx){
  if(!confirm('¿Borrar esta nota?'))return;
  const notes=getNotes(cityId,section);
  notes.splice(idx,1);
  saveNotes(cityId,section,notes);
- if(cityId.startsWith('tour_'))renderTourBody();else renderCityBody();
+ refreshAfterNote(cityId,section);
 }
 
 // ========= PHOTOS SYSTEM (IndexedDB) =========
@@ -1941,15 +2058,14 @@ function renderTours(){
 function renderTourBody(){
  const t=tours[curTour];
  let h='';
- // Notas section appended at end of every tab
- const notasH=renderNotes('tour_'+t.id,'tour');
+ // Notas independientes por cada sub-pestaña
  if(curTourSub==='info'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">${t.flag} ${t.name}</div><div class="card-sub">${t.base}</div><span class="tag" style="background:rgba(201,168,76,0.15);color:var(--gold2)">${t.precio}</span></div>`;
   if(t.desc)h+=`<div style="padding:12px 14px;font-size:15px;color:var(--cream);line-height:1.7;border-bottom:1px solid rgba(201,168,76,0.1)">${t.desc}</div>`;
   h+=`<div class="section-label">Lugares y atractivos principales</div>`;
   h+=t.atractivos.map(a=>`<div class="list-item"><span class="lb">◆</span><div class="list-text">${a[0]}<div class="list-sub">${a[1]}</div></div></div>`).join('');
   h+='</div>';
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='recomendados'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">⭐ Recomendados en ${t.name}</div></div>`;
   const recs=t.recomendados||[];
@@ -1959,12 +2075,12 @@ function renderTourBody(){
    h+=`<div style="padding:14px;font-size:14px;color:var(--dim);text-align:center">Sin recomendados adicionales</div>`;
   }
   h+='</div>';
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='gastronomia'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">🍽️ Gastronomía en ${t.name}</div></div>`;
   h+=t.gastronomia.map(g=>`<div class="list-item"><span class="lb">◆</span><span class="list-text">${g}</span></div>`).join('');
   h+='</div>';
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='restaurantes'){
   h+=`<div class="card"><div class="card-header"><div class="card-title">🍴 Dónde comer en ${t.name}</div></div>`;
   const rests=t.restaurantes||[];
@@ -1974,13 +2090,13 @@ function renderTourBody(){
    h+=`<div style="padding:14px;font-size:14px;color:var(--dim);text-align:center">Sin restaurantes registrados aún</div>`;
   }
   h+='</div>';
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='saludos'){
   const s=t.saludos;
   h+=`<div class="card"><div class="card-header"><div class="card-title">🗣️ Frases útiles en ${s.idioma}</div><div class="card-sub">${s.nota}</div></div>`;
   h+=s.frases.map(f=>`<div class="list-item"><span class="lb">◆</span><div class="list-text"><span style="color:var(--gold2);font-weight:500">${f.cat}</span><div style="font-size:16px;color:var(--cream);margin:3px 0">${f.local}</div><div style="font-size:13px;color:var(--gold);font-style:italic">Pronunciación: ${f.pron}</div><div class="list-sub">${f.tip}</div></div></div>`).join('');
   h+='</div>';
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='mapa'){
   const m=t.mapa||{centro:t.name,pois:[]};
   const murl=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(m.centro)}`;
@@ -1991,18 +2107,18 @@ function renderTourBody(){
    h+=m.pois.map(p=>`<a class="map-poi" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p[1])}" target="_blank" rel="noopener"><span class="poi-icon">📍</span><span class="poi-name">${p[0]}</span><span class="poi-arrow">›</span></a>`).join('');
   }
   h+='</div>';
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='fotos'){
   h+=renderPhotos(t.id,t.name);
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='clima'){
   h+=`<div class="card" id="tour-wx-${t.id}"><div class="card-header"><div class="card-title">🌤️ Clima en ${t.name}</div><div class="card-sub">Actualiza con señal · último dato guardado si offline</div></div><div id="tour-wx-body-${t.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:14px">⏳ Cargando clima...</div></div>`;
   if(t.wlat){setTimeout(()=>fetchWeather(t.id,t.name,t.wlat,t.wlon,'tour-wx-body-'+t.id),50);}
   else{setTimeout(()=>{const el=document.getElementById('tour-wx-body-'+t.id);if(el)el.innerHTML='Sin datos de ubicación.';},50);}
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='video'){
   h+=renderTourVideo(t);
-  h+=notasH;
+  h+=renderNotes('tour_'+t.id,curTourSub);
  }
  document.getElementById('tour-body').innerHTML=h;
 }
@@ -2059,6 +2175,8 @@ function renderDist(){
  document.getElementById('dist-tour-card').innerHTML=distTours.map(r=>
   `<div class="dist-row"><span class="dcity">${r.de}</span><span style="color:var(--dim);font-size:12px">→</span><span class="dcity" style="color:var(--cream)">${r.a}</span><span class="dkm">${r.km} km</span><span class="dtime">&nbsp;${r.t}</span></div>`
  ).join('');
+ const dn=document.getElementById('dist-notes');
+ if(dn)dn.innerHTML=renderNotes('app','distancias');
 }
 
 function renderMonedas(){
@@ -2085,6 +2203,8 @@ function renderMonedas(){
  if(navigator.onLine&&(!fxTs||fxAge>25)){
   fetchExchangeRates().then(ok=>{if(ok)renderMonedas();});
  }
+ const mn=document.getElementById('monedas-notes');
+ if(mn)mn.innerHTML=renderNotes('app','monedas');
 }
 // Tasas vs MXN (cuántos MXN vale 1 unidad)
 const USD_MXN=17.28;
@@ -2282,3 +2402,6 @@ window.addEventListener('online', ()=>{
  });
 });
 window.addEventListener('offline', updateOnlineBadge);
+
+// Render home notes + all-notes on first load
+try{ renderHomeNotes(); }catch(e){}
