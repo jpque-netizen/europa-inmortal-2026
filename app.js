@@ -2405,3 +2405,163 @@ window.addEventListener('offline', updateOnlineBadge);
 
 // Render home notes + all-notes on first load
 try{ renderHomeNotes(); }catch(e){}
+
+// ========= ALMACENAMIENTO PERSISTENTE + RESPALDO =========
+async function requestPersistentStorage(){
+ try{
+  if(navigator.storage&&navigator.storage.persist){
+   const already=await navigator.storage.persisted();
+   if(already)return true;
+   const granted=await navigator.storage.persist();
+   return granted;
+  }
+ }catch(e){}
+ return false;
+}
+
+function idbGetAll(dbName,storeName){
+ return new Promise(resolve=>{
+  try{
+   const req=indexedDB.open(dbName,1);
+   req.onsuccess=()=>{
+    const db=req.result;
+    if(!db.objectStoreNames.contains(storeName)){resolve([]);return;}
+    const tx=db.transaction(storeName,'readonly');
+    const all=tx.objectStore(storeName).getAll();
+    all.onsuccess=()=>resolve(all.result||[]);
+    all.onerror=()=>resolve([]);
+   };
+   req.onerror=()=>resolve([]);
+  }catch(e){resolve([]);}
+ });
+}
+
+function idbPutAll(dbName,storeName,records){
+ return new Promise(resolve=>{
+  try{
+   const req=indexedDB.open(dbName,1);
+   req.onsuccess=()=>{
+    const db=req.result;
+    if(!db.objectStoreNames.contains(storeName)){resolve(0);return;}
+    const tx=db.transaction(storeName,'readwrite');
+    const store=tx.objectStore(storeName);
+    let n=0;
+    records.forEach(r=>{ try{ const c=Object.assign({},r); delete c.id; store.add(c); n++; }catch(e){} });
+    tx.oncomplete=()=>resolve(n);
+    tx.onerror=()=>resolve(n);
+   };
+   req.onerror=()=>resolve(0);
+  }catch(e){resolve(0);}
+ });
+}
+
+async function buildBackupObject(){
+ const ls={};
+ for(let i=0;i<localStorage.length;i++){
+  const k=localStorage.key(i);
+  if(!k)continue;
+  if(k.startsWith('notes_')||k.startsWith('cityvid_')||k.startsWith('tourvid_')){
+   ls[k]=localStorage.getItem(k);
+  }
+ }
+ const photos=await idbGetAll('europa_photos','photos');
+ const docs=await idbGetAll('europa_docs','docs');
+ return {app:'europa-inmortal',version:38,fecha:new Date().toISOString(),localStorage:ls,photos:photos,docs:docs};
+}
+
+async function exportBackup(){
+ const btn=document.getElementById('backup-status');
+ if(btn){btn.style.display='block';btn.innerHTML='⏳ Preparando respaldo...';}
+ try{
+  const data=await buildBackupObject();
+  const json=JSON.stringify(data);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const d=new Date();
+  const stamp=d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2)+('0'+d.getDate()).slice(-2);
+  const a=document.createElement('a');
+  a.href=url; a.download='europa-inmortal-respaldo-'+stamp+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  localStorage.setItem('ultimo_respaldo',Date.now().toString());
+  const mb=(json.length/1048576).toFixed(1);
+  if(btn){btn.innerHTML='✅ Respaldo creado ('+mb+' MB) · '+data.photos.length+' fotos · '+data.docs.length+' documentos';}
+  renderStorageInfo();
+ }catch(e){
+  if(btn)btn.innerHTML='❌ No se pudo crear el respaldo';
+ }
+}
+
+async function importBackup(input){
+ const file=input.files&&input.files[0];
+ if(!file)return;
+ const btn=document.getElementById('backup-status');
+ if(!confirm('Restaurar respaldo\n\nSe AGREGARÁ el contenido del archivo a lo que ya tienes en este teléfono.\n\n¿Continuar?')){input.value='';return;}
+ if(btn){btn.style.display='block';btn.innerHTML='⏳ Restaurando...';}
+ try{
+  const text=await file.text();
+  const data=JSON.parse(text);
+  if(!data||(data.app!=='europa-inmortal'&&data.app!=='immortal-europe'))throw new Error('archivo no válido');
+  if(data.localStorage){
+   Object.keys(data.localStorage).forEach(k=>{
+    try{
+     // Adapta claves provenientes de la app en inglés
+     let key=k.startsWith('en_')?k.slice(3):k;
+     localStorage.setItem(key,data.localStorage[k]);
+    }catch(e){}
+   });
+  }
+  let np=0,nd=0;
+  if(data.photos&&data.photos.length)np=await idbPutAll('europa_photos','photos',data.photos);
+  if(data.docs&&data.docs.length)nd=await idbPutAll('europa_docs','docs',data.docs);
+  if(btn)btn.innerHTML='✅ Restaurado · '+np+' fotos · '+nd+' documentos · notas recuperadas';
+  renderStorageInfo();
+  try{renderHomeNotes();}catch(e){}
+ }catch(e){
+  if(btn)btn.innerHTML='❌ Archivo no válido o dañado';
+ }
+ input.value='';
+}
+
+async function renderStorageInfo(){
+ const el=document.getElementById('storage-info');
+ if(!el)return;
+ let usoTxt='—';
+ try{
+  if(navigator.storage&&navigator.storage.estimate){
+   const est=await navigator.storage.estimate();
+   const mb=(est.usage/1048576).toFixed(1);
+   usoTxt=mb+' MB';
+  }
+ }catch(e){}
+ const photos=await idbGetAll('europa_photos','photos');
+ const docs=await idbGetAll('europa_docs','docs');
+ let notas=0;
+ for(let i=0;i<localStorage.length;i++){
+  const k=localStorage.key(i);
+  if(k&&k.startsWith('notes_')&&k!=='notes_migrated_v37'){
+   try{notas+=(JSON.parse(localStorage.getItem(k))||[]).length;}catch(e){}
+  }
+ }
+ let persistTxt='';
+ try{
+  if(navigator.storage&&navigator.storage.persisted){
+   const p=await navigator.storage.persisted();
+   persistTxt=p?'<span style="color:#5ecb7a">🔒 Datos protegidos</span>':'<span style="color:#ffa552">⚠ Sin protección — instala la app en tu pantalla de inicio</span>';
+  }
+ }catch(e){}
+ const last=localStorage.getItem('ultimo_respaldo');
+ let lastTxt='<span style="color:#ffa552">Nunca has respaldado</span>';
+ if(last){
+  const dias=Math.floor((Date.now()-parseInt(last))/86400000);
+  lastTxt=dias===0?'Respaldado hoy':('Último respaldo hace '+dias+(dias===1?' día':' días'));
+  if(dias>=7)lastTxt='<span style="color:#ffa552">'+lastTxt+' ⚠</span>';
+ }
+ el.innerHTML='📦 '+usoTxt+' · '+photos.length+' fotos · '+docs.length+' documentos · '+notas+' notas<br>'+lastTxt+(persistTxt?'<br>'+persistTxt:'');
+}
+
+// Al iniciar: pedir persistencia y mostrar info
+(async function initStorage(){
+ await requestPersistentStorage();
+ setTimeout(renderStorageInfo,300);
+})();
