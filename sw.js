@@ -1,4 +1,4 @@
-const CACHE = 'europa-inmortal-v40';
+const CACHE = 'europa-inmortal-v41';
 const ASSETS = ['./index.html', './manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'];
@@ -27,6 +27,17 @@ self.addEventListener('fetch', e => {
         caches.open(CACHE).then(c => c.put(e.request, copy));
         return resp;
       }))
+    );
+    return;
+  }
+  // app.js e index.html: red primero (así una versión nueva siempre gana)
+  if (url.includes('app.js') || url.endsWith('/') || url.includes('index.html')) {
+    e.respondWith(
+      fetch(e.request).then(resp => {
+        const copy = resp.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+        return resp;
+      }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
     );
     return;
   }
