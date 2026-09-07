@@ -1632,7 +1632,7 @@ let photoDB=null;
 function openPhotoDB(){
  return new Promise((resolve,reject)=>{
   if(photoDB){resolve(photoDB);return;}
-  const req=indexedDB.open('europa_photos',1);
+  const req=indexedDB.open('europa_photos');
   req.onerror=()=>reject(req.error);
   req.onupgradeneeded=e=>{
    const db=e.target.result;
@@ -1641,7 +1641,25 @@ function openPhotoDB(){
     store.createIndex('cityId','cityId',{unique:false});
    }
   };
-  req.onsuccess=()=>{photoDB=req.result;resolve(photoDB);};
+  req.onsuccess=()=>{
+   const db=req.result;
+   // Reparación: si falta el almacén, se recrea subiendo la versión
+   if(!db.objectStoreNames.contains('photos')){
+    const v=db.version+1; db.close();
+    const up=indexedDB.open('europa_photos',v);
+    up.onupgradeneeded=ev=>{
+     const d2=ev.target.result;
+     if(!d2.objectStoreNames.contains('photos')){
+      const st=d2.createObjectStore('photos',{keyPath:'id',autoIncrement:true});
+      st.createIndex('cityId','cityId',{unique:false});
+     }
+    };
+    up.onsuccess=()=>{photoDB=up.result;resolve(photoDB);};
+    up.onerror=()=>reject(up.error);
+    return;
+   }
+   photoDB=db;resolve(photoDB);
+  };
  });
 }
 async function getPhotos(cityId){
@@ -1786,7 +1804,7 @@ let docsDB=null;
 function openDocsDB(){
  return new Promise((resolve,reject)=>{
   if(docsDB){resolve(docsDB);return;}
-  const req=indexedDB.open('europa_docs',1);
+  const req=indexedDB.open('europa_docs');
   req.onerror=()=>reject(req.error);
   req.onupgradeneeded=e=>{
    const db=e.target.result;
@@ -1795,7 +1813,24 @@ function openDocsDB(){
     store.createIndex('cityId','cityId',{unique:false});
    }
   };
-  req.onsuccess=()=>{docsDB=req.result;resolve(docsDB);};
+  req.onsuccess=()=>{
+   const db=req.result;
+   if(!db.objectStoreNames.contains('docs')){
+    const v=db.version+1; db.close();
+    const up=indexedDB.open('europa_docs',v);
+    up.onupgradeneeded=ev=>{
+     const d2=ev.target.result;
+     if(!d2.objectStoreNames.contains('docs')){
+      const st=d2.createObjectStore('docs',{keyPath:'id',autoIncrement:true});
+      st.createIndex('cityId','cityId',{unique:false});
+     }
+    };
+    up.onsuccess=()=>{docsDB=up.result;resolve(docsDB);};
+    up.onerror=()=>reject(up.error);
+    return;
+   }
+   docsDB=db;resolve(docsDB);
+  };
  });
 }
 async function getDocs(cityId){
@@ -2437,6 +2472,13 @@ function idbGetAll(dbName,storeName){
  return new Promise(resolve=>{
   try{
    const req=indexedDB.open(dbName,1);
+   req.onupgradeneeded=e=>{
+    const db=e.target.result;
+    if(!db.objectStoreNames.contains(storeName)){
+     const st=db.createObjectStore(storeName,{keyPath:'id',autoIncrement:true});
+     try{st.createIndex('cityId','cityId',{unique:false});}catch(err){}
+    }
+   };
    req.onsuccess=()=>{
     const db=req.result;
     if(!db.objectStoreNames.contains(storeName)){resolve([]);return;}
@@ -2454,6 +2496,13 @@ function idbPutAll(dbName,storeName,records){
  return new Promise(resolve=>{
   try{
    const req=indexedDB.open(dbName,1);
+   req.onupgradeneeded=e=>{
+    const db=e.target.result;
+    if(!db.objectStoreNames.contains(storeName)){
+     const st=db.createObjectStore(storeName,{keyPath:'id',autoIncrement:true});
+     try{st.createIndex('cityId','cityId',{unique:false});}catch(err){}
+    }
+   };
    req.onsuccess=()=>{
     const db=req.result;
     if(!db.objectStoreNames.contains(storeName)){resolve(0);return;}
