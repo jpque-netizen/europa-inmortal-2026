@@ -1737,7 +1737,7 @@ function renderFotos(cityId,cityName){
   if(photos.length===0){
    grid.innerHTML='<div style="padding:18px 14px;font-size:14px;color:var(--dim);text-align:center;grid-column:1/-1">No has subido fotos todavía. Toca el botón verde para agregar.</div>';
   } else {
-   grid.innerHTML=photos.sort((a,b)=>b.ts-a.ts).map(p=>`<div class="photo-tile" onclick="viewPhoto(${p.id})"><img src="${p.data}" loading="lazy" alt=""><button class="photo-del" onclick="event.stopPropagation();delPhotoUI(${p.id})">🗑</button></div>`).join('');
+   grid.innerHTML=photos.sort((a,b)=>b.ts-a.ts).map(p=>`<div class="photo-tile" onclick="viewPhoto(${p.id})"><img src="${p.data}" loading="lazy" alt=""><button class="photo-del" onclick="event.stopPropagation();delPhotoUI(${p.id})">🗑</button><button class="photo-tag-btn" onclick="event.stopPropagation();abrirEtiqueta(${p.id},'${cityId}')">🏷️</button>${p.caption?`<div class="photo-cap">${escapeHtml(p.caption)}</div>`:''}</div>`).join('');
   }
  },10);
  return `<div class="card photos-card">
@@ -1790,7 +1790,7 @@ async function viewPhoto(id){
   if(!p)return;
   const overlay=document.createElement('div');
   overlay.className='photo-overlay';
-  overlay.innerHTML=`<div class="photo-overlay-inner"><img src="${p.data}" alt=""><div class="photo-overlay-info">📅 ${p.date}</div><button class="photo-overlay-close" onclick="this.parentElement.parentElement.remove()">✕ Cerrar</button></div>`;
+  overlay.innerHTML=`<div class="photo-overlay-inner"><img src="${p.data}" alt="">${p.caption?`<div class="photo-overlay-cap">🏷️ ${escapeHtml(p.caption)}</div>`:''}<div class="photo-overlay-info">📅 ${p.date}</div><button class="photo-overlay-close" onclick="this.parentElement.parentElement.remove()">✕ Cerrar</button></div>`;
   overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
   document.body.appendChild(overlay);
  };
@@ -2158,7 +2158,7 @@ function renderTourBody(){
   h+='</div>';
   h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='fotos'){
-  h+=renderPhotos(t.id,t.name);
+  h+=renderFotos(t.id,t.name);
   h+=renderNotes('tour_'+t.id,curTourSub);
  } else if(curTourSub==='clima'){
   h+=`<div class="card" id="tour-wx-${t.id}"><div class="card-header"><div class="card-title">🌤️ Clima en ${t.name}</div><div class="card-sub">Actualiza con señal · último dato guardado si offline</div></div><div id="tour-wx-body-${t.id}" style="padding:20px;text-align:center;color:var(--dim);font-size:14px">⏳ Cargando clima...</div></div>`;
@@ -2471,7 +2471,7 @@ async function requestPersistentStorage(){
 function idbGetAll(dbName,storeName){
  return new Promise(resolve=>{
   try{
-   const req=indexedDB.open(dbName,1);
+   const req=indexedDB.open(dbName);
    req.onupgradeneeded=e=>{
     const db=e.target.result;
     if(!db.objectStoreNames.contains(storeName)){
@@ -2495,7 +2495,7 @@ function idbGetAll(dbName,storeName){
 function idbPutAll(dbName,storeName,records){
  return new Promise(resolve=>{
   try{
-   const req=indexedDB.open(dbName,1);
+   const req=indexedDB.open(dbName);
    req.onupgradeneeded=e=>{
     const db=e.target.result;
     if(!db.objectStoreNames.contains(storeName)){
@@ -2681,4 +2681,90 @@ function renderHotel(c){
  }
  h+='</div>';
  return h;
+}
+
+// ========= ETIQUETAS DE FOTOS =========
+// Devuelve los atractivos del ITINERARIO del lugar (ciudad o tour). Sin recomendados.
+function lugaresItinerario(ownerId){
+ const out=[];
+ try{
+  const raw=String(ownerId).replace(/^tour_/,'');
+  // 1) ¿Es una ciudad? -> atractivos del itinerario (no recomendados)
+  const c=(typeof cities!=='undefined')?cities.find(x=>x.id===raw):null;
+  if(c){
+   if(c.descripcion_dia)c.descripcion_dia.forEach(d=>{
+    if(d.attrs)d.attrs.forEach(a=>{if(a&&a[0])out.push(a[0]);});
+   });
+   return [...new Set(out)];
+  }
+  // 2) ¿Es un tour? -> sus atractivos
+  const t=(typeof tours!=='undefined')?tours.find(x=>String(x.id)===raw):null;
+  if(t&&t.atractivos)t.atractivos.forEach(a=>{if(a&&a[0])out.push(a[0]);});
+ }catch(e){}
+ return [...new Set(out)];
+}
+
+function abrirEtiqueta(id,ownerId){
+ const box=document.getElementById('tag-editor');
+ if(box)box.remove();
+ openPhotoDB().then(db=>{
+  const tx=db.transaction('photos','readonly');
+  const req=tx.objectStore('photos').get(id);
+  req.onsuccess=()=>{
+   const p=req.result;
+   if(!p)return;
+   const lugares=lugaresItinerario(ownerId);
+   const ov=document.createElement('div');
+   ov.className='tag-overlay';
+   ov.id='tag-editor';
+   let chips='';
+   if(lugares.length){
+    chips='<div class="tag-sec">Atractivos del itinerario</div><div class="tag-chips">'
+     + lugares.map(l=>`<button class="tag-chip" onclick="ponerEtiqueta(this,'${escapeHtml(l).replace(/'/g,"\\'")}')">${escapeHtml(l)}</button>`).join('')
+     + '</div>';
+   }
+   ov.innerHTML=`<div class="tag-panel">
+     <div class="tag-head">🏷️ Etiqueta de la foto</div>
+     ${chips}
+     <div class="tag-sec">Escribe la tuya</div>
+     <input type="text" id="tag-input" maxlength="40" placeholder="Ej. Puente de Carlos al atardecer" value="${escapeHtml(p.caption||'')}" oninput="document.getElementById('tag-count').textContent=this.value.length+'/40'">
+     <div class="tag-count" id="tag-count">${(p.caption||'').length}/40</div>
+     <div class="tag-btns">
+      <button class="tag-save" onclick="guardarEtiqueta(${id})">💾 Guardar</button>
+      <button class="tag-cancel" onclick="document.getElementById('tag-editor').remove()">✕ Cancelar</button>
+     </div>
+    </div>`;
+   document.body.appendChild(ov);
+  };
+ });
+}
+
+function ponerEtiqueta(btn,texto){
+ const inp=document.getElementById('tag-input');
+ if(!inp)return;
+ inp.value=texto.slice(0,40);
+ const c=document.getElementById('tag-count');
+ if(c)c.textContent=inp.value.length+'/40';
+ document.querySelectorAll('.tag-chip').forEach(b=>b.classList.remove('sel'));
+ btn.classList.add('sel');
+}
+
+async function guardarEtiqueta(id){
+ const inp=document.getElementById('tag-input');
+ const texto=inp?inp.value.trim().slice(0,40):'';
+ const db=await openPhotoDB();
+ const tx=db.transaction('photos','readwrite');
+ const store=tx.objectStore('photos');
+ const req=store.get(id);
+ req.onsuccess=()=>{
+  const p=req.result;
+  if(!p)return;
+  p.caption=texto;
+  store.put(p);
+  tx.oncomplete=()=>{
+   const ed=document.getElementById('tag-editor');
+   if(ed)ed.remove();
+   renderCityBody();
+  };
+ };
 }
